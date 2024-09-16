@@ -17,3 +17,13 @@ A simple Streamlit app that shows how to build a chatbot using OpenAI's GPT-3.5.
    ```
    $ streamlit run streamlit_app.py
    ```
+
+### To Do lit
+
+1. Dataset I'rab :
+
+Phrase | I'rab (LIVRE) | Mauvaise I'rab (API)
+
+2. Dataset Questions/Réponses
+
+Question | Réponse | Mauvaise réponse
