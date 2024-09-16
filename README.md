@@ -27,3 +27,10 @@ Phrase | I'rab (LIVRE) | Mauvaise I'rab (API)
 2. Dataset Questions/Réponses
 
 Question | Réponse | Mauvaise réponse
+
+3. Prompt Mode
+
+- Prompt Teacher
+- Prompt Examen
+- Prompt Discussion
+- Prompt Revision
