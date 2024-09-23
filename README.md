@@ -54,4 +54,6 @@ Do RAG on chapters.
 3. Agent Revision
 
 #### Features
-- Only write in Arabic OR in Arabic and English.
+- User can choose to only write in Arabic OR in Arabic and English.
+- User can choose the Agent Mode in a list (Teacher, Discussion, Revision)
+  
