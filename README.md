@@ -20,17 +20,38 @@ A chatbot using ALLaM model to learn everything about Arabic Grammar.
 
 ### To Do lit
 
+#### Datasets 
+DPO when Fine-Tuning
+
 1. Dataset I'rab :
 
-Phrase | I'rab (LIVRE) | Mauvaise I'rab (API)
+AR_Text | Irab | Bad_Irab (API)
 
 2. Dataset Questions/Réponses
 
-Question | Réponse | Mauvaise réponse
+Question | Answer | Bad_Answer (API)
 
-3. Prompt Mode
+3. Dataset AR/EN
 
-- Prompt Teacher
-- Prompt Examen
-- Prompt Discussion
-- Prompt Revision
+Arabic | English 
+
+4. Dataset Poem
+
+AR_Text | AR_Poem
+
+#### Agents
+
+Implement "Iteration of Tought" (IoT) every agent.
+Do RAG on chapters.
+
+1. Agent Teacher (+Examinator)
+
+- Write : "Hello, I am your Teacher. What would you like to discuss today ?"
+- List of : Topics non-finished --> Chapters non-finished
+- Prompt : "Based on {Text_of_chapter}. Elaborate : objectives, explanation ...."
+
+2. Agent Discussion
+3. Agent Revision
+
+#### Features
+- Only write in Arabic OR in Arabic and English.
