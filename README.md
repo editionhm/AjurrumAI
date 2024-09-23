@@ -47,7 +47,7 @@ Do RAG on chapters.
 1. Agent Teacher (+Examinator)
 
 - Write : "Hello, I am your Teacher. What would you like to discuss today ?"
-- List of : Topics non-finished --> Chapters non-finished
+- List of : Topics non-finished --> Courses non-finished --> Chapters non-finished
 - Prompt : "Based on {Text_of_chapter}. Elaborate : objectives, explanation ...."
 
 2. Agent Discussion
