@@ -56,4 +56,5 @@ Do RAG on chapters.
 #### Features
 - User can choose to only write in Arabic OR in Arabic and English.
 - User can choose the Agent Mode in a list (Teacher, Discussion, Revision)
+- Implement "Box of Leitner" : (3,7,14,30 days)
   
