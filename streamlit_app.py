@@ -78,12 +78,12 @@ def top_navbar():
 top_navbar()
 
 # -------------------------------
-# Sidebar with Conversations
+# Sidebar with Login or Conversations
 # -------------------------------
-if st.session_state.user["connected"]:
-    with st.sidebar:
+with st.sidebar:
+    if st.session_state.user["connected"]:
         st.header("Conversations / المحادثات")
-        
+
         if st.session_state.conversations:
             conversation_names = list(st.session_state.conversations.values())
             selected_conversation = st.selectbox("Select a conversation / اختر محادثة", conversation_names)
@@ -94,7 +94,7 @@ if st.session_state.user["connected"]:
                     break
         else:
             st.info("No conversations yet. / لا توجد محادثات بعد.")
-        
+
         # Option to start a new conversation
         if st.button("Start a new conversation / بدء محادثة جديدة"):
             # Generate a new conversation ID
@@ -106,6 +106,33 @@ if st.session_state.user["connected"]:
             st.session_state.conversation_history[conv_id] = []
             # TODO: Save new conversation to MongoDB
             # database.create_new_conversation(st.session_state.user['username'], conv_id, conv_name)
+    else:
+        st.header("Log In / تسجيل الدخول")
+        # Create a login form in the sidebar
+        username = st.text_input("Username / اسم المستخدم", key="login_username")
+        password = st.text_input("Password / كلمة المرور", type="password", key="login_password")
+        if st.button("Log In / تسجيل الدخول", key="login_button"):
+            # For now, just set connected to True
+            if username and password:
+                st.session_state.user = {
+                    "connected": True,
+                    "username": username,
+                    "age": 20  # Just an example
+                }
+                st.success("Logged in successfully! / تم تسجيل الدخول بنجاح!")
+                # TODO: Authenticate user using MongoDB
+                # user = database.authenticate_user(username, password)
+                # if user:
+                #     st.session_state.user = {
+                #         "connected": True,
+                #         "username": user['username'],
+                #         "age": user['age']
+                #     }
+                #     st.success("Logged in successfully! / تم تسجيل الدخول بنجاح!")
+                # else:
+                #     st.error("Invalid credentials. / بيانات اعتماد غير صالحة.")
+            else:
+                st.error("Please enter both username and password. / الرجاء إدخال اسم المستخدم وكلمة المرور.")
 
 # -------------------------------
 # Main Content Area
@@ -198,34 +225,7 @@ if st.session_state.user["connected"]:
 else:
     st.markdown("---")
     st.markdown("<h2 style='text-align: center;'>Please log in or sign up to start interacting with the chatbot. / الرجاء تسجيل الدخول أو إنشاء حساب لبدء التفاعل مع الروبوت.</h2>", unsafe_allow_html=True)
-    # Create a centered login form
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
-        st.markdown("### Log In / تسجيل الدخول")
-        username = st.text_input("Username / اسم المستخدم")
-        password = st.text_input("Password / كلمة المرور", type="password")
-        if st.button("Log In / تسجيل الدخول"):
-            # For now, just set connected to True
-            if username and password:
-                st.session_state.user = {
-                    "connected": True,
-                    "username": username,
-                    "age": 20  # Just an example
-                }
-                st.success("Logged in successfully! / تم تسجيل الدخول بنجاح!")
-                # TODO: Authenticate user using MongoDB
-                # user = database.authenticate_user(username, password)
-                # if user:
-                #     st.session_state.user = {
-                #         "connected": True,
-                #         "username": user['username'],
-                #         "age": user['age']
-                #     }
-                #     st.success("Logged in successfully! / تم تسجيل الدخول بنجاح!")
-                # else:
-                #     st.error("Invalid credentials. / بيانات اعتماد غير صالحة.")
-            else:
-                st.error("Please enter both username and password. / الرجاء إدخال اسم المستخدم وكلمة المرور.")
+    # Optionally, you can add more content here for users who are not logged in
 
 # -------------------------------
 # Database and Interaction Modules
