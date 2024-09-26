@@ -232,9 +232,9 @@ if st.session_state.user["connected"]:
             else:
                 prompt = user_input  # Default fallback prompt
 
-            # Get the model response using the interact module
+            # Get the model response using the generate_llm function
             try:
-                response = interact.get_model_response(prompt)
+                response = interact.generate_llm(prompt)
                 if response:
                     st.success("Response / الرد:")
                     st.write(response)
