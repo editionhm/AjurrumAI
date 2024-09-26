@@ -42,7 +42,7 @@ def top_navbar():
     with col1:
         # Show the greeting message above the main title
         if st.session_state.user["connected"]:
-            st.markdown(f"<h2>Hello, {st.session_state.user['username']}! | مرحبًا، {st.session_state.user['username']}!</h2>", unsafe_allow_html=True)
+            st.markdown(f"<h2><script>alert('test anassien')</script> Hello, {st.session_state.user['username']}! | مرحبًا، {st.session_state.user['username']}!</h2>", unsafe_allow_html=True)
 
         # Application title and description
         st.markdown("<h1 style='text-align: left; color: #2e7bcf;'>📚 AjurrumAI | Teaching Chatbot</h1>", unsafe_allow_html=True)
