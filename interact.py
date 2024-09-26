@@ -1,4 +1,7 @@
-from ibm_wastonx_ai import *
+import requests
+from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
+
+url = "https://eu-de.ml.cloud.ibm.com/ml/v1/text/generation?version=2023-05-29"
 
 def generate_llm(prompt):
     """
@@ -20,7 +23,7 @@ def generate_llm(prompt):
 
     headers = {
         "Accept": "application/json",
-        "Content-Type": "application/json",
+        "Content-Type": "application/json",   
         "Authorization": f"Bearer {token}"
     }
 
