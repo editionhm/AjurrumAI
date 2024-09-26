@@ -2,7 +2,7 @@
 #from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 #from ibm_watson import TextGenerationV1  # Replace with the actual service class if different
 #import config
-
+'''
 class WatsonXClient:
     """
     A client to interact with the Allam model on IBM WatsonX.
@@ -83,3 +83,4 @@ def get_model_response(prompt, decoding_method="greedy", max_new_tokens=1500, re
     except Exception as e:
         # Handle exceptions as needed (logging, re-raising, etc.)
         raise e
+'''
