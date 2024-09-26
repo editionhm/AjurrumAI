@@ -1,7 +1,7 @@
-import json
-from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
-from ibm_watson import TextGenerationV1  # Replace with the actual service class if different
-import config
+#import json
+#from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
+#from ibm_watson import TextGenerationV1  # Replace with the actual service class if different
+#import config
 
 class WatsonXClient:
     """
