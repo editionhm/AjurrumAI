@@ -33,16 +33,19 @@ if 'conversation_history' not in st.session_state:
     # TODO: Load conversation histories from MongoDB
     # st.session_state.conversation_history = database.get_conversation_histories(st.session_state.user['username'])
 
+if 'selected_mode' not in st.session_state:
+    st.session_state.selected_mode = "Free discussion / مناقشة حرة"
+
 # -------------------------------
-# Top Navigation Bar with Greeting and Logout
+# Top Navigation Bar with Greeting
 # -------------------------------
 def top_navbar():
     col1, col2 = st.columns([3, 1])
-    
+
     with col1:
         # Show the greeting message above the main title
         if st.session_state.user["connected"]:
-            st.markdown(f"<h2> Hello, {st.session_state.user['username']}! | مرحبًا، {st.session_state.user['username']}!</h2>", unsafe_allow_html=True)
+            st.markdown(f"<h2>Hello, {st.session_state.user['username']}! / مرحبًا، {st.session_state.user['username']}!</h2>", unsafe_allow_html=True)
 
         # Application title and description
         st.markdown("<h1 style='text-align: left; color: #2e7bcf;'>📚 AjurrumAI | Teaching Chatbot</h1>", unsafe_allow_html=True)
@@ -50,35 +53,23 @@ def top_navbar():
 
         # Mode selection when user is connected
         if st.session_state.user["connected"]:
-            st.markdown("#### Mode | الوضع")
+            st.markdown("#### Mode / الوضع")
             mode_options = [
-                "Continue the course | متابعة الدرس",
-                "Review a lesson | مراجعة درس",
-                "Free discussion | مناقشة حرة",
-                "Exam | امتحان"
+                "Continue the course / متابعة الدرس",
+                "Review a lesson / مراجعة درس",
+                "Free discussion / مناقشة حرة",
+                "Exam / امتحان"
             ]
-            selected_mode = st.selectbox("Which mode would you like? | أي وضع تود استخدامه", mode_options)
+            selected_mode = st.selectbox("Which mode would you like? / أي وضع تود استخدامه", mode_options, key='mode_select')
             st.session_state.selected_mode = selected_mode  # Store in session state for later use
 
-    # Right side: Only show a "Log Out" button when the user is logged in
-    with col2:
-        if st.session_state.user["connected"]:
-            if st.button("Log Out | تسجيل الخروج", key="logout_button", use_container_width=True):
-                st.session_state.user = {
-                    "connected": False,
-                    "username": None,
-                    "age": None
-                }
-                st.session_state.conversations = {}
-                st.session_state.current_conversation = None
-                st.session_state.conversation_history = {}
-                st.success("You have been logged out. / تم تسجيل خروجك.")
+    # Removed the Log Out button from here
 
 # Call the top navigation bar
 top_navbar()
 
 # -------------------------------
-# Sidebar with Login or Conversations
+# Sidebar with Login or Conversations and Log Out
 # -------------------------------
 with st.sidebar:
     if st.session_state.user["connected"]:
@@ -86,7 +77,8 @@ with st.sidebar:
 
         if st.session_state.conversations:
             conversation_names = list(st.session_state.conversations.values())
-            selected_conversation = st.selectbox("Select a conversation / اختر محادثة", conversation_names)
+            selected_conversation = st.selectbox(
+                "Select a conversation / اختر محادثة", conversation_names, key='conversation_select')
             # Set the current conversation based on selection
             for conv_id, conv_name in st.session_state.conversations.items():
                 if conv_name == selected_conversation:
@@ -96,7 +88,7 @@ with st.sidebar:
             st.info("No conversations yet. / لا توجد محادثات بعد.")
 
         # Option to start a new conversation
-        if st.button("Start a new conversation / بدء محادثة جديدة"):
+        if st.button("Start a new conversation / بدء محادثة جديدة", key='new_conversation_button'):
             # Generate a new conversation ID
             conv_id = f"conv_{len(st.session_state.conversations) + 1}"
             conv_name = f"Conversation {len(st.session_state.conversations) + 1}"
@@ -106,6 +98,40 @@ with st.sidebar:
             st.session_state.conversation_history[conv_id] = []
             # TODO: Save new conversation to MongoDB
             # database.create_new_conversation(st.session_state.user['username'], conv_id, conv_name)
+
+        # Allow user to rename conversations
+        st.markdown("---")
+        st.subheader("Manage Conversations / إدارة المحادثات")
+        if st.session_state.conversations:
+            conv_to_rename = st.selectbox("Select conversation to rename / اختر محادثة لإعادة تسميتها",
+                                          options=list(st.session_state.conversations.values()),
+                                          key='rename_select')
+            new_name = st.text_input("New name / اسم جديد", key='new_conv_name')
+            if st.button("Rename / إعادة تسمية", key='rename_button'):
+                # Find the conversation ID
+                for conv_id, conv_name in st.session_state.conversations.items():
+                    if conv_name == conv_to_rename:
+                        st.session_state.conversations[conv_id] = new_name
+                        # Update selection if it's the current conversation
+                        if st.session_state.current_conversation == conv_id:
+                            st.session_state.current_conversation = conv_id
+                        st.success(f"Conversation renamed to {new_name} / تم إعادة تسمية المحادثة إلى {new_name}")
+                        # TODO: Update conversation name in MongoDB
+                        # database.rename_conversation(st.session_state.user['username'], conv_id, new_name)
+                        break
+
+        # Log Out button at the bottom of the sidebar
+        st.markdown("---")
+        if st.button("Log Out / تسجيل الخروج", key="logout_button"):
+            st.session_state.user = {
+                "connected": False,
+                "username": None,
+                "age": None
+            }
+            st.session_state.conversations = {}
+            st.session_state.current_conversation = None
+            st.session_state.conversation_history = {}
+            st.success("You have been logged out. / تم تسجيل خروجك.")
     else:
         st.header("Log In / تسجيل الدخول")
         # Create a login form in the sidebar
@@ -119,7 +145,7 @@ with st.sidebar:
                     "username": username,
                     "age": 20  # Just an example
                 }
-                st.success("Logged in successfully! \n تم تسجيل الدخول بنجاح!")
+                st.success("Logged in successfully! / تم تسجيل الدخول بنجاح!")
                 # TODO: Authenticate user using MongoDB
                 # user = database.authenticate_user(username, password)
                 # if user:
@@ -139,7 +165,7 @@ with st.sidebar:
 # -------------------------------
 if st.session_state.user["connected"]:
     st.markdown("---")
-    
+
     # Display the conversation history
     conv_id = st.session_state.current_conversation
     if conv_id and conv_id in st.session_state.conversation_history:
@@ -150,10 +176,10 @@ if st.session_state.user["connected"]:
             st.markdown("---")
     else:
         st.info("No conversation selected or no messages yet. / لم يتم اختيار محادثة أو لا توجد رسائل بعد.")
-    
+
     # Display a system message for the chatbot
     st.markdown("**System Message:** _Hello, tell us what you want!_")
-    
+
     # Create a chat-style text input with a modern design
     st.markdown("""
     <style>
@@ -162,21 +188,30 @@ if st.session_state.user["connected"]:
             border-radius: 10px;
             padding: 10px;
             font-size: 16px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .submit-button {
+            margin-top: 10px;
+            float: right;
         }
     </style>
     """, unsafe_allow_html=True)
-    
-    user_input = st.text_area(
-        "Write your message here: / اكتب رسالتك هنا", 
-        placeholder="Type your message like in a chat... / اكتب رسالتك هنا مثل الدردشة...",
-        height=100, 
-        key="chat_input", 
-        label_visibility="collapsed",
-        help="Chat with the AI in real-time"
-    )
 
-    # Submit button for the chat message
-    if st.button("Submit / إرسال", key="submit_button"):
+    # Use a form to allow submission on Enter key press
+    with st.form(key='chat_form', clear_on_submit=True):
+        user_input = st.text_area(
+            "Write your message here: / اكتب رسالتك هنا",
+            placeholder="Type your message like in a chat... / اكتب رسالتك هنا مثل الدردشة...",
+            height=100,
+            key="chat_input",
+            label_visibility="collapsed",
+            help="Chat with the AI in real-time"
+        )
+        # Submit button aligned to the right
+        submit_button = st.form_submit_button("Submit / إرسال")
+
+    if submit_button:
         if user_input.strip() == "":
             st.error("Please enter something. / الرجاء إدخال شيء.")
         else:
@@ -196,7 +231,7 @@ if st.session_state.user["connected"]:
                 prompt = f"I am taking an exam. Here is my question: {user_input}"
             else:
                 prompt = user_input  # Default fallback prompt
-            
+
             # Get the model response using the interact module
             try:
                 response = interact.get_model_response(prompt)
@@ -224,7 +259,7 @@ if st.session_state.user["connected"]:
 
 else:
     st.markdown("---")
-    st.markdown("<h2 style='text-align: center;'>Please log in or sign up to start interacting with the chatbot. \n الرجاء تسجيل الدخول أو إنشاء حساب لبدء التفاعل مع الروبوت.</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align: center;'>Please log in or sign up to start interacting with the chatbot. / الرجاء تسجيل الدخول أو إنشاء حساب لبدء التفاعل مع الروبوت.</h2>", unsafe_allow_html=True)
     # Optionally, you can add more content here for users who are not logged in
 
 # -------------------------------
