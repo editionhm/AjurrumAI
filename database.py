@@ -1,3 +1,5 @@
+# database.py
+
 from pymongo import MongoClient, ASCENDING
 from bson.objectid import ObjectId
 from datetime import datetime, timedelta
@@ -13,6 +15,7 @@ courses_col = db['courses']
 lessons_col = db['lessons']
 users_col = db['users']
 masteries_col = db['masteries']
+exams_col = db['exams']  # New collection for exams
 
 # Setup collections with validation schemas
 def setup_collections():
@@ -159,14 +162,101 @@ def setup_collections():
     except Exception:
         pass  # Collection already exists
 
-# Create indexes for masteries collection
+    # Schema for exams collection
+    try:
+        db.create_collection("exams", validator={
+            "$jsonSchema": {
+                "bsonType": "object",
+                "required": ["user_id", "lesson_id", "questions", "user_answers", "score", "passed", "timestamp"],
+                "properties": {
+                    "user_id": {
+                        "bsonType": "objectId",
+                        "description": "Must be an ObjectId and is required"
+                    },
+                    "lesson_id": {
+                        "bsonType": "objectId",
+                        "description": "Must be an ObjectId and is required"
+                    },
+                    "questions": {
+                        "bsonType": "array",
+                        "items": {
+                            "bsonType": "object",
+                            "required": ["question_id", "question_text"],
+                            "properties": {
+                                "question_id": {
+                                    "bsonType": "objectId",
+                                    "description": "Must be an ObjectId and is required"
+                                },
+                                "question_text": {
+                                    "bsonType": "string",
+                                    "description": "Must be a string and is required"
+                                },
+                                "options": {
+                                    "bsonType": "array",
+                                    "items": {"bsonType": "string"},
+                                    "description": "Must be an array of strings"
+                                },
+                                "correct_option": {
+                                    "bsonType": "int",
+                                    "description": "Must be an integer indicating the correct option number"
+                                }
+                            }
+                        },
+                        "description": "Must be an array of questions and is required"
+                    },
+                    "user_answers": {
+                        "bsonType": "array",
+                        "items": {
+                            "bsonType": "object",
+                            "required": ["question_id", "user_answer", "correct"],
+                            "properties": {
+                                "question_id": {
+                                    "bsonType": "objectId",
+                                    "description": "Must be an ObjectId and is required"
+                                },
+                                "user_answer": {
+                                    "bsonType": "int",
+                                    "description": "Must be an integer indicating the user's chosen option number"
+                                },
+                                "correct": {
+                                    "bsonType": "bool",
+                                    "description": "Must be a boolean indicating if the answer was correct"
+                                }
+                            }
+                        },
+                        "description": "Must be an array of user answers and is required"
+                    },
+                    "score": {
+                        "bsonType": "int",
+                        "description": "Must be an integer representing the total correct answers"
+                    },
+                    "passed": {
+                        "bsonType": "bool",
+                        "description": "Must be a boolean indicating pass/fail status"
+                    },
+                    "timestamp": {
+                        "bsonType": "date",
+                        "description": "Must be a date and is required"
+                    }
+                }
+            }
+        })
+    except Exception:
+        pass  # Collection already exists
+
+# Create indexes for masteries and exams collections
 def create_indexes():
+    # Existing indexes for masteries
     masteries_col.create_index(
         [("user_id", ASCENDING), ("category", ASCENDING), ("item_id", ASCENDING)],
         unique=True
     )
     masteries_col.create_index("revision_date")
     masteries_col.create_index("user_id")
+    
+    # Indexes for exams
+    exams_col.create_index([("user_id", ASCENDING), ("lesson_id", ASCENDING), ("timestamp", ASCENDING)])
+    exams_col.create_index("lesson_id")
 
 # Initialize collections and indexes
 setup_collections()
@@ -317,6 +407,8 @@ def update_user(user_id, username=None, password=None, age=None):
 def remove_user(user_id):
     # Remove all associated masteries
     masteries_col.delete_many({"user_id": ObjectId(user_id)})
+    # Remove all associated exams
+    exams_col.delete_many({"user_id": ObjectId(user_id)})
     # Remove the user
     users_col.delete_one({"_id": ObjectId(user_id)})
 
@@ -477,28 +569,22 @@ def get_due_revisions(user_id):
     })
     return list(due_revisions)
 
-# Utility functions
-def get_all_topics():
-    return list(topics_col.find())
+# CRUD operations for Exams
+def add_exam(user_id, lesson_id, questions, user_answers, score, passed):
+    exam = {
+        "user_id": ObjectId(user_id),
+        "lesson_id": ObjectId(lesson_id),
+        "questions": questions,        # List of dicts with question_id and question_text
+        "user_answers": user_answers,  # List of dicts with question_id, user_answer, correct
+        "score": score,                # Total correct answers
+        "passed": passed,              # Boolean indicating pass/fail
+        "timestamp": datetime.utcnow()
+    }
+    result = exams_col.insert_one(exam)
+    return result.inserted_id
 
-def get_courses_by_topic(topic_id):
-    topic = get_topic(topic_id)
-    if topic and "courses" in topic:
-        return list(courses_col.find({"_id": {"$in": topic["courses"]}}))
-    return []
+def get_exam(exam_id):
+    return exams_col.find_one({"_id": ObjectId(exam_id)})
 
-def get_lessons_by_course(course_id):
-    course = get_course(course_id)
-    if course and "lessons" in course:
-        return list(lessons_col.find({"_id": {"$in": course["lessons"]}}))
-    return []
-
-def is_mastered(user_id, category, item_id):
-    mastery = get_mastery(user_id, category, item_id)
-    return mastery.get("mastered", False) if mastery else False
-
-def get_masteries(user_id, category=None):
-    query = {"user_id": ObjectId(user_id)}
-    if category:
-        query["category"] = category[:-1]
-    return list(masteries_col.find(query))
+def get_user_exams(user_id):
+    return list(exams_col.find({"user_id": ObjectId(user_id)}))
