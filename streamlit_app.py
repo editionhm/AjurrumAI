@@ -2,9 +2,7 @@ import streamlit as st
 import requests
 
 import database
-import interact  # Import the interact.py module
-import prompts
-import config
+import interact 
 
 # Page configuration
 st.set_page_config(page_title="AjurrumAI 😃", layout="wide")
