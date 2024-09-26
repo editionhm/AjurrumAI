@@ -2,7 +2,6 @@ import streamlit as st
 import os
 import database  # Ensure this module handles MongoDB interactions
 import interact   # Ensure this module handles LLM interactions
-from datetime import datetime
 
 # -------------------------------
 # Page Configuration
@@ -19,146 +18,115 @@ if 'user' not in st.session_state:
         "age": None
     }
 
+if 'conversations' not in st.session_state:
+    st.session_state.conversations = {}
+    # Structure: {conversation_id: conversation_name}
+    # TODO: Load user's conversations from MongoDB
+    # st.session_state.conversations = database.get_user_conversations(st.session_state.user['username'])
+
 if 'current_conversation' not in st.session_state:
-    st.session_state.current_conversation = []
+    st.session_state.current_conversation = None
 
-if 'conversation_list' not in st.session_state:
-    st.session_state.conversation_list = []
-
-if 'selected_conversation' not in st.session_state:
-    st.session_state.selected_conversation = None
+if 'conversation_history' not in st.session_state:
+    st.session_state.conversation_history = {}
+    # Structure: {conversation_id: [message1, message2, ...]}
+    # TODO: Load conversation histories from MongoDB
+    # st.session_state.conversation_history = database.get_conversation_histories(st.session_state.user['username'])
 
 # -------------------------------
-# Sidebar with Logout Button and Pages
+# Top Navigation Bar with Greeting and Logout
 # -------------------------------
-def sidebar_with_logout():
-    with st.sidebar:
-        # Mode selection before the system message
-        st.header("Mode / الوضع")
-        mode_options = [
-            "Continue the course / متابعة الدرس",
-            "Review a lesson / مراجعة درس",
-            "Free discussion / مناقشة حرة",
-            "Exam / امتحان"
-        ]
-        selected_mode = st.selectbox("Which mode would you like? / أي وضع تود استخدامه", mode_options)
-
-        # Dynamically load pages from the "Pages" folder
-        st.header("Pages / الصفحات")
-        pages_folder = "Pages"
-        if os.path.exists(pages_folder):
-            page_files = [f for f in os.listdir(pages_folder) if f.endswith('.py')]
-            page_names = [os.path.splitext(f)[0] for f in page_files]  # Remove the .py extension
-            st.selectbox("Select a page / اختر صفحة", page_names)
-
-        # Log Out button at the bottom of the sidebar
-        st.markdown("<br><br><br><br>", unsafe_allow_html=True)
+def top_navbar():
+    col1, col2 = st.columns([3, 1])
+    
+    with col1:
+        # Show the greeting message above the main title
         if st.session_state.user["connected"]:
-            if st.button("Log Out / تسجيل الخروج", key="logout_button"):
+            st.markdown(f"<h2>Hello, {st.session_state.user['username']}! / مرحبًا، {st.session_state.user['username']}!</h2>", unsafe_allow_html=True)
+
+        # Application title and description
+        st.markdown("<h1 style='text-align: left; color: #2e7bcf;'>📚 AjurrumAI | Teaching Chatbot</h1>", unsafe_allow_html=True)
+        st.markdown("### Chat with the greatest Arabic grammar expert! \n تحدث مع أكبر متخصص في قواعد اللغة العربية!")
+
+        # Mode selection when user is connected
+        if st.session_state.user["connected"]:
+            st.markdown("#### Mode / الوضع")
+            mode_options = [
+                "Continue the course / متابعة الدرس",
+                "Review a lesson / مراجعة درس",
+                "Free discussion / مناقشة حرة",
+                "Exam / امتحان"
+            ]
+            selected_mode = st.selectbox("Which mode would you like? / أي وضع تود استخدامه", mode_options)
+            st.session_state.selected_mode = selected_mode  # Store in session state for later use
+
+    # Right side: Only show a "Log Out" button when the user is logged in
+    with col2:
+        if st.session_state.user["connected"]:
+            if st.button("Log Out / تسجيل الخروج", key="logout_button", use_container_width=True):
                 st.session_state.user = {
                     "connected": False,
                     "username": None,
                     "age": None
                 }
+                st.session_state.conversations = {}
+                st.session_state.current_conversation = None
+                st.session_state.conversation_history = {}
                 st.success("You have been logged out. / تم تسجيل خروجك.")
-
-# -------------------------------
-# Top Navigation Bar without Greeting
-# -------------------------------
-def top_navbar():
-    st.markdown("<h1 style='text-align: left; color: #2e7bcf;'>📚 AjurrumAI | Teaching Chatbot</h1>", unsafe_allow_html=True)
-    st.markdown("### Chat with the greatest Arabic grammar expert! \n تحدث مع أكبر متخصص في قواعد اللغة العربية!")
 
 # Call the top navigation bar
 top_navbar()
 
-# Call the sidebar with the log out button
-sidebar_with_logout()
-
 # -------------------------------
-# Function to Save Chat History
+# Sidebar with Conversations
 # -------------------------------
-def save_chat_history():
-    # Save the current conversation to the database
-    if st.session_state.user["connected"] and st.session_state.current_conversation:
-        conversation_id = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        database.save_conversation(
-            username=st.session_state.user['username'],
-            conversation_id=conversation_id,
-            conversation=st.session_state.current_conversation
-        )
-        st.session_state.current_conversation = []
-        load_conversation_list()  # Reload the conversation list after saving
-
-# -------------------------------
-# Load Conversation List for the User
-# -------------------------------
-def load_conversation_list():
-    if st.session_state.user["connected"]:
-        st.session_state.conversation_list = database.get_user_conversations(st.session_state.user['username'])
-
-# -------------------------------
-# Chatbox with Chat History Retrieval
-# -------------------------------
-def display_chat_history():
-    st.markdown("<h3>Chat History / سجل المحادثة</h3>", unsafe_allow_html=True)
-    
-    chat_box_style = """
-    <style>
-    .chat-box {
-        height: 300px;
-        overflow-y: scroll;
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 10px;
-        background-color: #f9f9f9;
-    }
-    </style>
-    """
-    
-    st.markdown(chat_box_style, unsafe_allow_html=True)
-    
-    chat_content = ""
-    if st.session_state.selected_conversation:
-        for entry in st.session_state.selected_conversation:
-            user_message, bot_response = entry["user_message"], entry["bot_response"]
-            chat_content += f"<b>User:</b> {user_message}<br><b>Bot:</b> {bot_response}<hr>"
-    
-    st.markdown(f"<div class='chat-box'>{chat_content}</div>", unsafe_allow_html=True)
-
-# -------------------------------
-# Right Sidebar: Conversation History and New Chat
-# -------------------------------
-def conversation_sidebar():
+if st.session_state.user["connected"]:
     with st.sidebar:
-        if st.session_state.user["connected"]:
-            st.header("Conversations / المحادثات")
-            if st.session_state.conversation_list:
-                conversation_ids = [conv['conversation_id'] for conv in st.session_state.conversation_list]
-                selected_conv_id = st.selectbox("Select a conversation / اختر محادثة", conversation_ids, key='conv_selector')
-                
-                if selected_conv_id:
-                    selected_conversation = next(conv for conv in st.session_state.conversation_list if conv['conversation_id'] == selected_conv_id)
-                    st.session_state.selected_conversation = selected_conversation["conversation"]
-                    st.experimental_rerun()
-            
-            # Start new conversation
-            if st.button("Start New Conversation / ابدأ محادثة جديدة"):
-                st.session_state.current_conversation = []
-                st.session_state.selected_conversation = None
-
-# Call the conversation sidebar
-conversation_sidebar()
+        st.header("Conversations / المحادثات")
+        
+        if st.session_state.conversations:
+            conversation_names = list(st.session_state.conversations.values())
+            selected_conversation = st.selectbox("Select a conversation / اختر محادثة", conversation_names)
+            # Set the current conversation based on selection
+            for conv_id, conv_name in st.session_state.conversations.items():
+                if conv_name == selected_conversation:
+                    st.session_state.current_conversation = conv_id
+                    break
+        else:
+            st.info("No conversations yet. / لا توجد محادثات بعد.")
+        
+        # Option to start a new conversation
+        if st.button("Start a new conversation / بدء محادثة جديدة"):
+            # Generate a new conversation ID
+            conv_id = f"conv_{len(st.session_state.conversations) + 1}"
+            conv_name = f"Conversation {len(st.session_state.conversations) + 1}"
+            st.session_state.conversations[conv_id] = conv_name
+            st.session_state.current_conversation = conv_id
+            # Initialize empty conversation history
+            st.session_state.conversation_history[conv_id] = []
+            # TODO: Save new conversation to MongoDB
+            # database.create_new_conversation(st.session_state.user['username'], conv_id, conv_name)
 
 # -------------------------------
-# Main Content Area - Chat Interaction
+# Main Content Area
 # -------------------------------
 if st.session_state.user["connected"]:
     st.markdown("---")
     
-    # Display the selected chat history if available
-    display_chat_history()
-
+    # Display the conversation history
+    conv_id = st.session_state.current_conversation
+    if conv_id and conv_id in st.session_state.conversation_history:
+        st.markdown("### Conversation History / تاريخ المحادثة")
+        for message in st.session_state.conversation_history[conv_id]:
+            st.markdown(f"**You:** {message['user_input']}")
+            st.markdown(f"**Bot:** {message['response']}")
+            st.markdown("---")
+    else:
+        st.info("No conversation selected or no messages yet. / لم يتم اختيار محادثة أو لا توجد رسائل بعد.")
+    
+    # Display a system message for the chatbot
+    st.markdown("**System Message:** _Hello, tell us what you want!_")
+    
     # Create a chat-style text input with a modern design
     st.markdown("""
     <style>
@@ -185,31 +153,79 @@ if st.session_state.user["connected"]:
         if user_input.strip() == "":
             st.error("Please enter something. / الرجاء إدخال شيء.")
         else:
-            # Get the selected mode
-            interaction_mode = st.sidebar.selectbox("Which mode would you like? / أي وضع تود استخدامه", mode_options)
+            # Determine interaction mode
+            selected_mode = st.session_state.get('selected_mode', "Free discussion / مناقشة حرة")
+            interaction_mode = selected_mode.split(" / ")[0]  # Extract English part
 
             # Adapt the prompt based on the selected mode and user's age
-            prompt = f"Mode: {interaction_mode}. I am a {st.session_state.user['age']} year old user. Here is my question: {user_input}"
-
+            prompt = ""
+            if interaction_mode == "Continue the course":
+                prompt = f"I am a {st.session_state.user['age']} year old student who wants to continue the course. Here is my question: {user_input}"
+            elif interaction_mode == "Review a lesson":
+                prompt = f"I am reviewing a lesson. Here is my question: {user_input}"
+            elif interaction_mode == "Free discussion":
+                prompt = f"I would like to have a free discussion. Here is my topic: {user_input}"
+            elif interaction_mode == "Exam":
+                prompt = f"I am taking an exam. Here is my question: {user_input}"
+            else:
+                prompt = user_input  # Default fallback prompt
+            
             # Get the model response using the interact module
             try:
                 response = interact.get_model_response(prompt)
                 if response:
-                    st.session_state.current_conversation.append({"user_message": user_input, "bot_response": response})
                     st.success("Response / الرد:")
                     st.write(response)
+
+                    # Save the message and response to the conversation history
+                    conv_id = st.session_state.current_conversation
+                    if conv_id:
+                        if conv_id not in st.session_state.conversation_history:
+                            st.session_state.conversation_history[conv_id] = []
+                        st.session_state.conversation_history[conv_id].append({
+                            'user_input': user_input,
+                            'response': response
+                        })
+                        # TODO: Save updated conversation history to MongoDB
+                        # database.save_conversation(st.session_state.user['username'], conv_id, st.session_state.conversation_history[conv_id])
+                    else:
+                        st.warning("No conversation selected. / لم يتم اختيار محادثة.")
                 else:
                     st.warning("No response received / لم يتم استلام رد")
             except Exception as e:
                 st.error(f"An error occurred: {str(e)} / حدث خطأ: {str(e)}")
 
-    # Save conversation button
-    if st.button("Save Conversation / حفظ المحادثة"):
-        save_chat_history()
-
 else:
     st.markdown("---")
-    st.info("Please log in or sign up to start interacting with the chatbot. / الرجاء تسجيل الدخول أو إنشاء حساب لبدء التفاعل مع الروبوت.")
+    st.markdown("<h2 style='text-align: center;'>Please log in or sign up to start interacting with the chatbot. / الرجاء تسجيل الدخول أو إنشاء حساب لبدء التفاعل مع الروبوت.</h2>", unsafe_allow_html=True)
+    # Create a centered login form
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        st.markdown("### Log In / تسجيل الدخول")
+        username = st.text_input("Username / اسم المستخدم")
+        password = st.text_input("Password / كلمة المرور", type="password")
+        if st.button("Log In / تسجيل الدخول"):
+            # For now, just set connected to True
+            if username and password:
+                st.session_state.user = {
+                    "connected": True,
+                    "username": username,
+                    "age": 20  # Just an example
+                }
+                st.success("Logged in successfully! / تم تسجيل الدخول بنجاح!")
+                # TODO: Authenticate user using MongoDB
+                # user = database.authenticate_user(username, password)
+                # if user:
+                #     st.session_state.user = {
+                #         "connected": True,
+                #         "username": user['username'],
+                #         "age": user['age']
+                #     }
+                #     st.success("Logged in successfully! / تم تسجيل الدخول بنجاح!")
+                # else:
+                #     st.error("Invalid credentials. / بيانات اعتماد غير صالحة.")
+            else:
+                st.error("Please enter both username and password. / الرجاء إدخال اسم المستخدم وكلمة المرور.")
 
 # -------------------------------
 # Database and Interaction Modules
