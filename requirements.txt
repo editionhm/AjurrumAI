@@ -1,2 +1,5 @@
 streamlit
-openai
+ibm-cloud-sdk-core
+ibm-watsonx-ai
+pymongo
+bcrypt
