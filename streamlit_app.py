@@ -119,7 +119,7 @@ with st.sidebar:
                     "username": username,
                     "age": 20  # Just an example
                 }
-                st.success("Logged in successfully! / تم تسجيل الدخول بنجاح!")
+                st.success("Logged in successfully! \n تم تسجيل الدخول بنجاح!")
                 # TODO: Authenticate user using MongoDB
                 # user = database.authenticate_user(username, password)
                 # if user:
@@ -224,7 +224,7 @@ if st.session_state.user["connected"]:
 
 else:
     st.markdown("---")
-    st.markdown("<h2 style='text-align: center;'>Please log in or sign up to start interacting with the chatbot. / الرجاء تسجيل الدخول أو إنشاء حساب لبدء التفاعل مع الروبوت.</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align: center;'>Please log in or sign up to start interacting with the chatbot. \n الرجاء تسجيل الدخول أو إنشاء حساب لبدء التفاعل مع الروبوت.</h2>", unsafe_allow_html=True)
     # Optionally, you can add more content here for users who are not logged in
 
 # -------------------------------
