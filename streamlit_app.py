@@ -1,55 +1,104 @@
 import streamlit as st
-from openai import OpenAI
+import requests
 
-# Show title and description.
-st.title("📚 AjurrumAI | Interactive Teaching Chatbot ")
-st.write(
-    "This is an Arabic Grammar chatbot that uses ALlaM model to generate responses."
-    "You can also learn how to build this app step by step by [following our tutorial](https://docs.streamlit.io/develop/tutorials/llms/build-conversational-apps)."
-)
+import database
+import interact  # Import the interact.py module
+import prompts
+import config
 
-# Ask user for their OpenAI API key via `st.text_input`.
-# Alternatively, you can store the API key in `./.streamlit/secrets.toml` and access it
-# via `st.secrets`, see https://docs.streamlit.io/develop/concepts/connections/secrets-management
-openai_api_key = st.text_input("OpenAI API Key", type="password")
-if not openai_api_key:
-    st.info("Please add your OpenAI API key to continue.", icon="🗝️")
-else:
+# Page configuration
+st.set_page_config(page_title="AjurrumAI 😃", layout="wide")
+st.title("AjurrumAI 😃")
+st.write("Chat with the greatest Arabic grammar expert! / تحدث مع أكبر متخصص في قواعد اللغة العربية!")
 
-    # Create an OpenAI client.
-    client = OpenAI(api_key=openai_api_key)
+# Sidebar for navigation
+with st.sidebar:
+    st.header("Mode / الوضع")
+    option = st.radio("Which mode would you like? / أي وضع تود استخدامه",
+                      ["Continue the course / متابعة الدرس",
+                       "Review a lesson / مراجعة درس",
+                       "Free discussion / مناقشة حرة",
+                       "Exam / امتحان"])
+    # You can add specific options or widgets based on the selected mode if needed
 
-    # Create a session state variable to store the chat messages. This ensures that the
-    # messages persist across reruns.
-    if "messages" not in st.session_state:
-        st.session_state.messages = []
+### USER MANAGEMENT
 
-    # Display the existing chat messages via `st.chat_message`.
-    for message in st.session_state.messages:
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
+user_var_set = {
+    "connected": False,
+    "username": "None",
+    "age": 0,
+    "chapter": "None"
+}
 
-    # Create a chat input field to allow the user to enter a message. This will display
-    # automatically at the bottom of the page.
-    if prompt := st.chat_input("What is up?"):
+st.header("Identification / تسجيل الدخول")
 
-        # Store and display the current prompt.
-        st.session_state.messages.append({"role": "user", "content": prompt})
-        with st.chat_message("user"):
-            st.markdown(prompt)
+menu = st.sidebar.selectbox('Menu / القائمة', ['Login / تسجيل الدخول', 'Sign Up / تسجيل حساب'])
 
-        # Generate a response using the OpenAI API.
-        stream = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": m["role"], "content": m["content"]}
-                for m in st.session_state.messages
-            ],
-            stream=True,
-        )
+if menu == 'Sign Up / تسجيل حساب':
+    st.subheader('Create an Account / إنشاء حساب')
+    username = st.text_input('Username / اسم المستخدم')
+    password = st.text_input('Password / كلمة المرور', type='password')
+    age = st.slider("Choose your age / اختر عمرك", 0, 100, 20)
+    if st.button('Sign Up / تسجيل'):
+        message = database.register(username, password, age)
 
-        # Stream the response to the chat using `st.write_stream`, then store it in 
-        # session state.
-        with st.chat_message("assistant"):
-            response = st.write_stream(stream)
-        st.session_state.messages.append({"role": "assistant", "content": response})
+        if message == "USERNAME_TAKEN":
+            st.fail("You can't use this username - لا يمكنك استخدام هذا الإسم")
+        else:
+            st.success("Account created successfully! / تم إنشاء الحساب بنجاح!")
+            login_message = database.login(username, password)
+            if login_message == "LOGIN_SUCCESS":
+                user_var_set["connected"] = True
+                user_var_set["username"] = username
+
+elif menu == 'Login / تسجيل الدخول':
+    st.subheader('Login / تسجيل الدخول')
+    username = st.text_input('Username / اسم المستخدم')
+    password = st.text_input('Password / كلمة المرور', type='password')
+    if st.button('Login / تسجيل الدخول'):
+        message = database.login(username, password)
+        if message == "INCORRECT_CREDENTIALS":
+            st.fail("Incorrect username or password - خطا في الاسم او كلمة المرور")
+        else:
+            st.success("Logged in successfully! / تم تسجيل الدخول بنجاح!")
+            user_var_set["connected"] = True
+            user_var_set["username"] = username
+            user = database.get_user_by_username(username)
+            if user:
+                user_var_set["age"] = user.get("age", 0)
+
+# Input text from user
+user_input = st.text_area("Ask your question or say what's on your mind: / اطرح سؤالك أو قل ما يدور في ذهنك:")
+
+# Button to send the request
+if st.button("Submit / إرسال"):
+    if user_input.strip() == "":
+        st.error("Please enter something. / الرجاء إدخال شيء.")
+    else:
+        if not user_var_set["connected"]:
+            st.error("Please log in first. / الرجاء تسجيل الدخول أولاً.")
+        else:
+            # Determine interaction mode
+            interaction_mode = option.split(" / ")[0]  # Extract English part
+
+            # Adapt prompt based on interaction mode and age
+            prompt = ""
+            if interaction_mode == "Continue the course":
+                prompt = f"I am a {user_var_set['age']} year old student who wants to continue the course. Here is my question: {user_input}"
+            elif interaction_mode == "Review a lesson":
+                prompt = f"I am reviewing a lesson. Here is my question: {user_input}"
+            elif interaction_mode == "Free discussion":
+                prompt = f"I would like to have a free discussion. Here is my topic: {user_input}"
+            elif interaction_mode == "Exam":
+                prompt = f"I am taking an exam. Here is my question: {user_input}"
+
+            # Get the model response using interact.py
+            try:
+                response = interact.get_model_response(prompt)
+                if response:
+                    st.success("Response / الرد:")
+                    st.write(response)
+                else:
+                    st.warning("No response received / لم يتم استلام رد")
+            except Exception as e:
+                st.error(f"An error occurred: {str(e)} / حدث خطأ: {str(e)}")
