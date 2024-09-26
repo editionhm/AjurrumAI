@@ -18,25 +18,36 @@ if 'user' not in st.session_state:
         "age": None
     }
 
-# -------------------------------
-# Top Navigation Bar with Greeting and Logout
-# -------------------------------
-def top_navbar():
-    col1, col2 = st.columns([3, 1])
-    
-    with col1:
-        # Show the greeting message above the main title
-        if st.session_state.user["connected"]:
-            st.markdown(f"<h2>Hello, {st.session_state.user['username']}! / مرحبًا، {st.session_state.user['username']}!</h2>", unsafe_allow_html=True)
+if 'chat_history' not in st.session_state:
+    st.session_state.chat_history = []
 
-        # Application title and description
-        st.markdown("<h1 style='text-align: left; color: #2e7bcf;'>📚 AjurrumAI | Teaching Chatbot</h1>", unsafe_allow_html=True)
-        st.markdown("### Chat with the greatest Arabic grammar expert! \n تحدث مع أكبر متخصص في قواعد اللغة العربية!")
+# -------------------------------
+# Sidebar with Logout Button and Pages
+# -------------------------------
+def sidebar_with_logout():
+    with st.sidebar:
+        # Mode selection before the system message
+        st.header("Mode / الوضع")
+        mode_options = [
+            "Continue the course / متابعة الدرس",
+            "Review a lesson / مراجعة درس",
+            "Free discussion / مناقشة حرة",
+            "Exam / امتحان"
+        ]
+        selected_mode = st.selectbox("Which mode would you like? / أي وضع تود استخدامه", mode_options)
 
-    # Right side: Only show a "Log Out" button when the user is logged in
-    with col2:
+        # Dynamically load pages from the "Pages" folder
+        st.header("Pages / الصفحات")
+        pages_folder = "Pages"
+        if os.path.exists(pages_folder):
+            page_files = [f for f in os.listdir(pages_folder) if f.endswith('.py')]
+            page_names = [os.path.splitext(f)[0] for f in page_files]  # Remove the .py extension
+            st.selectbox("Select a page / اختر صفحة", page_names)
+
+        # Log Out button at the bottom of the sidebar
+        st.markdown("<br><br><br><br>", unsafe_allow_html=True)
         if st.session_state.user["connected"]:
-            if st.button("Log Out / تسجيل الخروج", key="logout_button", use_container_width=True):
+            if st.button("Log Out / تسجيل الخروج", key="logout_button"):
                 st.session_state.user = {
                     "connected": False,
                     "username": None,
@@ -44,45 +55,56 @@ def top_navbar():
                 }
                 st.success("You have been logged out. / تم تسجيل خروجك.")
 
+# -------------------------------
+# Top Navigation Bar without Greeting
+# -------------------------------
+def top_navbar():
+    st.markdown("<h1 style='text-align: left; color: #2e7bcf;'>📚 AjurrumAI | Teaching Chatbot</h1>", unsafe_allow_html=True)
+    st.markdown("### Chat with the greatest Arabic grammar expert! \n تحدث مع أكبر متخصص في قواعد اللغة العربية!")
+
 # Call the top navigation bar
 top_navbar()
 
-# -------------------------------
-# Sidebar with Pages from "Pages" Folder
-# -------------------------------
-if st.session_state.user["connected"]:
-    # Dynamically load pages from the "Pages" folder
-    with st.sidebar:
-        st.header("Pages / الصفحات")
-        
-        # Assuming the "Pages" folder is in the current directory and contains .py files for each page
-        pages_folder = "Pages"
-        if os.path.exists(pages_folder):
-            page_files = [f for f in os.listdir(pages_folder) if f.endswith('.py')]
-            page_names = [os.path.splitext(f)[0] for f in page_files]  # Remove the .py extension
-            selected_page = st.selectbox("Select a page / اختر صفحة", page_names)
-        else:
-            st.warning(f"Folder '{pages_folder}' not found.")
-
-    # Mode selection before the system message
-    st.sidebar.header("Mode / الوضع")
-    mode_options = [
-        "Continue the course / متابعة الدرس",
-        "Review a lesson / مراجعة درس",
-        "Free discussion / مناقشة حرة",
-        "Exam / امتحان"
-    ]
-    selected_mode = st.sidebar.selectbox("Which mode would you like? / أي وضع تود استخدامه", mode_options)
+# Call the sidebar with the log out button
+sidebar_with_logout()
 
 # -------------------------------
-# Main Content Area
+# Scrollable Chatbox
+# -------------------------------
+def scrollable_chatbox():
+    st.markdown("<h3>Chat History / سجل المحادثة</h3>", unsafe_allow_html=True)
+    
+    chat_box_style = """
+    <style>
+    .chat-box {
+        height: 300px;
+        overflow-y: scroll;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        background-color: #f9f9f9;
+    }
+    </style>
+    """
+    
+    st.markdown(chat_box_style, unsafe_allow_html=True)
+    
+    chat_content = ""
+    for entry in st.session_state.chat_history:
+        user_message, bot_response = entry["user_message"], entry["bot_response"]
+        chat_content += f"<b>User:</b> {user_message}<br><b>Bot:</b> {bot_response}<hr>"
+    
+    st.markdown(f"<div class='chat-box'>{chat_content}</div>", unsafe_allow_html=True)
+
+# -------------------------------
+# Main Content Area - Chat Interaction
 # -------------------------------
 if st.session_state.user["connected"]:
     st.markdown("---")
     
-    # Display a system message for the chatbot
-    st.markdown("**System Message:** _Hello, tell us what you want!_")
-    
+    # Display the scrollable chatbox
+    scrollable_chatbox()
+
     # Create a chat-style text input with a modern design
     st.markdown("""
     <style>
@@ -109,33 +131,23 @@ if st.session_state.user["connected"]:
         if user_input.strip() == "":
             st.error("Please enter something. / الرجاء إدخال شيء.")
         else:
-            # Determine interaction mode
-            interaction_mode = selected_mode.split(" / ")[0]  # Extract English part
+            # Get the selected mode
+            interaction_mode = st.sidebar.selectbox("Which mode would you like? / أي وضع تود استخدامه", mode_options)
 
             # Adapt the prompt based on the selected mode and user's age
-            prompt = ""
-            if interaction_mode == "Continue the course":
-                prompt = f"I am a {st.session_state.user['age']} year old student who wants to continue the course. Here is my question: {user_input}"
-            elif interaction_mode == "Review a lesson":
-                prompt = f"I am reviewing a lesson. Here is my question: {user_input}"
-            elif interaction_mode == "Free discussion":
-                prompt = f"I would like to have a free discussion. Here is my topic: {user_input}"
-            elif interaction_mode == "Exam":
-                prompt = f"I am taking an exam. Here is my question: {user_input}"
-            else:
-                prompt = user_input  # Default fallback prompt
-            
+            prompt = f"Mode: {interaction_mode}. I am a {st.session_state.user['age']} year old user. Here is my question: {user_input}"
+
             # Get the model response using the interact module
             try:
                 response = interact.get_model_response(prompt)
                 if response:
+                    st.session_state.chat_history.append({"user_message": user_input, "bot_response": response})
                     st.success("Response / الرد:")
                     st.write(response)
                 else:
                     st.warning("No response received / لم يتم استلام رد")
             except Exception as e:
                 st.error(f"An error occurred: {str(e)} / حدث خطأ: {str(e)}")
-
 else:
     st.markdown("---")
     st.info("Please log in or sign up to start interacting with the chatbot. / الرجاء تسجيل الدخول أو إنشاء حساب لبدء التفاعل مع الروبوت.")
