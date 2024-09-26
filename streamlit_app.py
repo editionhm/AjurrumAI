@@ -5,8 +5,8 @@ import database
 import interact 
 
 # Page configuration
-st.set_page_config(page_title="AjurrumAI 😃", layout="wide")
-st.title("AjurrumAI 😃")
+st.set_page_config(page_title="📚 AjurrumAI ", layout="wide")
+st.title("📚 AjurrumAI | Interactive Teaching Chatbot ")
 st.write("Chat with the greatest Arabic grammar expert! / تحدث مع أكبر متخصص في قواعد اللغة العربية!")
 
 # Sidebar for navigation
