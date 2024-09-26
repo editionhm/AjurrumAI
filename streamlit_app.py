@@ -27,7 +27,7 @@ def top_navbar():
     col1, col2 = st.columns([3, 1])
     with col1:
         st.markdown("<h1 style='text-align: left; color: #2e7bcf;'>📚 AjurrumAI | Interactive Teaching Chatbot</h1>", unsafe_allow_html=True)
-        st.markdown("### Chat with the greatest Arabic grammar expert! / تحدث مع أكبر متخصص في قواعد اللغة العربية!")
+        st.markdown("### Helo Chat with the greatest Arabic grammar expert! / تحدث مع أكبر متخصص في قواعد اللغة العربية!")
     with col2:
         if st.session_state.user["connected"]:
             with st.expander(f"👤 {st.session_state.user['username']}"):
