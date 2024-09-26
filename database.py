@@ -1,4 +1,3 @@
-# database.py
 
 from pymongo import MongoClient, ASCENDING
 from bson.objectid import ObjectId
