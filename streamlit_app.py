@@ -2,6 +2,7 @@ import streamlit as st
 import os
 import database  # Ensure this module handles MongoDB interactions
 import interact   # Ensure this module handles LLM interactions
+from datetime import datetime
 
 # -------------------------------
 # Page Configuration
@@ -18,8 +19,14 @@ if 'user' not in st.session_state:
         "age": None
     }
 
-if 'chat_history' not in st.session_state:
-    st.session_state.chat_history = []
+if 'current_conversation' not in st.session_state:
+    st.session_state.current_conversation = []
+
+if 'conversation_list' not in st.session_state:
+    st.session_state.conversation_list = []
+
+if 'selected_conversation' not in st.session_state:
+    st.session_state.selected_conversation = None
 
 # -------------------------------
 # Sidebar with Logout Button and Pages
@@ -69,9 +76,31 @@ top_navbar()
 sidebar_with_logout()
 
 # -------------------------------
-# Scrollable Chatbox
+# Function to Save Chat History
 # -------------------------------
-def scrollable_chatbox():
+def save_chat_history():
+    # Save the current conversation to the database
+    if st.session_state.user["connected"] and st.session_state.current_conversation:
+        conversation_id = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        database.save_conversation(
+            username=st.session_state.user['username'],
+            conversation_id=conversation_id,
+            conversation=st.session_state.current_conversation
+        )
+        st.session_state.current_conversation = []
+        load_conversation_list()  # Reload the conversation list after saving
+
+# -------------------------------
+# Load Conversation List for the User
+# -------------------------------
+def load_conversation_list():
+    if st.session_state.user["connected"]:
+        st.session_state.conversation_list = database.get_user_conversations(st.session_state.user['username'])
+
+# -------------------------------
+# Chatbox with Chat History Retrieval
+# -------------------------------
+def display_chat_history():
     st.markdown("<h3>Chat History / سجل المحادثة</h3>", unsafe_allow_html=True)
     
     chat_box_style = """
@@ -90,11 +119,36 @@ def scrollable_chatbox():
     st.markdown(chat_box_style, unsafe_allow_html=True)
     
     chat_content = ""
-    for entry in st.session_state.chat_history:
-        user_message, bot_response = entry["user_message"], entry["bot_response"]
-        chat_content += f"<b>User:</b> {user_message}<br><b>Bot:</b> {bot_response}<hr>"
+    if st.session_state.selected_conversation:
+        for entry in st.session_state.selected_conversation:
+            user_message, bot_response = entry["user_message"], entry["bot_response"]
+            chat_content += f"<b>User:</b> {user_message}<br><b>Bot:</b> {bot_response}<hr>"
     
     st.markdown(f"<div class='chat-box'>{chat_content}</div>", unsafe_allow_html=True)
+
+# -------------------------------
+# Right Sidebar: Conversation History and New Chat
+# -------------------------------
+def conversation_sidebar():
+    with st.sidebar:
+        if st.session_state.user["connected"]:
+            st.header("Conversations / المحادثات")
+            if st.session_state.conversation_list:
+                conversation_ids = [conv['conversation_id'] for conv in st.session_state.conversation_list]
+                selected_conv_id = st.selectbox("Select a conversation / اختر محادثة", conversation_ids, key='conv_selector')
+                
+                if selected_conv_id:
+                    selected_conversation = next(conv for conv in st.session_state.conversation_list if conv['conversation_id'] == selected_conv_id)
+                    st.session_state.selected_conversation = selected_conversation["conversation"]
+                    st.experimental_rerun()
+            
+            # Start new conversation
+            if st.button("Start New Conversation / ابدأ محادثة جديدة"):
+                st.session_state.current_conversation = []
+                st.session_state.selected_conversation = None
+
+# Call the conversation sidebar
+conversation_sidebar()
 
 # -------------------------------
 # Main Content Area - Chat Interaction
@@ -102,8 +156,8 @@ def scrollable_chatbox():
 if st.session_state.user["connected"]:
     st.markdown("---")
     
-    # Display the scrollable chatbox
-    scrollable_chatbox()
+    # Display the selected chat history if available
+    display_chat_history()
 
     # Create a chat-style text input with a modern design
     st.markdown("""
@@ -141,13 +195,18 @@ if st.session_state.user["connected"]:
             try:
                 response = interact.get_model_response(prompt)
                 if response:
-                    st.session_state.chat_history.append({"user_message": user_input, "bot_response": response})
+                    st.session_state.current_conversation.append({"user_message": user_input, "bot_response": response})
                     st.success("Response / الرد:")
                     st.write(response)
                 else:
                     st.warning("No response received / لم يتم استلام رد")
             except Exception as e:
                 st.error(f"An error occurred: {str(e)} / حدث خطأ: {str(e)}")
+
+    # Save conversation button
+    if st.button("Save Conversation / حفظ المحادثة"):
+        save_chat_history()
+
 else:
     st.markdown("---")
     st.info("Please log in or sign up to start interacting with the chatbot. / الرجاء تسجيل الدخول أو إنشاء حساب لبدء التفاعل مع الروبوت.")
