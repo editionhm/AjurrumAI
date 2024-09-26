@@ -42,7 +42,7 @@ def top_navbar():
     with col1:
         # Show the greeting message above the main title
         if st.session_state.user["connected"]:
-            st.markdown(f"<h2>Hello, {st.session_state.user['username']}! / مرحبًا، {st.session_state.user['username']}!</h2>", unsafe_allow_html=True)
+            st.markdown(f"<h2>Hello, {st.session_state.user['username']}! | مرحبًا، {st.session_state.user['username']}!</h2>", unsafe_allow_html=True)
 
         # Application title and description
         st.markdown("<h1 style='text-align: left; color: #2e7bcf;'>📚 AjurrumAI | Teaching Chatbot</h1>", unsafe_allow_html=True)
@@ -50,20 +50,20 @@ def top_navbar():
 
         # Mode selection when user is connected
         if st.session_state.user["connected"]:
-            st.markdown("#### Mode / الوضع")
+            st.markdown("#### Mode | الوضع")
             mode_options = [
-                "Continue the course / متابعة الدرس",
-                "Review a lesson / مراجعة درس",
-                "Free discussion / مناقشة حرة",
-                "Exam / امتحان"
+                "Continue the course | متابعة الدرس",
+                "Review a lesson | مراجعة درس",
+                "Free discussion | مناقشة حرة",
+                "Exam | امتحان"
             ]
-            selected_mode = st.selectbox("Which mode would you like? / أي وضع تود استخدامه", mode_options)
+            selected_mode = st.selectbox("Which mode would you like? | أي وضع تود استخدامه", mode_options)
             st.session_state.selected_mode = selected_mode  # Store in session state for later use
 
     # Right side: Only show a "Log Out" button when the user is logged in
     with col2:
         if st.session_state.user["connected"]:
-            if st.button("Log Out / تسجيل الخروج", key="logout_button", use_container_width=True):
+            if st.button("Log Out | تسجيل الخروج", key="logout_button", use_container_width=True):
                 st.session_state.user = {
                     "connected": False,
                     "username": None,
