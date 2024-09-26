@@ -1,7 +1,7 @@
 import streamlit as st
 import os
 import database  # Ensure this module handles MongoDB interactions
-import interact   # Ensure this module handles LLM interactions
+import interact   # Ensure this module handles LLM interactions (non-OpenAI)
 
 # -------------------------------
 # Page Configuration
@@ -20,18 +20,12 @@ if 'user' not in st.session_state:
 
 if 'conversations' not in st.session_state:
     st.session_state.conversations = {}
-    # Structure: {conversation_id: conversation_name}
-    # TODO: Load user's conversations from MongoDB
-    # st.session_state.conversations = database.get_user_conversations(st.session_state.user['username'])
 
 if 'current_conversation' not in st.session_state:
     st.session_state.current_conversation = None
 
 if 'conversation_history' not in st.session_state:
     st.session_state.conversation_history = {}
-    # Structure: {conversation_id: [message1, message2, ...]}
-    # TODO: Load conversation histories from MongoDB
-    # st.session_state.conversation_history = database.get_conversation_histories(st.session_state.user['username'])
 
 if 'selected_mode' not in st.session_state:
     st.session_state.selected_mode = "Free discussion / مناقشة حرة"
@@ -43,15 +37,12 @@ def top_navbar():
     col1, col2 = st.columns([3, 1])
 
     with col1:
-        # Show the greeting message above the main title
         if st.session_state.user["connected"]:
             st.markdown(f"<h2>Hello, {st.session_state.user['username']}! / مرحبًا، {st.session_state.user['username']}!</h2>", unsafe_allow_html=True)
 
-        # Application title and description
         st.markdown("<h1 style='text-align: left; color: #2e7bcf;'>📚 AjurrumAI | Teaching Chatbot</h1>", unsafe_allow_html=True)
         st.markdown("### Chat with the greatest Arabic grammar expert! \n تحدث مع أكبر متخصص في قواعد اللغة العربية!")
 
-        # Mode selection when user is connected
         if st.session_state.user["connected"]:
             st.markdown("#### Mode / الوضع")
             mode_options = [
@@ -61,11 +52,8 @@ def top_navbar():
                 "Exam / امتحان"
             ]
             selected_mode = st.selectbox("Which mode would you like? / أي وضع تود استخدامه", mode_options, key='mode_select')
-            st.session_state.selected_mode = selected_mode  # Store in session state for later use
+            st.session_state.selected_mode = selected_mode
 
-    # Removed the Log Out button from here
-
-# Call the top navigation bar
 top_navbar()
 
 # -------------------------------
@@ -79,7 +67,6 @@ with st.sidebar:
             conversation_names = list(st.session_state.conversations.values())
             selected_conversation = st.selectbox(
                 "Select a conversation / اختر محادثة", conversation_names, key='conversation_select')
-            # Set the current conversation based on selection
             for conv_id, conv_name in st.session_state.conversations.items():
                 if conv_name == selected_conversation:
                     st.session_state.current_conversation = conv_id
@@ -87,19 +74,13 @@ with st.sidebar:
         else:
             st.info("No conversations yet. / لا توجد محادثات بعد.")
 
-        # Option to start a new conversation
         if st.button("Start a new conversation / بدء محادثة جديدة", key='new_conversation_button'):
-            # Generate a new conversation ID
             conv_id = f"conv_{len(st.session_state.conversations) + 1}"
             conv_name = f"Conversation {len(st.session_state.conversations) + 1}"
             st.session_state.conversations[conv_id] = conv_name
             st.session_state.current_conversation = conv_id
-            # Initialize empty conversation history
             st.session_state.conversation_history[conv_id] = []
-            # TODO: Save new conversation to MongoDB
-            # database.create_new_conversation(st.session_state.user['username'], conv_id, conv_name)
 
-        # Allow user to rename conversations
         st.markdown("---")
         st.subheader("Manage Conversations / إدارة المحادثات")
         if st.session_state.conversations:
@@ -108,19 +89,13 @@ with st.sidebar:
                                           key='rename_select')
             new_name = st.text_input("New name / اسم جديد", key='new_conv_name')
             if st.button("Rename / إعادة تسمية", key='rename_button'):
-                # Find the conversation ID
                 for conv_id, conv_name in st.session_state.conversations.items():
                     if conv_name == conv_to_rename:
                         st.session_state.conversations[conv_id] = new_name
-                        # Update selection if it's the current conversation
                         if st.session_state.current_conversation == conv_id:
                             st.session_state.current_conversation = conv_id
                         st.success(f"Conversation renamed to {new_name} / تم إعادة تسمية المحادثة إلى {new_name}")
-                        # TODO: Update conversation name in MongoDB
-                        # database.rename_conversation(st.session_state.user['username'], conv_id, new_name)
-                        break
 
-        # Log Out button at the bottom of the sidebar
         st.markdown("---")
         if st.button("Log Out / تسجيل الخروج", key="logout_button"):
             st.session_state.user = {
@@ -134,29 +109,16 @@ with st.sidebar:
             st.success("You have been logged out. / تم تسجيل خروجك.")
     else:
         st.header("Log In / تسجيل الدخول")
-        # Create a login form in the sidebar
         username = st.text_input("Username / اسم المستخدم", key="login_username")
         password = st.text_input("Password / كلمة المرور", type="password", key="login_password")
         if st.button("Log In / تسجيل الدخول", key="login_button"):
-            # For now, just set connected to True
             if username and password:
                 st.session_state.user = {
                     "connected": True,
                     "username": username,
-                    "age": 20  # Just an example
+                    "age": 20
                 }
                 st.success("Logged in successfully! / تم تسجيل الدخول بنجاح!")
-                # TODO: Authenticate user using MongoDB
-                # user = database.authenticate_user(username, password)
-                # if user:
-                #     st.session_state.user = {
-                #         "connected": True,
-                #         "username": user['username'],
-                #         "age": user['age']
-                #     }
-                #     st.success("Logged in successfully! / تم تسجيل الدخول بنجاح!")
-                # else:
-                #     st.error("Invalid credentials. / بيانات اعتماد غير صالحة.")
             else:
                 st.error("Please enter both username and password. / الرجاء إدخال اسم المستخدم وكلمة المرور.")
 
@@ -166,7 +128,6 @@ with st.sidebar:
 if st.session_state.user["connected"]:
     st.markdown("---")
 
-    # Display the conversation history
     conv_id = st.session_state.current_conversation
     if conv_id and conv_id in st.session_state.conversation_history:
         st.markdown("### Conversation History / تاريخ المحادثة")
@@ -177,10 +138,8 @@ if st.session_state.user["connected"]:
     else:
         st.info("No conversation selected or no messages yet. / لم يتم اختيار محادثة أو لا توجد رسائل بعد.")
 
-    # Display a system message for the chatbot
     st.markdown("**System Message:** _Hello, tell us what you want!_")
 
-    # Create a chat-style text input with a modern design
     st.markdown("""
     <style>
         .chat-input {
@@ -198,7 +157,6 @@ if st.session_state.user["connected"]:
     </style>
     """, unsafe_allow_html=True)
 
-    # Use a form to allow submission on Enter key press
     with st.form(key='chat_form', clear_on_submit=True):
         user_input = st.text_area(
             "Write your message here: / اكتب رسالتك هنا",
@@ -208,18 +166,15 @@ if st.session_state.user["connected"]:
             label_visibility="collapsed",
             help="Chat with the AI in real-time"
         )
-        # Submit button aligned to the right
         submit_button = st.form_submit_button("Submit / إرسال")
 
     if submit_button:
         if user_input.strip() == "":
             st.error("Please enter something. / الرجاء إدخال شيء.")
         else:
-            # Determine interaction mode
             selected_mode = st.session_state.get('selected_mode', "Free discussion / مناقشة حرة")
-            interaction_mode = selected_mode.split(" / ")[0]  # Extract English part
+            interaction_mode = selected_mode.split(" / ")[0]
 
-            # Adapt the prompt based on the selected mode and user's age
             prompt = ""
             if interaction_mode == "Continue the course":
                 prompt = f"I am a {st.session_state.user['age']} year old student who wants to continue the course. Here is my question: {user_input}"
@@ -230,16 +185,14 @@ if st.session_state.user["connected"]:
             elif interaction_mode == "Exam":
                 prompt = f"I am taking an exam. Here is my question: {user_input}"
             else:
-                prompt = user_input  # Default fallback prompt
+                prompt = user_input
 
-            # Get the model response using the generate_llm function
             try:
-                response = interact.generate_llm(prompt)
+                response = interact.generate_llm(prompt)  # Use custom model or Hugging Face API
                 if response:
                     st.success("Response / الرد:")
                     st.write(response)
 
-                    # Save the message and response to the conversation history
                     conv_id = st.session_state.current_conversation
                     if conv_id:
                         if conv_id not in st.session_state.conversation_history:
@@ -248,10 +201,6 @@ if st.session_state.user["connected"]:
                             'user_input': user_input,
                             'response': response
                         })
-                        # TODO: Save updated conversation history to MongoDB
-                        # database.save_conversation(st.session_state.user['username'], conv_id, st.session_state.conversation_history[conv_id])
-                    else:
-                        st.warning("No conversation selected. / لم يتم اختيار محادثة.")
                 else:
                     st.warning("No response received / لم يتم استلام رد")
             except Exception as e:
@@ -260,11 +209,3 @@ if st.session_state.user["connected"]:
 else:
     st.markdown("---")
     st.markdown("<h2 style='text-align: center;'>Please log in or sign up to start interacting with the chatbot. / الرجاء تسجيل الدخول أو إنشاء حساب لبدء التفاعل مع الروبوت.</h2>", unsafe_allow_html=True)
-    # Optionally, you can add more content here for users who are not logged in
-
-# -------------------------------
-# Database and Interaction Modules
-# -------------------------------
-# Note: Ensure that the `database` and `interact` modules are properly implemented.
-# The `database` module should handle user registration, login, and retrieval.
-# The `interact` module should handle interactions with the LLM/API.
