@@ -46,21 +46,11 @@ if not st.session_state.user["connected"]:
     st.markdown("### تحدث مع أكبر متخصص في قواعد اللغة العربية!")
 
 
-def top_navbar():
+""" def top_navbar():
     col1, col2 = st.columns([1, 3])
 
-    with col1:
-        if st.session_state.user["connected"]:
-            st.markdown("#### Mode | الوضع")
-            mode_options = [
-                "Continue the course | متابعة الدرس",
-                "Review a lesson | مراجعة درس",
-                "Free discussion | مناقشة حرة"
-            ]
-            selected_mode = st.selectbox("Which mode would you like ? | أي وضع تود استخدامه", mode_options, key='mode_select')
-            st.session_state.selected_mode = selected_mode
-        
-top_navbar()
+
+top_navbar()"""
 
 # -------------------------------
 # Sidebar with Login or Conversations and Log Out
@@ -70,7 +60,20 @@ def clear_chat_history():
 
 with st.sidebar:
     if st.session_state.user["connected"]:
+        
+        st.markdown("#### Mode | الوضع")
+        mode_options = [
+                "Continue the course | متابعة الدرس",
+                "Review a lesson | مراجعة درس",
+                "Free discussion | مناقشة حرة"
+            ]
+        selected_mode = st.selectbox("Which mode would you like ? | أي وضع تود استخدامه", mode_options, key='mode_select')
+        st.session_state.selected_mode = selected_mode
+        
+
         st.sidebar.button('Clear Chat History', on_click=clear_chat_history)
+        
+        
         if st.button("Log Out | تسجيل الخروج", key="logout_button"):
             st.session_state.user = {
                 "connected": False,
@@ -82,8 +85,6 @@ with st.sidebar:
             st.session_state.conversation_history = {}
             st.success("You have been logged out. | تم تسجيل خروجك.")
             st.rerun()
-
-
 
 # -------------------------------
 # If user is not logged in. Left menu bar        
