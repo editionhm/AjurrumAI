@@ -133,7 +133,7 @@ if st.session_state.user["connected"]:
                 placeholder.markdown(full_response)
                         # st.write_stream(stream)
         
-        message = {"role": "assistant", "content": full_response)
+        message = {"role": "assistant", "content": full_response}
         st.session_state.messages.append(message)
     
 else:
