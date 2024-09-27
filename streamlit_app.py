@@ -65,6 +65,8 @@ top_navbar()
 # -------------------------------
 # Sidebar with Login or Conversations and Log Out
 # -------------------------------
+def clear_chat_history():
+    st.session_state.messages = [{"role": "assistant", "content": "What do you want to study? | ماذا تريد أن تدرس؟"}]
 
 with st.sidebar:
     if st.session_state.user["connected"]:
@@ -107,8 +109,6 @@ with st.sidebar:
 # -------------------------------
 # Main Content Area
 # -------------------------------
-def clear_chat_history():
-    st.session_state.messages = [{"role": "assistant", "content": "What do you want to study? | ماذا تريد أن تدرس؟"}]
 
 if st.session_state.user["connected"]:
     st.markdown("---")
