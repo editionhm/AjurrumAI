@@ -79,7 +79,7 @@ with st.sidebar:
             st.session_state.current_conversation = None
             st.session_state.conversation_history = {}
             st.success("You have been logged out. | تم تسجيل خروجك.")
-            st.experimental_rerun()
+            st.rerun()
 
 
 
@@ -100,7 +100,7 @@ with st.sidebar:
                     "age": age
                 }
                 st.success("Logged in successfully ! \n تم تسجيل الدخول بنجاح!")
-                st.experimental_rerun()
+                st.rerun()
             else:
                 st.error("Please enter both username and password. | الرجاء إدخال اسم المستخدم وكلمة المرور.")
 
