@@ -1,9 +1,10 @@
 import requests
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 
-url = st.secrets["URL "] 
+url = st.secrets["URL"] 
 token_iam = st.secrets["TOKEN"]
 projet_id = st.secrets["PROJECT_ID"]
+
 def generate_llm(prompt):
     """
     Function to generate responses from the LLM
