@@ -1,13 +1,14 @@
 import requests
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 
-url = "https://eu-de.ml.cloud.ibm.com/ml/v1/text/generation?version=2023-05-29"
-
+url = st.secrets["URL "] 
+token_iam = st.secrets["TOKEN"]
+projet_id = st.secrets["PROJECT_ID"]
 def generate_llm(prompt):
     """
     Function to generate responses from the LLM
     """
-    authenticator = IAMAuthenticator('GjztbmXZwtS4jEzjvrL8J9JuS8pPi-ulDQ2JhzPrtZst')
+    authenticator = IAMAuthenticator(token_iam)
     token = authenticator.token_manager.get_token()
     body = {
         "input": f"""[INST] {prompt} [/INST]""",
@@ -18,7 +19,7 @@ def generate_llm(prompt):
             "repetition_penalty": 1
         },
         "model_id": "sdaia/allam-1-13b-instruct",
-        "project_id": "cb0d224c-3a53-4fec-ab52-a5f3dd088ba2"
+        "project_id": project_id
     }
 
     headers = {
