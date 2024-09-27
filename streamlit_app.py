@@ -141,7 +141,7 @@ if st.session_state.user["connected"]:
                     full_response += item
                     placeholder.markdown(full_response)
                 placeholder.markdown(full_response)
-                st.write_stream(full_response)
+                #st.write_stream(full_response)
         
         message = {"role": "assistant", "content": full_response}
         # Add assistant reponse in chat history
