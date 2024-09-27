@@ -108,10 +108,10 @@ with st.sidebar:
             st.session_state.conversation_history = {}
             st.success("You have been logged out. | تم تسجيل خروجك.")
     else:
-        st.header("Log In / تسجيل الدخول")
+        st.header("Log In | تسجيل الدخول")
         username = st.text_input("Username | اسم المستخدم", key="login_username")
         password = st.text_input("Password | كلمة المرور", type="password", key="login_password")
-        if st.button("Log In / تسجيل الدخول", key="login_button"):
+        if st.button("Log In | تسجيل الدخول", key="login_button"):
             if username and password:
                 st.session_state.user = {
                     "connected": True,
