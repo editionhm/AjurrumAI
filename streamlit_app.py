@@ -3,6 +3,7 @@ import database  # Ensure this module handles MongoDB interactions
 import interact   # Ensure this module handles LLM interactions (non-OpenAI)
 
 age = 20 ## a modifier pr reucp dans la database
+
 url = st.secrets["URL"] 
 token_iam = st.secrets["TOKEN"]
 projet_id = st.secrets["PROJECT_ID"]
@@ -45,9 +46,8 @@ if not st.session_state.user["connected"]:
     st.markdown("### تحدث مع أكبر متخصص في قواعد اللغة العربية!")
 
 
-
 def top_navbar():
-    col1, col2 = st.columns([3, 1])
+    col1, col2 = st.columns([1, 3])
 
     with col1:
         if st.session_state.user["connected"]:
@@ -59,8 +59,6 @@ def top_navbar():
             ]
             selected_mode = st.selectbox("Which mode would you like ? | أي وضع تود استخدامه", mode_options, key='mode_select')
             st.session_state.selected_mode = selected_mode
-    with col2:
-        st.markdown("#### Col2 Test")
         
 top_navbar()
 
@@ -70,6 +68,7 @@ top_navbar()
 
 with st.sidebar:
     if st.session_state.user["connected"]:
+        st.sidebar.button('Clear Chat History', on_click=clear_chat_history)
         if st.button("Log Out | تسجيل الخروج", key="logout_button"):
             st.session_state.user = {
                 "connected": False,
@@ -80,6 +79,9 @@ with st.sidebar:
             st.session_state.current_conversation = None
             st.session_state.conversation_history = {}
             st.success("You have been logged out. | تم تسجيل خروجك.")
+            st.experimental_rerun()
+
+
 
 # -------------------------------
 # If user is not logged in. Left menu bar        
@@ -98,12 +100,16 @@ with st.sidebar:
                     "age": age
                 }
                 st.success("Logged in successfully ! \n تم تسجيل الدخول بنجاح!")
+                st.experimental_rerun()
             else:
                 st.error("Please enter both username and password. | الرجاء إدخال اسم المستخدم وكلمة المرور.")
 
 # -------------------------------
 # Main Content Area
 # -------------------------------
+def clear_chat_history():
+    st.session_state.messages = [{"role": "assistant", "content": "What do you want to study? | ماذا تريد أن تدرس؟"}]
+
 if st.session_state.user["connected"]:
     st.markdown("---")
 
@@ -116,13 +122,8 @@ if st.session_state.user["connected"]:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
 
-    def clear_chat_history():
-        st.session_state.messages = [{"role": "assistant", "content": "How may I assist you today?"}]
-    st.sidebar.button('Clear Chat History', on_click=clear_chat_history)
-
     # User-provided prompt
-    
-    if prompt := st.chat_input("What is up?"):
+    if prompt := st.chat_input("Write your text here | اكتب نصك هنا"):
         st.session_state.messages.append({"role": "user", "content": prompt})
         with st.chat_message("user"):
             st.write(prompt)
