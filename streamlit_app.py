@@ -7,8 +7,10 @@ import interact   # Ensure this module handles LLM interactions (non-OpenAI)
 # -------------------------------
 st.set_page_config(page_title="📚 AjurrumAI", layout="wide")
 
-st.markdown("<h1 style='text-align: left; color: #2e7bcf;'>📚 AjurrumAI | Teaching Chatbot</h1>", unsafe_allow_html=True)
-st.markdown("### Chat with the greatest Arabic grammar expert! \n تحدث مع أكبر متخصص في قواعد اللغة العربية!")
+st.markdown("<h1 style='text-align: left; color: #2e7bcf;'>📚 AjurrumAI>", unsafe_allow_html=True)
+st.markdown("### Chat with the greatest Arabic Grammar expert!")
+st.markdown("### تحدث مع أكبر متخصص في قواعد اللغة العربية!")
+
 # -------------------------------
 # Initialize Session State
 # -------------------------------
@@ -40,8 +42,6 @@ def top_navbar():
     with col1:
         if st.session_state.user["connected"]:
             st.markdown(f"<h2>Hello, {st.session_state.user['username']}! | مرحبًا، {st.session_state.user['username']}!</h2>", unsafe_allow_html=True)
-
-
 
         if st.session_state.user["connected"]:
             st.markdown("#### Mode | الوضع")
@@ -108,9 +108,12 @@ with st.sidebar:
             st.session_state.conversation_history = {}
             st.success("You have been logged out. | تم تسجيل خروجك.")
     else:
-        st.header("Log In | تسجيل الدخول")
+        #st.header("Log In | تسجيل الدخول")
+        st.markdown("<h3 style='text-align: center;'>Log In | تسجيل الدخول.</h3>", unsafe_allow_html=True)
+
         username = st.text_input("Username | اسم المستخدم", key="login_username")
         password = st.text_input("Password | كلمة المرور", type="password", key="login_password")
+        
         if st.button("Log In | تسجيل الدخول", key="login_button"):
             if username and password:
                 st.session_state.user = {
