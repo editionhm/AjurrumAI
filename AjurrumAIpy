@@ -11,7 +11,7 @@ projet_id = st.secrets["PROJECT_ID"]
 # -------------------------------
 # Page Configuration
 # -------------------------------
-st.set_page_config(page_title="📚 AjurrumAI", layout="wide")
+st.set_page_config(page_title="AjurrumAI", layout="wide", page_icon='📚')
 
 st.markdown("<h1 style='text-align: left; color: #2e7bcf;'>📚 AjurrumAI", unsafe_allow_html=True)
 
@@ -38,19 +38,13 @@ if 'selected_mode' not in st.session_state:
     st.session_state.selected_mode = "Free discussion / مناقشة حرة"
 
 # -------------------------------
-# Top Navigation Bar with Greeting
+# Top Navigation Bar with Greeting= """ def top_navbar():   col1, col2 = st.columns([1, 3]) top_navbar()"""
 # -------------------------------
 
 if not st.session_state.user["connected"]: 
     st.markdown("### Chat with the greatest Arabic Grammar expert!")
     st.markdown("### تحدث مع أكبر متخصص في قواعد اللغة العربية!")
 
-
-""" def top_navbar():
-    col1, col2 = st.columns([1, 3])
-
-
-top_navbar()"""
 
 # -------------------------------
 # Sidebar with Login or Conversations and Log Out
