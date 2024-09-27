@@ -1,5 +1,4 @@
 import streamlit as st
-import os
 import database  # Ensure this module handles MongoDB interactions
 import interact   # Ensure this module handles LLM interactions (non-OpenAI)
 
@@ -188,7 +187,8 @@ if st.session_state.user["connected"]:
                 prompt = user_input
 
             try:
-                response = interact.generate_llm(prompt)  # Use custom model or Hugging Face API
+                # Using your custom LLM interaction function
+                response = interact.generate_llm(prompt)
                 if response:
                     st.success("Response / الرد:")
                     st.write(response)
