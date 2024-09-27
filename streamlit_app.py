@@ -124,12 +124,14 @@ if st.session_state.user["connected"]:
 
     # User-provided prompt
     if prompt := st.chat_input("Write your text here | اكتب نصك هنا"):
+        # Add user message to chat history
         st.session_state.messages.append({"role": "user", "content": prompt})
+        # Display user message in chat message container
         with st.chat_message("user"):
             st.write(prompt)
 
     # Generate a new response if last message is not from assistant
-    if st.session_state.messages[-1]["role"] != "assistant":
+    #if st.session_state.messages[-1]["role"] != "assistant":
         with st.chat_message("assistant"):
             with st.spinner("Thinking..."):
                 response = interact.generate_llm(prompt)
@@ -139,9 +141,10 @@ if st.session_state.user["connected"]:
                     full_response += item
                     placeholder.markdown(full_response)
                 placeholder.markdown(full_response)
-                        # st.write_stream(stream)
+                st.write_stream(full_response)
         
         message = {"role": "assistant", "content": full_response}
+        # Add assistant reponse in chat history
         st.session_state.messages.append(message)
     
 else:
