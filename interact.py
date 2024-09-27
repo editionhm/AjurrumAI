@@ -1,10 +1,5 @@
 import requests
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
-import streamlit as st 
-
-url = st.secrets["URL"] 
-token_iam = st.secrets["TOKEN"]
-projet_id = st.secrets["PROJECT_ID"]
 
 def generate_llm(prompt):
     """
