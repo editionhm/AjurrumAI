@@ -7,6 +7,8 @@ import interact   # Ensure this module handles LLM interactions (non-OpenAI)
 # -------------------------------
 st.set_page_config(page_title="📚 AjurrumAI", layout="wide")
 
+st.markdown("<h1 style='text-align: left; color: #2e7bcf;'>📚 AjurrumAI | Teaching Chatbot</h1>", unsafe_allow_html=True)
+st.markdown("### Chat with the greatest Arabic grammar expert! \n تحدث مع أكبر متخصص في قواعد اللغة العربية!")
 # -------------------------------
 # Initialize Session State
 # -------------------------------
@@ -39,8 +41,7 @@ def top_navbar():
         if st.session_state.user["connected"]:
             st.markdown(f"<h2>Hello, {st.session_state.user['username']}! | مرحبًا، {st.session_state.user['username']}!</h2>", unsafe_allow_html=True)
 
-        st.markdown("<h1 style='text-align: left; color: #2e7bcf;'>📚 AjurrumAI | Teaching Chatbot</h1>", unsafe_allow_html=True)
-        st.markdown("### Chat with the greatest Arabic grammar expert! \n تحدث مع أكبر متخصص في قواعد اللغة العربية!")
+
 
         if st.session_state.user["connected"]:
             st.markdown("#### Mode | الوضع")
@@ -208,4 +209,6 @@ if st.session_state.user["connected"]:
 
 else:
     st.markdown("---")
-    st.markdown("<h2 style='text-align: center;'>Please log in or sign up to start interacting with the chatbot. \n الرجاء تسجيل الدخول أو إنشاء حساب لبدء التفاعل مع الروبوت.</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align: center;'>Please log in or sign up to start interacting with the chatbot.</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align: center;'>الرجاء تسجيل الدخول أو إنشاء حساب لبدء التفاعل مع الروبوت.</h2>", unsafe_allow_html=True)
+
