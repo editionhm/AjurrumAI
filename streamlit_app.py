@@ -134,7 +134,7 @@ if st.session_state.user["connected"]:
                         # st.write_stream(stream)
         
         message = {"role": "assistant", "content": full_response)
-        st.session_state.messages.append({"role": "assistant", "content": response})
+        st.session_state.messages.append(message)
     
 else:
     st.markdown("---")
