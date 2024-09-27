@@ -3,6 +3,9 @@ import database  # Ensure this module handles MongoDB interactions
 import interact   # Ensure this module handles LLM interactions (non-OpenAI)
 
 age = 20 ## a modifier pr reucp dans la database
+url = st.secrets["URL"] 
+token_iam = st.secrets["TOKEN"]
+projet_id = st.secrets["PROJECT_ID"]
 
 # -------------------------------
 # Page Configuration
