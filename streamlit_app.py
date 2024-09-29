@@ -1,7 +1,8 @@
 import streamlit as st
-import database  # Ensure this module handles MongoDB interactions
-import interact   # Ensure this module handles LLM interactions (non-OpenAI)
+import database
+import interact
 import iot_module
+
 iot = iot_module.IterationOfThought(max_iterations=5,timeout=45,temperature=0.7)
 
 age = 20 ## a modifier pr reucp dans la database
