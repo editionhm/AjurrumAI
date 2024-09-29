@@ -105,21 +105,53 @@ with st.sidebar:
 # -------------------------------
 # Main Content Area
 # -------------------------------
-st.session_state.messages = [{"role": "assistant", "content": "What do you want to study? | ماذا تريد أن تدرس؟"}]
-chapters_list = interact.extract_chapters('./data/ajurrumiyyah.txt') ## Change file with corresponding ...
+if "messages" not in st.session_state:
+    st.session_state.messages = [{"role": "assistant", "content": "What do you want to study? | ماذا تريد أن تدرس؟"}]
+
+if "selected_chapter" not in st.session_state:
+    st.session_state.selected_chapter = None
+
+chapters_list = interact.extract_chapters('./data/ajurrumiyyah.txt')  # Update file path as needed
 
 if st.session_state.user["connected"]:
     st.markdown("---")
-    
-    # Store LLM generated responses
-    if "messages" not in st.session_state: 
-        st.session_state.messages = []
-        
-    # Display the title and the dropdown menu in both English and Arabic
-    st.title('Chapter Selection Menu | قائمة اختيار الفصول')
+
+    # Dropdown menu for chapter selection
     selected_chapter = st.selectbox('Select a Chapter | اختر فصلاً:', chapters_list)
-    
-    # Display or clear chat messages
+
+    # Check if the selected chapter is different from the previous state
+    if selected_chapter and selected_chapter != st.session_state.selected_chapter:
+        # Update session state with the new selected chapter
+        st.session_state.selected_chapter = selected_chapter
+
+        # Display the message informing the user about their choice
+        with st.chat_message("assistant"):
+            st.markdown(f"You chose to study **{selected_chapter}** !")
+
+        # Generate a new response based on the selected chapter
+        with st.chat_message("assistant"):
+            with st.spinner("Thinking..."):
+                # Prepare the prompt for LLM
+                prompt = f"""You are an expert Arabic Grammar teacher. Elaborate on the following subject in the following chapter: {selected_chapter}. You need to be engaging and understandable. Provide a clear explanation with examples if possible."""
+
+                # Interact with LLM (replace with the proper method for LLM response)
+                response = iot_module.run_iot(iot, prompt)
+
+                # Display LLM response progressively
+                placeholder = st.empty()
+                full_response = ''
+                for item in response:
+                    full_response += item
+                    placeholder.markdown(full_response)
+                placeholder.markdown(full_response)
+
+        # Store the assistant's response in the session state messages
+        st.session_state.messages.append({"role": "assistant", "content": full_response})
+
+        # After the response, prompt the user to ask a question
+        st.markdown("Feel free to ask me any question about what I just explained! | اسألني أي سؤال حول ما شرحته للتو!")
+
+    # Display existing chat history
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
@@ -132,33 +164,7 @@ if st.session_state.user["connected"]:
         with st.chat_message("user"):
             st.write(prompt)
 
-    # Generate a new response if last message is not from assistant
-    # if st.session_state.messages[-1]["role"] != "assistant":
-        if selected_chapter:
-            #Inform the user about their choice
-            with st.chat_message("assistant"):
-                st.markdown(f"You chose to study **{selected_chapter}**. Let me think...!")
-                
-            # Generate a new response based onthe selecter chapter
-            with st.chat_message("assistant"):
-                with st.spinner("Let me deeply think about it ..."):
-    
-                    prompt = f""" You are an expert Arabic Grammar teacher. Elaborate on the following subject in the following chapter : {selected_chapter}. You need to be engaging and understandable. Provide a clear explanation with examples if possible.
-                    """
-                    #response = interact.generate_llm(prompt)
-                    response = iot_module.run_iot(iot, prompt)
-                    placeholder = st.empty()
-                    full_response = ''
-                    for item in response:
-                        full_response += item
-                        placeholder.markdown(full_response)
-                    placeholder.markdown(full_response)
-                    #st.write_stream(full_response)
-            
-            message = {"role": "assistant", "content": full_response}
-            # Add assistant reponse in chat history
-            st.session_state.messages.append(message)
-    
+
 else:
     st.markdown("---")
     st.markdown("<h2 style='text-align: center;'>Please log in or sign up to start interacting with the chatbot.</h2>", unsafe_allow_html=True)
