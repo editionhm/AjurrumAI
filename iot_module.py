@@ -11,7 +11,7 @@ class IterationOfThought:
     """
     Class for performing Iteration of Thought (IoT)
     """
-    def __init__(self, max_iterations: int = 5, timeout: int = 30, temperature: float = 0.5):
+    def __init__(self, max_iterations: int = 3, timeout: int = 30, temperature: float = 0.5):
         self.max_iterations = max_iterations
         self.timeout = timeout
         self.temperature = temperature 
@@ -20,7 +20,7 @@ class IterationOfThought:
         prompt = (
             f"Given the original query: '{query}' and the previous response: '{previous_response}', "
             "generate an instructive and context-specific prompt to refine and improve the answer. "
-            "Ensure that the new prompt encourages deeper reasoning or addresses any gaps in the previous response."
+            "Ensure that the new prompt encourages deeper reasoning or addresses any gaps in the previous response. Always answer in English."
         )
         return interact.generate_llm(prompt)
 
