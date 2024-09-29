@@ -114,12 +114,13 @@ if st.session_state.user["connected"]:
     # Store LLM generated responses
     if "messages" not in st.session_state: 
         st.session_state.messages = []
+        
+    # Display the title and the dropdown menu in both English and Arabic
+    st.title('Chapter Selection Menu | قائمة اختيار الفصول')
+    selected_chapter = st.selectbox('Select a Chapter | اختر فصلاً:', chapters_list)
     
     # Display or clear chat messages
     for message in st.session_state.messages:
-        # Display the title and the dropdown menu in both English and Arabic
-        st.title('Chapter Selection Menu | قائمة اختيار الفصول')
-        selected_chapter = st.selectbox('Select a Chapter | اختر فصلاً:', chapters_list)
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
 
