@@ -128,6 +128,9 @@ if st.session_state.user["connected"]:
     # if st.session_state.messages[-1]["role"] != "assistant":
         with st.chat_message("assistant"):
             with st.spinner("Thinking..."):
+
+                prompt = f""" You are an expert teacher. Elaborate on the following subject in the following text: {prompt}. You need to be engaging and understandable. Provide a clear explanation with examples if possible.
+                """
                 response = interact.generate_llm(prompt)
                 placeholder = st.empty()
                 full_response = ''
