@@ -38,3 +38,14 @@ def generate_llm(prompt):
     data = response.json()
     resultat = data['results'][0]['generated_text']
     return resultat
+
+
+#####
+
+def extract_chapters(file_path):
+    chapters = []
+    with open(file_path, 'r') as file:
+        for line in file:
+            if line.startswith("Chapter"):
+                chapters.append(line.strip())  # Add the chapter line to the list
+    return chapters
