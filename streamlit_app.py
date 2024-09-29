@@ -107,7 +107,7 @@ with st.sidebar:
 
 if st.session_state.user["connected"]:
     st.markdown("---")
-
+    st.session_state.messages.append("TEST")
     # Store LLM generated responses
     if "messages" not in st.session_state: 
         st.session_state.messages = []
@@ -126,7 +126,7 @@ if st.session_state.user["connected"]:
             st.write(prompt)
 
     # Generate a new response if last message is not from assistant
-    #if st.session_state.messages[-1]["role"] != "assistant":
+    # if st.session_state.messages[-1]["role"] != "assistant":
         with st.chat_message("assistant"):
             with st.spinner("Thinking..."):
                 response = interact.generate_llm(prompt)
