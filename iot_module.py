@@ -55,5 +55,5 @@ def timeout_handler(signum, frame):
     raise TimeoutError("Process took too long")
 
 def run_iot(iot: IterationOfThought, query: str) -> str:
-        result = iot.aiot(query)
+    result = iot.aiot(query)
     return result
