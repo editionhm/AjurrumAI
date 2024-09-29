@@ -133,7 +133,7 @@ if st.session_state.user["connected"]:
                 prompt = f""" You are an expert teacher. Elaborate on the following subject in the following text: {prompt}. You need to be engaging and understandable. Provide a clear explanation with examples if possible.
                 """
                 #response = interact.generate_llm(prompt)
-                response = run_iot(iot, prompt)
+                response = iot_module.run_iot(iot, prompt)
                 placeholder = st.empty()
                 full_response = ''
                 for item in response:
