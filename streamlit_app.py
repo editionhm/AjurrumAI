@@ -106,6 +106,14 @@ with st.sidebar:
 # Main Content Area
 # -------------------------------
 st.session_state.messages = [{"role": "assistant", "content": "What do you want to study? | ماذا تريد أن تدرس؟"}]
+chapters_list = interact.extract_chapters('/data/fichier.txt/')
+# Display the title and the dropdown menu in both English and Arabic
+st.title('Chapter Selection Menu | قائمة اختيار الفصول')
+selected_chapter = st.selectbox('Select a Chapter | اختر فصلاً:', chapters_list)
+# Show the selected chapter in both English and Arabic
+st.write(f'You selected: {selected_chapter} | لقد اخترت: {selected_chapter}')
+
+
 if st.session_state.user["connected"]:
     st.markdown("---")
     # Store LLM generated responses
