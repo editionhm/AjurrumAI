@@ -110,13 +110,13 @@ chapters_list = interact.extract_chapters('./data/ajurrumiyyah.txt') ## Change f
 
 if st.session_state.user["connected"]:
     st.markdown("---")
+    
     # Store LLM generated responses
     if "messages" not in st.session_state: 
         st.session_state.messages = []
     
     # Display or clear chat messages
     for message in st.session_state.messages:
-
         # Display the title and the dropdown menu in both English and Arabic
         st.title('Chapter Selection Menu | قائمة اختيار الفصول')
         selected_chapter = st.selectbox('Select a Chapter | اختر فصلاً:', chapters_list)
@@ -133,24 +133,30 @@ if st.session_state.user["connected"]:
 
     # Generate a new response if last message is not from assistant
     # if st.session_state.messages[-1]["role"] != "assistant":
-        with st.chat_message("assistant"):
-            with st.spinner("Thinking..."):
-
-                prompt = f""" You are an expert Arabic Grammar teacher. Elaborate on the following subject in the following chapter : {selected_chapter}. You need to be engaging and understandable. Provide a clear explanation with examples if possible.
-                """
-                #response = interact.generate_llm(prompt)
-                response = iot_module.run_iot(iot, prompt)
-                placeholder = st.empty()
-                full_response = ''
-                for item in response:
-                    full_response += item
+        if selected_chapter:
+            #Inform the user about their choice
+            with st.chat_message("assistant"):
+                st.markdown(f"You chose to study **{selected_chapter}**. Let me think...!")
+                
+            # Generate a new response based onthe selecter chapter
+            with st.chat_message("assistant"):
+                with st.spinner("Let me deeply think about it ..."):
+    
+                    prompt = f""" You are an expert Arabic Grammar teacher. Elaborate on the following subject in the following chapter : {selected_chapter}. You need to be engaging and understandable. Provide a clear explanation with examples if possible.
+                    """
+                    #response = interact.generate_llm(prompt)
+                    response = iot_module.run_iot(iot, prompt)
+                    placeholder = st.empty()
+                    full_response = ''
+                    for item in response:
+                        full_response += item
+                        placeholder.markdown(full_response)
                     placeholder.markdown(full_response)
-                placeholder.markdown(full_response)
-                #st.write_stream(full_response)
-        
-        message = {"role": "assistant", "content": full_response}
-        # Add assistant reponse in chat history
-        st.session_state.messages.append(message)
+                    #st.write_stream(full_response)
+            
+            message = {"role": "assistant", "content": full_response}
+            # Add assistant reponse in chat history
+            st.session_state.messages.append(message)
     
 else:
     st.markdown("---")
