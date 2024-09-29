@@ -106,7 +106,7 @@ with st.sidebar:
 # Main Content Area
 # -------------------------------
 st.session_state.messages = [{"role": "assistant", "content": "What do you want to study? | ماذا تريد أن تدرس؟"}]
-chapters_list = interact.extract_chapters('/data/ajurrumiyyah.txt')
+chapters_list = interact.extract_chapters('./data/ajurrumiyyah.txt')
 # Display the title and the dropdown menu in both English and Arabic
 st.title('Chapter Selection Menu | قائمة اختيار الفصول')
 selected_chapter = st.selectbox('Select a Chapter | اختر فصلاً:', chapters_list)
