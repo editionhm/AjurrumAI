@@ -11,7 +11,7 @@ class IterationOfThought:
     """
     Class for performing Iteration of Thought (IoT)
     """
-    def __init__(self, max_iterations: int = 4, timeout: int = 30, temperature: float = 0.5):
+    def __init__(self, max_iterations: int = 5, timeout: int = 30, temperature: float = 0.5):
         self.max_iterations = max_iterations
         self.timeout = timeout
         self.temperature = temperature 
