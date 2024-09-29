@@ -107,7 +107,7 @@ with st.sidebar:
 
 if st.session_state.user["connected"]:
     st.markdown("---")
-    st.session_state.messages.append({"role": "assistant", "content": "TEST TEST")
+    st.session_state.messages.append({"role": "assistant", "content": "TEST TEST"})
     # Store LLM generated responses
     if "messages" not in st.session_state: 
         st.session_state.messages = []
