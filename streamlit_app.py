@@ -106,11 +106,15 @@ with st.sidebar:
 # Main Content Area
 # -------------------------------
 # Initialize session state for storing the selected chapter and messages
+# Initialize session state for storing the selected chapter, messages, and conversation context
 if "messages" not in st.session_state:
     st.session_state.messages = [{"role": "assistant", "content": "What do you want to study? | ماذا تريد أن تدرس؟"}]
 
 if "selected_chapter" not in st.session_state:
     st.session_state.selected_chapter = None
+
+if "conversation_context" not in st.session_state:
+    st.session_state.conversation_context = ""
 
 chapters_list = interact.extract_chapters('./data/ajurrumiyyah.txt')  # Update file path as needed
 
@@ -127,47 +131,54 @@ if st.session_state.user["connected"]:
     if selected_chapter != "Please select a chapter | اختر فصلاً" and selected_chapter != st.session_state.selected_chapter:
         # Update session state with the new selected chapter
         st.session_state.selected_chapter = selected_chapter
+        st.session_state.conversation_context = f"The user has selected the chapter: {selected_chapter}. This chapter is about {selected_chapter}. You are an expert in Arabic Grammar."
 
         # Display the message informing the user about their choice
-        with st.chat_message("assistant"):
-            st.markdown(f"You chose to study **{selected_chapter}**. Let me think...!")
+        st.session_state.messages.append({"role": "assistant", "content": f"You chose to study **{selected_chapter}**. Let me think...!"})
 
         # Generate a new response based on the selected chapter
-        with st.chat_message("assistant"):
-            with st.spinner("Thinking..."):
-                # Prepare the prompt for LLM
-                prompt = f"""You are an expert Arabic Grammar teacher. Elaborate on the following subject in the following chapter: {selected_chapter}. You need to be engaging and understandable. Provide a clear explanation with examples if possible."""
+        with st.spinner("Thinking..."):
+            # Prepare the prompt for LLM with added context
+            prompt = f"""You are an expert Arabic Grammar teacher. The user has selected the following chapter: {selected_chapter}. Please explain it in a clear and engaging manner, and include examples. Also, stay in the context of this chapter for further discussions."""
+            
+            # Interact with LLM (replace with the proper method for LLM response)
+            response = iot_module.run_iot(iot, prompt)
 
-                # Interact with LLM (replace with the proper method for LLM response)
-                response = iot_module.run_iot(iot, prompt)
+            # Display LLM response progressively
+            full_response = ''
+            for item in response:
+                full_response += item
 
-                # Display LLM response progressively
-                placeholder = st.empty()
-                full_response = ''
-                for item in response:
-                    full_response += item
-                    placeholder.markdown(full_response)
-                placeholder.markdown(full_response)
-
-        # Store the assistant's response in the session state messages
-        st.session_state.messages.append({"role": "assistant", "content": full_response})
-
-        # After the response, prompt the user to ask a question
-        st.markdown("Feel free to ask me any question about what I just explained! | اسألني أي سؤال حول ما شرحته للتو!")
+            # Add the assistant's response to session state to store chat history
+            st.session_state.messages.append({"role": "assistant", "content": full_response})
 
     # Display existing chat history
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
 
-    # User-provided prompt
+    # User-provided prompt (allowing free conversation after the initial response)
     if prompt := st.chat_input("Write your text here | اكتب نصك هنا"):
         # Add user message to chat history
         st.session_state.messages.append({"role": "user", "content": prompt})
-        # Display user message in chat message container
-        with st.chat_message("user"):
-            st.write(prompt)
+        
+        # Prepare the updated prompt with conversation context and user question
+        context = st.session_state.conversation_context
+        user_prompt = f"{context} The user asked: {prompt}"
 
+        # Interact with LLM to continue the conversation based on the context
+        with st.chat_message("assistant"):
+            with st.spinner("Thinking..."):
+                response = iot_module.run_iot(iot, user_prompt)
+
+                # Display LLM response progressively
+                full_response = ''
+                for item in response:
+                    full_response += item
+
+                # Store the assistant's response in the session state to continue chat history
+                st.session_state.messages.append({"role": "assistant", "content": full_response})
+                st.markdown(full_response)
 else:
     st.markdown("---")
     st.markdown("<h2 style='text-align: center;'>Please log in or sign up to start interacting with the chatbot.</h2>", unsafe_allow_html=True)
