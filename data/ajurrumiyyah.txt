@@ -1,0 +1,22 @@
+Chapter 1: The Sentence and its Types | الْكَلَامُ وَأَنْوَاعِهِ
+Chapter 2: Declension and its Types | الْإِعْرَابُ وَأَنْوَاعِهِ
+Chapter 3: Signs of the Nominative Case (Rafʿ) | عَلَامَاتُ الرَّفْعِ
+Chapter 4: Signs of the Accusative Case (Naṣb) | عَلَامَاتُ النَّصْبِ
+Chapter 5: Signs of the Genitive Case (Jarr/Khafḍ) | عَلَامَاتُ الْجَرِّ/الْخَفْضِ
+Chapter 6: Signs of the Apocopate Case (Jazm) | عَلَامَاتُ الْجَزْمِ
+Chapter 7: Variable Words | الْمُعْربَاتُ
+Chapter 8: Verbs and Their Types | الْأَفْعَالُ وَأَنْوَاعِهَا
+Chapter 9: Agents of Naṣb for the Incomplete Verb | نَوَاصِبُ الْمُضَارِعِ
+Chapter 10: Agents of Jazm for the Incomplete Verb | جَوَاوزِمُ الْمُضَارِعِ
+Chapter 11: Types of Nominative Words | مَرْفُوعَاتِ اَلْأَسْمَاءِ
+Chapter 12: The Subject | الْفَاعِلُ
+Chapter 13: The Subject (mubtadā') and the Predicate (khabar) | الْمُبْتَدَأُ وَالْخَبَرُ
+Chapter 14: Abrogators of mubtadā' and khabar | نَوَاسِخُ الْمُبْتَدَأُ وَالْخَبَرُ
+Chapter 15: The Adjective (naʿt) | النعت
+Chapter 16: Coordination | الْعَطْفُ
+Chapter 17: Emphasis and its Rules | التَوْكِيد
+Chapter 18: Apposition and its Rules | الْبَدَلُ
+Chapter 19: Accusative Words, Direct Object, Verbal Noun, and Adverbials | الْمَنْصُوبَاتُ والْمَفْعُولُ بِهِ وَالْمَصْدَرُ وَظَرْفُ الزَّمَانِ وَالْمَكَانِ
+Chapter 20: Complement of State and Specifier | الْحَالُ وَالتَّمْيِيزُ
+Chapter 21: Exception and Negation | الاِسْتِثْنَاءُ وَاللَّا
+Chapter 22: Interjection, Cause Complement, and Genitive Words | النِّدَاءُ وَالْمَفْعُولُ لأَجْلِهِ وَالْمَخْفُوضَاتُ
