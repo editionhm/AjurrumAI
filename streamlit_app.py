@@ -105,6 +105,7 @@ with st.sidebar:
 # -------------------------------
 # Main Content Area
 # -------------------------------
+# Initialize session state for storing the selected chapter and messages
 if "messages" not in st.session_state:
     st.session_state.messages = [{"role": "assistant", "content": "What do you want to study? | ماذا تريد أن تدرس؟"}]
 
@@ -113,20 +114,23 @@ if "selected_chapter" not in st.session_state:
 
 chapters_list = interact.extract_chapters('./data/ajurrumiyyah.txt')  # Update file path as needed
 
+# Add a placeholder option to the chapters list to prevent auto-selection
+chapters_list_with_placeholder = ["Please select a chapter | اختر فصلاً"] + chapters_list
+
 if st.session_state.user["connected"]:
     st.markdown("---")
 
-    # Dropdown menu for chapter selection
-    selected_chapter = st.selectbox('Select a Chapter | اختر فصلاً:', chapters_list)
+    # Dropdown menu for chapter selection, with the placeholder at the top
+    selected_chapter = st.selectbox('Select a Chapter | اختر فصلاً:', chapters_list_with_placeholder)
 
-    # Check if the selected chapter is different from the previous state
-    if selected_chapter and selected_chapter != st.session_state.selected_chapter:
+    # Proceed only if the user has selected a valid chapter (not the placeholder)
+    if selected_chapter != "Please select a chapter | اختر فصلاً" and selected_chapter != st.session_state.selected_chapter:
         # Update session state with the new selected chapter
         st.session_state.selected_chapter = selected_chapter
 
         # Display the message informing the user about their choice
         with st.chat_message("assistant"):
-            st.markdown(f"You chose to study **{selected_chapter}** !")
+            st.markdown(f"You chose to study **{selected_chapter}**. Let me think...!")
 
         # Generate a new response based on the selected chapter
         with st.chat_message("assistant"):
@@ -163,7 +167,6 @@ if st.session_state.user["connected"]:
         # Display user message in chat message container
         with st.chat_message("user"):
             st.write(prompt)
-
 
 else:
     st.markdown("---")
