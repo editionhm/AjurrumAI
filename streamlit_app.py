@@ -1,6 +1,9 @@
 import streamlit as st
 import database  # Ensure this module handles MongoDB interactions
 import interact   # Ensure this module handles LLM interactions (non-OpenAI)
+from iot_module import IterationOfThought, run_iot
+
+iot = IterationOfThought(max_iterations=5,timeout=45,temperature=0.7)
 
 age = 20 ## a modifier pr reucp dans la database
 
@@ -131,7 +134,8 @@ if st.session_state.user["connected"]:
 
                 prompt = f""" You are an expert teacher. Elaborate on the following subject in the following text: {prompt}. You need to be engaging and understandable. Provide a clear explanation with examples if possible.
                 """
-                response = interact.generate_llm(prompt)
+                #response = interact.generate_llm(prompt)
+                response = run_iot(iot, prompt)
                 placeholder = st.empty()
                 full_response = ''
                 for item in response:
