@@ -139,7 +139,7 @@ if st.session_state.user["connected"]:
         # Generate a new response based on the selected chapter
         with st.spinner("Thinking..."):
             # Prepare the prompt for LLM with added context
-            prompt = f"""You are an expert Arabic Grammar teacher. The user has selected the following chapter: {selected_chapter}. Please explain it in a clear and engaging manner, and include examples. Also, stay in the context of this chapter for further discussions."""
+            prompt = f"""You are an expert Arabic Grammar teacher. The user has selected the following chapter: {selected_chapter}. Please explain it in a clear and engaging manner, and include examples. Also, stay in the context of this chapter for further discussions. Never forget that the response has to do with Arabic Grammar explanation."""
             
             # Interact with LLM (replace with the proper method for LLM response)
             response = iot_module.run_iot(iot, prompt)
