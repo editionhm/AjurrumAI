@@ -1,22 +1,66 @@
-Chapter 1: The Sentence and its Types | الْكَلَامُ وَأَنْوَاعِهِ
-Chapter 2: Declension and its Types | الْإِعْرَابُ وَأَنْوَاعِهِ
-Chapter 3: Signs of the Nominative Case (Rafʿ) | عَلَامَاتُ الرَّفْعِ
-Chapter 4: Signs of the Accusative Case (Naṣb) | عَلَامَاتُ النَّصْبِ
-Chapter 5: Signs of the Genitive Case (Jarr/Khafḍ) | عَلَامَاتُ الْجَرِّ/الْخَفْضِ
-Chapter 6: Signs of the Apocopate Case (Jazm) | عَلَامَاتُ الْجَزْمِ
-Chapter 7: Variable Words | الْمُعْربَاتُ
-Chapter 8: Verbs and Their Types | الْأَفْعَالُ وَأَنْوَاعِهَا
-Chapter 9: Agents of Naṣb for the Incomplete Verb | نَوَاصِبُ الْمُضَارِعِ
-Chapter 10: Agents of Jazm for the Incomplete Verb | جَوَاوزِمُ الْمُضَارِعِ
-Chapter 11: Types of Nominative Words | مَرْفُوعَاتِ اَلْأَسْمَاءِ
-Chapter 12: The Subject | الْفَاعِلُ
-Chapter 13: The Subject (mubtadā') and the Predicate (khabar) | الْمُبْتَدَأُ وَالْخَبَرُ
-Chapter 14: Abrogators of mubtadā' and khabar | نَوَاسِخُ الْمُبْتَدَأُ وَالْخَبَرُ
-Chapter 15: The Adjective (naʿt) | النعت
-Chapter 16: Coordination | الْعَطْفُ
-Chapter 17: Emphasis and its Rules | التَوْكِيد
-Chapter 18: Apposition and its Rules | الْبَدَلُ
-Chapter 19: Accusative Words, Direct Object, Verbal Noun, and Adverbials | الْمَنْصُوبَاتُ والْمَفْعُولُ بِهِ وَالْمَصْدَرُ وَظَرْفُ الزَّمَانِ وَالْمَكَانِ
-Chapter 20: Complement of State and Specifier | الْحَالُ وَالتَّمْيِيزُ
-Chapter 21: Exception and Negation | الاِسْتِثْنَاءُ وَاللَّا
-Chapter 22: Interjection, Cause Complement, and Genitive Words | النِّدَاءُ وَالْمَفْعُولُ لأَجْلِهِ وَالْمَخْفُوضَاتُ
+Chapter : Speech and Its Types | الكلام وأنواعه 
+Chapter : Types of Speech | أنواع الكلام
+Chapter : The Signs of the Noun | علامات الاسم
+Chapter : The Signs of the Verb | علامات الفعل 
+Chapter : The Particle | الحرف 
+Chapter : Inflection | باب الإعراب 
+Chapter : The Types of Declension | أنواع الإعراب 
+Chapter : Understanding the Signs of Declension | باب معرفة علامات الإعراب 
+Chapter : The Signs of al-Raf | علامات الرفع
+Chapter : Positions of the Dammah | مواضع الضمة
+Chapter : The Letter Wāw as a Representative of the Dammah | نيابة الواو عن الضمة
+Chapter : The Letter Alif as a Representative of the Dammah | نيابة الألف عن الضمة
+Chapter : The Letter Nūn as a Representative of the Dammah  |نيابة النون عن الضمة 
+Chapter : The Signs of al-Nasb | علامات النصب
+Chapter : The Fatha and Its Utilisation | الفتحة ومواضعها
+Chapter : The Letter Alif as a Representative of the Fathah | نيابة الألف عن الفتحة
+Chapter : The Kasrah as a Representative of the Fathah | نيابة الكسرة عن الفتحة
+Chapter : The Letter Yā' as a Representative of the Fathah | نيابة الياء عن الفتحة
+Chapter : The Removal of the Letter Nūn as a Representative of the Fathah | حذف النون  نيابة عن الفتحة
+Chapter : The Signs of al-Khafḍ | علامات الخفض
+Chapter : The Kasrah and its Utilisation | الكسرة ومواضعها
+Chapter : The Letter Yā' as a Representative of the Kasrah | نيابة الياء عن الكسرة
+Chapter : The Fatha as a Representative of the Kasrah | نيابة الفتحة عن الكسرة
+Chapter : The Two Signs of al-Jazm | علامنا الجزم
+Chapter : Instances of the Sukun | موضع السكون
+Chapter : Instances of Removal | مواضع الحذف
+Chapter : Inflectable [Words] | المعربات
+Chapter : Inflectable Through Diacritics | المعرب بالحركات
+Chapter : The Root Signs of Inflection for That Which Inflects with Diacritics, and its Exceptions | الأصل في إعراب ما يعرب بالحركات، وما خرج عنه 
+Chapter : Inflectable Through Letters | المعربات بالحروف
+Chapter : The Inflection of the Dual Form | إعراب المثنى
+Chapter : The Inflection of the Sound Masculine Plural |  إعراب جمع المذكر السالم 
+Chapter : The Inflection of the Five Nouns | إعراب الأسماء الخمسة 
+Chapter : The Inflection of the Five Verbs | إعراب الأفعال الخمسة
+Chapter : The Verbs |  باب الأفعال 
+Chapter : The Verbs and Their Types | الأفعال وأنواعها
+Chapter : Rulings of the Verb | أحكام الفعل
+Chapter : Nawaṣib of the Mudari Verb | نواصب المضارع
+Chapter : Jawazim of the Mudari Verb | جواز المضارع
+Chapter : The Types of the Marfū' Words and Examples of Them | عدد المرفوعات وأمثلتها
+Chapter : The Subject | باب الفاعل
+Chapter : The Deputy of the Subject | النائب عن الفاعل
+Chapter : The Nominal Subject and Predicate | المبتدأ والخبر
+Chapter : The Abrogators of the Nominal Subject and Its Predicate | نواسخ المبتدأ والخبر
+Chapter : Kana and Its Sisters | كان وأخواتها 
+Chapter : Inna and Its Sisters | إن وأخواتها 
+Chapter : Zanna and Its Sisters | ظن وأخواتها
+Chapter : The Adjective | النعت
+Chapter : The Definite and Its Types | المعرفة وأقسامها
+Chapter : The Indefinite | النكرة
+Chapter : The Particles of Conjunction | حروف العطف
+Chapter : The Emphasis, Its Types and Its Rulings | التوكيد، وأنواعه، وحكمه
+Chapter : The Substitute and Its Rulings | البدل وحكمه
+Chapter : The Number of Manṣüb Words  |  عدد المنصوبات
+Chapter : The Object | المفعول
+Chapter : The Infinitive | المصدر 
+Chapter : Types of the Absolute Object |  أنواع المفعول المطلق
+Chapter : The Adverb of Time and the Adverb of Place | ظرف الزمان و ظرف المكان 
+Chapter : The Circumstantial Adverb | الحال
+Chapter : The Disambiguation | التمييز
+Chapter : The Exception | الاستثناء
+Chapter : The Conditions for Using "La" with the Function of Innā | شروط إعمال لا عمل إن
+Chapter : The Vocative | المنادی
+Chapter : The Causative Object | المفعول له
+Chapter : The Object of Accompaniment | المفعول معه
+Chapter : The Nouns in the State of Khad | المخفوضات من الأسماء
