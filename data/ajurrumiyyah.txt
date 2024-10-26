@@ -5,7 +5,6 @@ Chapter : The Signs of the Verb | علامات الفعل
 Chapter : The Particle | الحرف 
 Chapter : Inflection | باب الإعراب 
 Chapter : The Types of Declension | أنواع الإعراب 
-Chapter : Understanding the Signs of Declension | باب معرفة علامات الإعراب 
 Chapter : The Signs of al-Raf | علامات الرفع
 Chapter : Positions of the Dammah | مواضع الضمة
 Chapter : The Letter Wāw as a Representative of the Dammah | نيابة الواو عن الضمة
