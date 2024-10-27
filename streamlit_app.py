@@ -102,6 +102,10 @@ with st.sidebar:
                     if login:
                         st.sidebar.sucess(f"You are logged in as {username.upper()}")
                         del user_pas
+                else:
+                    login = login_form.form_submit_button(label='Sign In')
+                    if login:
+                        st.sidebar.error("Username or Password is incorrect.")
                 
         if st.button("Log In | تسجيل الدخول", key="login_button"):
             if username and password:
