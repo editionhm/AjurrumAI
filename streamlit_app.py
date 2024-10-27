@@ -82,7 +82,7 @@ with st.sidebar:
         st.write("You selected the level", level_mastery)
         
         ### Clear Chat History
-        
+    
         st.sidebar.button('Clear Chat History', on_click=clear_chat_history)
         
         ### Log Out Button 
