@@ -67,11 +67,28 @@ with st.sidebar:
             ]
         selected_mode = st.selectbox("Which mode would you like ? | أي وضع تود استخدامه", mode_options, key='mode_select')
         st.session_state.selected_mode = selected_mode
-        
 
+        ### Age render
+
+        level_mastery = st.select_slider(
+            "Select a range of color wavelength",
+            options=[
+                "Absolute Beginner",
+                "Beginner",
+                "Intermediate",
+                "Upper Intermediate",
+                "Advanced",
+                "Expert",
+            ],
+            value=("Level of explanation"),
+        )
+        st.write("You selected the level", level_mastery)
+        
+        ### Clear Chat History
+        
         st.sidebar.button('Clear Chat History', on_click=clear_chat_history)
         
-        
+        ### Log Out Button 
         if st.button("Log Out | تسجيل الخروج", key="logout_button"):
             st.session_state.user = {
                 "connected": False,
