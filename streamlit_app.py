@@ -103,7 +103,7 @@ with st.sidebar:
                     "username": username,
                     "age": age
                     }
-                    st.sidebar.sucess(f"You are logged in as {username.upper()}")
+                    st.sucess(f"You are logged in as {username.upper()}")
                     del user_pas
                 else:
                     st.session_state.user = {
