@@ -23,7 +23,7 @@ masteries_col = db['masteries']
 exams_col = db['exams']  # New collection for exams """ 
 
 # Setup collections with validation schemas
-def setup_collections():
+""" def setup_collections():
     # Schema for topics collection
     try:
         db.create_collection("topics", validator={
@@ -593,3 +593,4 @@ def get_exam(exam_id):
 
 def get_user_exams(user_id):
     return list(exams_col.find({"user_id": ObjectId(user_id)}))
+"""
