@@ -71,7 +71,7 @@ with st.sidebar:
         ### Age render
 
         level_mastery = st.select_slider(
-            "Select a range of color wavelength",
+            "Select the level of the explanation",
             options=[
                 "Absolute Beginner",
                 "Beginner",
@@ -80,7 +80,6 @@ with st.sidebar:
                 "Advanced",
                 "Expert",
             ],
-            value=("Level of explanation"),
         )
         st.write("You selected the level", level_mastery)
         
