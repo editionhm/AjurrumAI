@@ -2,9 +2,12 @@ import streamlit as st
 import database, interact, iot_module
 
 iot = iot_module.IterationOfThought(max_iterations=5,timeout=45,temperature=0.7)
-
 age = 20 ## a modifier pr reucp dans la database
 
+user_db = database.connect_db()
+# -------------------------------
+# SECRETS
+# -------------------------------
 url = st.secrets["URL"] 
 token_iam = st.secrets["TOKEN"]
 projet_id = st.secrets["PROJECT_ID"]
@@ -89,7 +92,17 @@ with st.sidebar:
 
         username = st.text_input("Username | اسم المستخدم", key="login_username")
         password = st.text_input("Password | كلمة المرور", type="password", key="login_password")
-        
+
+        with st.form("login"):
+            st.write("Inside the form")
+            slider_val = st.slider("Form slider")
+            checkbox_val = st.checkbox("Form checkbox")
+
+            # Every form must have a submit button.
+            submitted = st.form_submit_button("Log In - تسجيل الدخول")
+            if submitted:
+                st.write("slider", slider_val, "checkbox", checkbox_val)
+                
         if st.button("Log In | تسجيل الدخول", key="login_button"):
             if username and password:
                 st.session_state.user = {
