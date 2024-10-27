@@ -111,9 +111,7 @@ with st.sidebar:
                     "username": None,
                     "age": age
                     }
-                    login = login_form.form_submit_button(label='Sign In')
-                    if login:
-                        st.sidebar.error("Username or Password is incorrect.")
+                    st.error("Username or Password is incorrect.", icon="🚨")
                 
 
 # -------------------------------
