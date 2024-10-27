@@ -89,7 +89,7 @@ with st.sidebar:
 # -------------------------------
     else:
 
-       login_form = with st.form("login"):
+       with st.form("login"):
             # st.write("<h3 style='text-align: center;'>Log In | تسجيل الدخول.</h3>")
             st.markdown("<h3 style='text-align: center;'>Log In | تسجيل الدخول.</h3>", unsafe_allow_html=True)
             username = st.text_input("Username | اسم المستخدم", key="login_username")
@@ -98,7 +98,6 @@ with st.sidebar:
             submitted = st.form_submit_button("Log In - تسجيل الدخول")
             if submitted:
                 if user_db.find_one({'username' : username, 'password' : password}):
-                    login = login.form.form_submit_button(label='Sign In', on_click=user_update(username))
                     st.session_state.user = {
                     "connected": True,
                     "username": username,
@@ -108,6 +107,11 @@ with st.sidebar:
                         st.sidebar.sucess(f"You are logged in as {username.upper()}")
                         del user_pas
                 else:
+                    st.session_state.user = {
+                    "connected": False,
+                    "username": None,
+                    "age": age
+                    }
                     login = login_form.form_submit_button(label='Sign In')
                     if login:
                         st.sidebar.error("Username or Password is incorrect.")
