@@ -11,7 +11,7 @@ def connect_db():
     client = pymongo.MongoClient(
         URL_DATABASE,
         server_api = ServerApi('1'))
-    db = client.get_database['ajurrumai']
+    db = client['ajurrumai']
     return db.users
     
 # Define collections
