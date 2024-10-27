@@ -103,9 +103,8 @@ with st.sidebar:
                     "username": username,
                     "age": age
                     }
-                    if login:
-                        st.sidebar.sucess(f"You are logged in as {username.upper()}")
-                        del user_pas
+                    st.sidebar.sucess(f"You are logged in as {username.upper()}")
+                    del user_pas
                 else:
                     st.session_state.user = {
                     "connected": False,
