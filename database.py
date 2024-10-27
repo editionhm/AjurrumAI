@@ -1,20 +1,27 @@
-
-from pymongo import MongoClient, ASCENDING
+import pymongo
+from pymongo.server_api import ServerApi
 from bson.objectid import ObjectId
 from datetime import datetime, timedelta
 import bcrypt
+import streamlit as st
 
+URL_DATABASE = st.secrets["URL_DATABASE"] 
 # Connect to MongoDB
-client = MongoClient("mongodb+srv://editionheritagemohammadien:Ajurrum-AI2025@ajurrumai.zua8i.mongodb.net/?retryWrites=true&w=majority&appName=AjurrumAI")
-db = client['ajurrumai']
-
+@st.exeperimental_singleton 
+def connect_db():
+    client = pymongo.MongoClient(
+        URL_DATABASE,
+        server_api = ServerApi('1'))
+    db = client.get_database['ajurrumai']
+    return db.users
+    
 # Define collections
-topics_col = db['topics']
+""" topics_col = db['topics']
 courses_col = db['courses']
 lessons_col = db['lessons']
 users_col = db['users']
 masteries_col = db['masteries']
-exams_col = db['exams']  # New collection for exams
+exams_col = db['exams']  # New collection for exams """ 
 
 # Setup collections with validation schemas
 def setup_collections():
