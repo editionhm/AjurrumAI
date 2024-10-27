@@ -104,7 +104,8 @@ with st.sidebar:
                     "age": age
                     }
                     st.success(f"You are logged in as {username.upper()}", icon="✅")
-                    del user_pas
+                    del password
+                    st.rerun()
                 else:
                     st.session_state.user = {
                     "connected": False,
