@@ -88,20 +88,20 @@ with st.sidebar:
 # If user is not logged in. Left menu bar        
 # -------------------------------
     else:
-        st.markdown("<h3 style='text-align: center;'>Log In | تسجيل الدخول.</h3>", unsafe_allow_html=True)
-
-        username = st.text_input("Username | اسم المستخدم", key="login_username")
-        password = st.text_input("Password | كلمة المرور", type="password", key="login_password")
 
         with st.form("login"):
-            st.write("Inside the form")
-            slider_val = st.slider("Form slider")
-            checkbox_val = st.checkbox("Form checkbox")
-
+            # st.write("<h3 style='text-align: center;'>Log In | تسجيل الدخول.</h3>")
+            st.markdown("<h3 style='text-align: center;'>Log In | تسجيل الدخول.</h3>", unsafe_allow_html=True)
+            username = st.text_input("Username | اسم المستخدم", key="login_username")
+            password = st.text_input("Password | كلمة المرور", type="password", key="login_password")
             # Every form must have a submit button.
             submitted = st.form_submit_button("Log In - تسجيل الدخول")
             if submitted:
-                st.write("slider", slider_val, "checkbox", checkbox_val)
+                if user_db.find_one({'username' : username, 'password' : password}):
+                    login = login.form.form_submit_button(label='Sign In', on_click=user_update(username))
+                    if login:
+                        st.sidebar.sucess(f"You are logged in as {username.upper()}")
+                        del user_pas
                 
         if st.button("Log In | تسجيل الدخول", key="login_button"):
             if username and password:
