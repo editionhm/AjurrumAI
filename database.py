@@ -7,7 +7,8 @@ import streamlit as st
 
 URL_DATABASE = st.secrets["URL_DATABASE"] 
 # Connect to MongoDB
-@st.exeperimental_singleton 
+@st.experimental_singleton
+
 def connect_db():
     client = pymongo.MongoClient(
         URL_DATABASE,
