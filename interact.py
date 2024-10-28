@@ -50,7 +50,7 @@ def extract_chapters(file_path):
         csv_reader = csv.DictReader(file)
         for row in csv_reader:
             chapter = row.get("Chapter")
-            if chapter:  # Ensure there's a value in the "Chapter" column
+            if chapter and chapter != "Chapter":  # Ignore empty or header-like values
                 chapters.append(chapter.strip())  # Add the chapter name to the list
     return chapters
 
