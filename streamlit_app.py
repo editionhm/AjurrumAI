@@ -1,9 +1,9 @@
 import streamlit as st
 import database, interact, iot_module
 
-iot = iot_module.IterationOfThought(max_iterations=3,timeout=45,temperature=0.8)
+iot = iot_module.IterationOfThought(max_iterations=4,timeout=45,temperature=0.8)
 age = 20 ## a modifier pr reucp dans la database
-
+language = "english"
 user_db = database.connect_db()
 # -------------------------------
 # SECRETS
@@ -143,7 +143,7 @@ if "selected_chapter" not in st.session_state:
 if "conversation_context" not in st.session_state:
     st.session_state.conversation_context = ""
 
-chapters_list = interact.extract_chapters('./data/ajurrumiyyah.txt')  # Update file path as needed
+chapters_list = interact.extract_chapters('./data/content_chapter.csv')  # Update file path as needed
 
 # Add a placeholder option to the chapters list to prevent auto-selection
 chapters_list_with_placeholder = ["Please select a chapter | اختر فصلاً"] + chapters_list
@@ -158,7 +158,9 @@ if st.session_state.user["connected"]:
     if selected_chapter != "Please select a chapter | اختر فصلاً" and selected_chapter != st.session_state.selected_chapter:
         # Update session state with the new selected chapter
         st.session_state.selected_chapter = selected_chapter
-        st.session_state.conversation_context = f"The user has selected the chapter: {selected_chapter}. This chapter is about {selected_chapter}. You are an expert in Arabic Grammar."
+        
+        # use?? 
+        # st.session_state.conversation_context = f"The user has selected the chapter: {selected_chapter}. This chapter is about {selected_chapter}. You are an expert in Arabic Grammar."
 
         # Display the message informing the user about their choice
         st.session_state.messages.append({"role": "assistant", "content": f"You chose to study **{selected_chapter}**. Let me think...!"})
@@ -166,7 +168,11 @@ if st.session_state.user["connected"]:
         # Generate a new response based on the selected chapter
         with st.spinner("Thinking..."):
             # Prepare the prompt for LLM with added context
-            prompt = f"""You are an expert Arabic Grammar teacher. The user has selected the following chapter: {selected_chapter}. Please explain it in a clear and engaging manner, and include examples for someone who have the level {level_mastery}. Also, stay in the context of this chapter for further discussions. Never forget that the response has to do with Arabic Grammar explanation."""
+            prompt = f"""You are an expert in teaching Arabic Grammar. The user has selected the following chapter : {selected_chapter}.""" 
+
+            content_chapter = interact.extract_passage("./data/content_chapter.csv", selected_chapter)
+            prompt += f"""The content of the chapter is the following {content_chapter}. Please explain it in a clear and engaging manner, and include examples for someone who have the level {level_mastery}.
+            Also, stay in the context of this chapter for further discussions. Always write in {language}."""
             
             # Interact with LLM (replace with the proper method for LLM response)
             response = iot_module.run_iot(iot, prompt)
