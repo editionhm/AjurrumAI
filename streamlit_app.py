@@ -175,8 +175,8 @@ if st.session_state.user["connected"]:
             Also, stay in the context of this chapter for further discussions. Always write in {language}."""
             
             # Interact with LLM (replace with the proper method for LLM response)
-            response = iot_module.run_iot(iot, prompt)
-
+            #response = iot_module.run_iot(iot, prompt)
+            reponse = interact.generate_llm(prompt)
             # Display LLM response progressively
             full_response = ''
             for item in response:
