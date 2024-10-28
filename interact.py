@@ -1,6 +1,8 @@
 import requests
 import streamlit as st
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
+import csv
+
 
 url = st.secrets["URL"] 
 token_iam = st.secrets["TOKEN"]
@@ -44,8 +46,26 @@ def generate_llm(prompt):
 
 def extract_chapters(file_path):
     chapters = []
-    with open(file_path, 'r') as file:
-        for line in file:
-            if line.startswith("Chapter"):
-                chapters.append(line.strip())  # Add the chapter line to the list
+    with open(file_path, mode='r', encoding='utf-8') as file:
+        csv_reader = csv.DictReader(file)
+        for row in csv_reader:
+            chapter = row.get("Chapter")
+            if chapter:  # Ensure there's a value in the "Chapter" column
+                chapters.append(chapter.strip())  # Add the chapter name to the list
     return chapters
+
+def extract_passage(file_path, chapter_value):
+    """
+    Extrait le contenu de la colonne "Passage" pour la ligne où la colonne "Chapter" correspond à chapter_value.
+    
+    :param file_path: Chemin vers le fichier CSV
+    :param chapter_value: Valeur de la colonne "Chapter" pour laquelle on souhaite récupérer le passage
+    :return: Le contenu de la colonne "Passage" si trouvé, sinon None
+    """
+    with open(file_path, mode='r', encoding='utf-8') as file:
+        csv_reader = csv.DictReader(file)
+        for row in csv_reader:
+            if row.get("Chapter") == chapter_value:
+                return row.get("Passage")  # Récupère le contenu de la colonne "Passage"
+    return None
+
