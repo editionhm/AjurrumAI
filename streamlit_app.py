@@ -1,7 +1,7 @@
 import streamlit as st
 import database, interact, iot_module
 
-iot = iot_module.IterationOfThought(max_iterations=5,timeout=45,temperature=0.7)
+iot = iot_module.IterationOfThought(max_iterations=3,timeout=45,temperature=0.8)
 age = 20 ## a modifier pr reucp dans la database
 
 user_db = database.connect_db()
