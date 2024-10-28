@@ -11,7 +11,7 @@ user_db = database.connect_db()
 # -------------------------------
 
 st.page_link("streamlit_app.py", label="AjurrumAI Chatbot", icon="🏠")
-st.page_link("pages/3-إعراب tool.py", label="I'rab Tool", icon="1️⃣")
+st.page_link("pages/3-irab tool.py", label="I'rab Tool", icon="1️⃣")
 st.page_link("pages/2-Translation Tool.py", label="Translation Tool", icon="2️⃣", disabled=True)
 st.page_link("http://www.google.com", label="Google", icon="🌎")
 
