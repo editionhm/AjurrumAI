@@ -176,7 +176,7 @@ if st.session_state.user["connected"]:
             
             # Interact with LLM (replace with the proper method for LLM response)
             #response = iot_module.run_iot(iot, prompt)
-            reponse = interact.generate_llm(prompt)
+            response = interact.generate_llm(prompt)
             # Display LLM response progressively
             full_response = ''
             for item in response:
