@@ -5,6 +5,16 @@ iot = iot_module.IterationOfThought(max_iterations=5,timeout=45,temperature=0.65
 age = 20 ## a modifier pr reucp dans la database
 language = "english"
 user_db = database.connect_db()
+
+# -------------------------------
+# PAGES
+# -------------------------------
+
+st.page_link("streamlit_app.py", label="AjurrumAI Chatbot", icon="🏠")
+st.page_link("pages/3-إعراب tool.py", label="I'rab Tool", icon="1️⃣")
+st.page_link("pages/2-Translation Tool.py", label="Translation Tool", icon="2️⃣", disabled=True)
+st.page_link("http://www.google.com", label="Google", icon="🌎")
+
 # -------------------------------
 # SECRETS
 # -------------------------------
