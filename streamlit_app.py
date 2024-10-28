@@ -172,7 +172,7 @@ if st.session_state.user["connected"]:
 
             content_chapter = interact.extract_passage("./data/content_chapter.csv", selected_chapter)
             prompt += f"""The content of the chapter is the following {content_chapter}. Please explain it in a clear and engaging manner, and include examples for someone who have the level {level_mastery}.
-            Also, stay in the context of this chapter for further discussions. Always write in {language}."""
+            Also, stay in the context of this chapter for further discussions. Always write in {language}. Remember : you are an Arabic Grammar teacher."""
             
             # Interact with LLM (replace with the proper method for LLM response)
             #response = iot_module.run_iot(iot, prompt)
@@ -197,7 +197,7 @@ if st.session_state.user["connected"]:
         
         # Prepare the updated prompt with conversation context and user question
         context = st.session_state.conversation_context
-        context = interact.generate_llm(f"Here is the chat history or resume between a user and a chatbot. Make a resume of this the most concise possible without losing any informations. Here is the context : {context}")
+        context = interact.generate_llm(f"Here is the chat history or resume between a user and a chatbot for Arabic Grammar. Make a resume of this the most concise possible without losing any informations. Here is the context : {context}")
         user_prompt = f"{context} The user asked: {prompt}"
 
         # Interact with LLM to continue the conversation based on the context
