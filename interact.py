@@ -19,7 +19,7 @@ def generate_llm(prompt):
 
         "parameters": {
             "decoding_method": "greedy",
-            "max_new_tokens": 1536,
+            "max_new_tokens": 2048,
             "repetition_penalty": 1
         },
         "model_id": "sdaia/allam-1-13b-instruct",
