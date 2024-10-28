@@ -197,12 +197,14 @@ if st.session_state.user["connected"]:
         
         # Prepare the updated prompt with conversation context and user question
         context = st.session_state.conversation_context
+        context = interact.generate_llm(f"Here is the chat history or resume between a user and a chatbot. Make a resume of this the most concise possible without losing any informations. Here is the context : {context}")
         user_prompt = f"{context} The user asked: {prompt}"
 
         # Interact with LLM to continue the conversation based on the context
         with st.chat_message("assistant"):
             with st.spinner("Thinking..."):
-                response = iot_module.run_iot(iot, user_prompt)
+                # response = iot_module.run_iot(iot, user_prompt)
+                response = interact.generate_llm(user_prompt)
 
                 # Display LLM response progressively
                 full_response = ''
