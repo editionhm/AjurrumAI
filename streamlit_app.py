@@ -198,7 +198,7 @@ if st.session_state.user["connected"]:
         # Prepare the updated prompt with conversation context and user question
         context = st.session_state.conversation_context
         context = interact.generate_llm(f"Here is the chat history or resume between a user and a chatbot for Arabic Grammar. Make a resume of this the most concise possible without losing any informations. Here is the context : {context}")
-        user_prompt = f"{context} The user asked: {prompt}. Remember, you are an Arabic Grammar teacher. Explain the best as possible with examples in arabic."
+        user_prompt = f"{context} The user asked: {prompt}. Remember, you are an Arabic Grammar teacher. Explain the best as possible with examples in arabic. The main language is {language}"
         with st.chat_message("user"):
             st.write(f"{prompt }")
 
