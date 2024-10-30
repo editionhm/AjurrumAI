@@ -6,12 +6,24 @@ st.set_page_config(page_title="Translation Tool - Outil de Traduction", page_ico
 st.title("Translator English ↔️ Arabic | مترجم إنجليزي ↔️ عربي")
 
 # Définir la fonction de traduction en utilisant `generate_llm`
-def translate(text, source_lang, target_lang):
-    prompt = f"Translate this text from {source_lang} to {target_lang}: {text}. Only output the translation."
+def translate(text, source_lang, target_lang, translation_typed=translation_type):
+    prompt = f"Translate this text from {source_lang} to {target_lang}: {text}. You should use this translation type : {translation_typed}. Only output the translation."
     response = generate_llm(prompt)
     return response
 
 # Interface Streamlit
+
+
+# Choix du type de traduction
+translation_type = st.radio(
+    "Choose Translation Type | اختر نوع الترجمة",
+    [
+        "Literal Translation | الترجمة الحرفية",
+        "Contextual Translation | الترجمة السياقية",
+        "Formal/Academic Translation | الترجمة الرسمية/الأكاديمية",
+    ],
+    help="Select the type of translation style you prefer | اختر نوع الترجمة الذي تفضله",
+)
 
 # Zone de texte pour l'anglais (en haut)
 english_text = st.text_area("English Text | النص الإنجليزي", height=150)
