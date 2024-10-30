@@ -20,7 +20,7 @@ class IterationOfThought:
         prompt = (
             f"""Given the original query: '{query}' and the previous response: '{previous_response}', "
             generate an instructive and context-specific prompt to refine and improve the answer.
-            Ensure that the new prompt encourages deeper reasoning or addresses any gaps in the previous response. Always answer in English. Never forget that the response has to do with Arabic Grammar explanation."""
+            Ensure that the new prompt encourages deeper reasoning or addresses any gaps in the previous response. Always answer in English. Never forget that the response has to do with Arabic Grammar explanation. Give an answer like it's a final answer without noticing any internal discussion"""
         )
         return interact.generate_llm(prompt)
 
