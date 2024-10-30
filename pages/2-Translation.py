@@ -6,8 +6,8 @@ st.set_page_config(page_title="Translation Tool - Outil de Traduction", page_ico
 st.title("Translator English ↔️ Arabic | مترجم إنجليزي ↔️ عربي")
 
 # Définir la fonction de traduction en utilisant `generate_llm`
-def translate(text, source_lang, target_lang, translation_typed=translation_type):
-    prompt = f"Translate this text from {source_lang} to {target_lang}: {text}. You should use this translation type : {translation_typed}. Only output the translation."
+def translate(text, source_lang, target_lang, translation_type):
+    prompt = f"Translate this text from {source_lang} to {target_lang}: {text}. You should use this translation type : {translation_type}. Only output the translation."
     response = generate_llm(prompt)
     return response
 
@@ -35,12 +35,12 @@ arabic_text = st.text_area("Arabic Text | النص العربي", height=150)
 if st.button("Translate | ترجمة"):
     if english_text and not arabic_text:
         # Traduction de l'anglais vers l'arabe
-        translated_text = translate(english_text, "English", "Arabic")
+        translated_text = translate(english_text, "English", "Arabic", translation_type)
         st.write("Arabic Translation | الترجمة إلى العربية:")
         st.text_area("النص العربي | Arabic Text", translated_text, height=150)
     elif arabic_text and not english_text:
         # Traduction de l'arabe vers l'anglais
-        translated_text = translate(arabic_text, "Arabic", "English")
+        translated_text = translate(arabic_text, "Arabic", "English", translation_type)
         st.write("English Translation | الترجمة إلى الإنجليزية:")
         st.text_area("النص الإنجليزي | English Text", translated_text, height=150)
     else:
