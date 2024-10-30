@@ -7,7 +7,7 @@ st.title("Translator English ↔️ Arabic | مترجم إنجليزي ↔️ ع
 
 # Définir la fonction de traduction en utilisant `generate_llm`
 def translate(text, source_lang, target_lang):
-    prompt = f"Translate this text from {source_lang} to {target_lang}: {text}"
+    prompt = f"Translate this text from {source_lang} to {target_lang}: {text}. Only output the translation."
     response = generate_llm(prompt)
     return response
 
