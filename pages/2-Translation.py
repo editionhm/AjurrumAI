@@ -14,15 +14,6 @@ Text: {text}
     analysis_response = generate_llm(analysis_prompt)
     return analysis_response
 
-# Définir la fonction pour extraire les mots clés importants
-def extract_keywords(text, source_lang):
-    keyword_prompt = f"""
-Extract the most important words from the following {source_lang} text. Provide a list of keywords that are essential for understanding the text, formatted as a bullet list.
-Text: {text}
-"""
-    keywords_response = generate_llm(keyword_prompt)
-    return keywords_response
-
 # Définir la fonction de traduction en utilisant `generate_llm`
 def translate(text, source_lang, target_lang, analysis_info):
     pre_prompt = f"""
@@ -50,11 +41,6 @@ if st.button("Translate | ترجمة"):
         st.write("Analysis Information:")
         st.text(analysis_info)
         
-        # Extraction des mots clés en anglais
-        keywords_info = extract_keywords(english_text, "English")
-        st.write("Important Keywords:")
-        st.text(keywords_info)
-        
         # Traduction de l'anglais vers l'arabe
         translated_text = translate(english_text, "English", "Arabic", analysis_info)
         st.write("Arabic Translation | الترجمة إلى العربية:")
@@ -64,11 +50,6 @@ if st.button("Translate | ترجمة"):
         analysis_info = analyze_text(arabic_text, "Arabic")
         st.write("Analysis Information:")
         st.text(analysis_info)
-        
-        # Extraction des mots clés en arabe
-        keywords_info = extract_keywords(arabic_text, "Arabic")
-        st.write("Important Keywords | الكلمات المهمة:")
-        st.text(keywords_info)
         
         # Traduction de l'arabe vers l'anglais
         translated_text = translate(arabic_text, "Arabic", "English", analysis_info)
