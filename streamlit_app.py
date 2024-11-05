@@ -7,8 +7,15 @@ language = "english"
 user_db = database.connect_db()
 
 # -------------------------------
-# Main Content Area
+# Initialize Session State
 # -------------------------------
+if "user" not in st.session_state:
+    st.session_state.user = {
+        "connected": False,
+        "username": None,
+        "age": None
+    }
+
 if "messages" not in st.session_state:
     st.session_state.messages = [{"role": "assistant", "content": "What do you want to study? | ماذا تريد أن تدرس؟"}]
 
@@ -18,9 +25,15 @@ if "selected_chapter" not in st.session_state:
 if "conversation_context" not in st.session_state:
     st.session_state.conversation_context = ""
 
+if "selected_mode" not in st.session_state:
+    st.session_state.selected_mode = "Free discussion / مناقشة حرة"
+
 chapters_list = interact.extract_chapters('./data/content_chapter.csv')
 chapters_list_with_placeholder = ["Please select a chapter | اختر فصلاً"] + chapters_list
 
+# -------------------------------
+# Main Content Area
+# -------------------------------
 if st.session_state.user["connected"]:
     st.markdown("---")
 
