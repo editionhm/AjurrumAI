@@ -6,7 +6,7 @@ st.set_page_config(page_title="Translation Tool - Outil de Traduction", page_ico
 st.title("Translator English ↔️ Arabic | مترجم إنجليزي ↔️ عربي")
 
 # Définir la fonction de traduction en utilisant `generate_llm`
-def translate(text, source_lang, target_lang, translation_type):
+def translate(text, source_lang, target_lang):
     pre_prompt = """
 Act as a translator from Arabic to French. You are an excellent translator who maintains the meaning and provides a high-quality translation that preserves the structure and every word in a sentence. You are specialized in Islamic texts. I will provide you with an example of an Arabic text and its translation:
 
@@ -84,23 +84,12 @@ When the Shaykh reached the Muḥammadan Presence and named it "the Supreme Veil
 Here, the Shaykh seeks Allāh; he seeks entry into the Presence but under the leadership, protection, and wing of the Messenger of Allāh (saws), the Supreme Veil. The Shaykh was not content with that but sought what lies beyond the veil, which is the Lord of Lords, exalted and glorified. Then he said: "And make the Supreme Veil the life of my spirit." When he said: "Carry me on its path to Your Presence," this means that the Shaykh entered the Presence under the leadership of the Messenger of Allāh (saws).
 But to understand the Shaykh's intention here when he phrased this prayer in the form of a supplication, he was not asking for the unknown but for stations he was familiar with. How could he ask to be removed from the mire (awḥāl) of monotheism (tawḥīd) and immersed in the ocean of Oneness (aḥadiyyah), and be carried on the path of the Messenger of Allāh (saws) to the Presence of Allāh? This is therefore not a mere request or supplication, for the Shaykh only spoke of these stations because he knew and experienced them. He asked for them and expressed them in the form of a supplication out of respect for the station so as not to show that he had attained them, remaining in the station of servitude (ʿubudiyyah), the station of the supplicant, the seeker. All these stations mentioned by the Shaykh, he knew them, reached them, and fully understood them.
 """
-    prompt = pre_prompt + f"Now translate this text from {source_lang} to {target_lang}: {text}. You should use this translation type : {translation_type}. Only output the translation."
+    prompt = pre_prompt + f"Now translate this text from {source_lang} to {target_lang}: {text}. Only output the translation."
     response = generate_llm(prompt)
     return response
 
 # Interface Streamlit
 
-
-# Choix du type de traduction
-translation_type = st.radio(
-    "Choose Translation Type | اختر نوع الترجمة",
-    [
-        "Literal Translation | الترجمة الحرفية",
-        "Contextual Translation | الترجمة السياقية",
-        "Formal/Academic Translation | الترجمة الرسمية/الأكاديمية",
-    ],
-    help="Select the type of translation style you prefer | اختر نوع الترجمة الذي تفضله",
-)
 
 # Zone de texte pour l'anglais (en haut)
 english_text = st.text_area("English Text | النص الإنجليزي", height=150)
@@ -112,12 +101,12 @@ arabic_text = st.text_area("Arabic Text | النص العربي", height=150)
 if st.button("Translate | ترجمة"):
     if english_text and not arabic_text:
         # Traduction de l'anglais vers l'arabe
-        translated_text = translate(english_text, "English", "Arabic", translation_type)
+        translated_text = translate(english_text, "English", "Arabic")
         st.write("Arabic Translation | الترجمة إلى العربية:")
         st.text_area("النص العربي | Arabic Text", translated_text, height=150)
     elif arabic_text and not english_text:
         # Traduction de l'arabe vers l'anglais
-        translated_text = translate(arabic_text, "Arabic", "English", translation_type)
+        translated_text = translate(arabic_text, "Arabic", "English")
         st.write("English Translation | الترجمة إلى الإنجليزية:")
         st.text_area("النص الإنجليزي | English Text", translated_text, height=150)
     else:
