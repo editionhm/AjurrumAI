@@ -4,3 +4,4 @@ ibm-watsonx-ai
 pymongo
 bcrypt
 utils
+pandas
