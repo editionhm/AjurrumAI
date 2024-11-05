@@ -2,6 +2,7 @@ import requests
 import streamlit as st
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 import csv
+import pandas as pd
 
 
 url = st.secrets["URL"] 
@@ -69,7 +70,6 @@ def extract_passage(file_path, chapter_value):
                 return row.get("Passage")  # Récupère le contenu de la colonne "Passage"
     return None
 
-import pandas as pd
 
 def generate_questions(selected_chapter, file_path):
     """
