@@ -50,7 +50,7 @@ selected_chapter = st.selectbox('Select a Chapter | اختر فصلاً:', chapt
 
 if selected_chapter != "Please select a chapter | اختر فصلاً" and selected_chapter != st.session_state.selected_chapter:
     st.session_state.selected_chapter = selected_chapter
-    st.session_state.messages.append({"role": "assistant", "content": f"You chose to study **{selected_chapter}**. Let's start!"})
+    st.session_state.messages.append({"role": "assistant", "content": f"Study **{selected_chapter}**. Let's start!"})
 
     # Load content and generate questions from selected chapter
     content_chapter = interact.extract_passage("./data/content_chapter.csv", selected_chapter)
@@ -58,37 +58,13 @@ if selected_chapter != "Please select a chapter | اختر فصلاً" and selec
     questions = interact.generate_questions(prompt, file_path="./data/content_chapter.csv", level_mastery="Beginner")
     
     # Assign questions directly if it’s already a list
-    st.session_state.questions = questions
-    st.session_state.current_question_index = 0
+    st.session_state.messages.append({"role": "assistant", "content": f"{questions}"})
+
 
 # Display chat history
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
-
-# Interactive Q&A based on questions generated from the chapter
-if st.session_state.questions:
-    current_question = st.session_state.questions[st.session_state.current_question_index]
-    st.markdown(f"**Question:** {current_question}")
-
-    # User response
-    user_answer = st.text_input("Your answer | إجابتك هنا")
-    if user_answer:
-        # Append user's answer to messages
-        st.session_state.messages.append({"role": "user", "content": user_answer})
-        
-        # Verify user's answer
-        verification_prompt = f"As an Arabic tutor, verify if this answer is correct: '{user_answer}' based on the question: '{current_question}'."
-        verification_response = interact.verify_answer(verification_prompt)
-        
-        st.session_state.messages.append({"role": "assistant", "content": verification_response})
-        
-        # Move to next question
-        if st.session_state.current_question_index < len(st.session_state.questions) - 1:
-            st.session_state.current_question_index += 1
-        else:
-            st.markdown("End of questions for this chapter! | انتهت الأسئلة لهذا الفصل.")
-            st.session_state.questions = []
 
 # User input and assistant response for custom questions
 if prompt := st.chat_input("Ask a custom question or comment | اطرح سؤالاً أو تعليقاً"):
