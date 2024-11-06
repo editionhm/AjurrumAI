@@ -74,11 +74,10 @@ if st.session_state.selected_mode == "Continue the course | متابعة الد�
         st.session_state.messages.append({"role": "assistant", "content": f"You chose to study **{selected_chapter}** with the level: {level_mastery}. Let me think...!"})
 
         with st.spinner("Thinking..."):
-            prompt = f"""You are an expert Arabic Grammar teacher. The user has selected the following chapter: {selected_chapter}.""" 
+            prompt = f"""You are an expert Arabic Grammar teacher."""
             content_chapter = interact.extract_passage("./data/content_chapter.csv", selected_chapter)
-            prompt += f"""The content of the chapter is : {content_chapter}. 
-            Please explain it in a clear and engaging manner, and include examples for someone who has the level {level_mastery}. 
-            When you write examples, make sure there are written both in english and arabic.
+            prompt += f"""The content of the chapter that you will explain is : {content_chapter}. 
+            Please explain it in a clear and engaging manner. Remember the examples in the previous content. Write to someone who has the level {level_mastery}. 
             Always stay in the context of this chapter. Write in {language}. """
             
             response = interact.generate_llm(prompt)
@@ -95,7 +94,7 @@ for message in st.session_state.messages:
 if prompt := st.chat_input("Write your text here | اكتب نصك هنا"):
     st.session_state.messages.append({"role": "user", "content": prompt})
     context = st.session_state.conversation_context
-    user_prompt = f"{context} The user asked: {prompt}. Remember, you are an Arabic Grammar teacher and the content of the subject is : {content_chapter}. Explain in {language}, and when you give examples, give them in both arabic and english."
+    user_prompt = f"Answer to this request: {prompt}. Remember, you are an Arabic Grammar teacher and the content of the subject is : {content_chapter}. Explain in {language}."
     with st.chat_message("user"):
         st.write(prompt)
     with st.chat_message("assistant"):
