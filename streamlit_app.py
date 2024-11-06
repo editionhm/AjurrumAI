@@ -94,7 +94,8 @@ for message in st.session_state.messages:
 if prompt := st.chat_input("Write your text here | اكتب نصك هنا"):
     st.session_state.messages.append({"role": "user", "content": prompt})
     context = st.session_state.conversation_context
-    user_prompt = f"Answer to this request: {prompt}. Remember, you are an Arabic Grammar teacher and the content of the subject is : {content_chapter}. Explain in {language}."
+    content_chapter = interact.extract_passage("./data/content_chapter.csv", st.session_state.selected_chapter)
+    user_prompt = f"""Answer to this request: {prompt}. Remember, you are an Arabic Grammar teacher and the content of the subject is : {content_chapter}. Explain in {language}."""
     with st.chat_message("user"):
         st.write(prompt)
     with st.chat_message("assistant"):
