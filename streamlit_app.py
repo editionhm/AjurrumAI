@@ -23,6 +23,32 @@ if "selected_mode" not in st.session_state:
 chapters_list = interact.extract_chapters('./data/content_chapter.csv')
 chapters_list_with_placeholder = ["Please select a chapter | اختر فصلاً"] + chapters_list
 
+
+# -------------------------------
+# Sidebar with Login or Conversations and Log Out
+# -------------------------------
+
+def clear_chat_history():
+    st.session_state.messages = [{"role": "assistant", "content": "What do you want to study? | ماذا تريد أن تدرس؟"}]
+
+with st.sidebar:
+        st.markdown("#### Mode | الوضع")
+        mode_options = [
+            "Continue the course | متابعة الدرس",
+            "Review a lesson | مراجعة درس",
+            "Free discussion | مناقشة حرة"
+        ]
+        selected_mode = st.selectbox("Which mode would you like? | أي وضع تود استخدامه", mode_options, key='mode_select')
+        st.session_state.selected_mode = selected_mode
+
+        level_mastery = st.select_slider(
+            "Select the level of the explanation",
+            options=["Beginner", "Intermediate", "Advanced", "Expert"],
+        )
+        st.write("You selected the level", level_mastery)
+
+        st.sidebar.button('Clear Chat History', on_click=clear_chat_history)
+
 # -------------------------------
 # Main Content Area
 # -------------------------------
@@ -58,7 +84,7 @@ else:
 
     if selected_chapter != "Please select a chapter | اختر فصلاً" and selected_chapter != st.session_state.selected_chapter:
         st.session_state.selected_chapter = selected_chapter
-        st.session_state.messages.append({"role": "assistant", "content": f"You chose to study **{selected_chapter}**. Let me think...!"})
+        st.session_state.messages.append({"role": "assistant", "content": f"You chose to study **{selected_chapter}** with the level : {level_mastery}. Let me think...!"})
 
         with st.spinner("Thinking..."):
             prompt = f"""You are an expert in teaching Arabic Grammar. The user has selected the following chapter: {selected_chapter}.""" 
