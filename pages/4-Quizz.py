@@ -93,6 +93,7 @@ if st.session_state.questions:
 # User input and assistant response for custom questions
 if prompt := st.chat_input("Ask a custom question or comment | اطرح سؤالاً أو تعليقاً"):
     st.session_state.messages.append({"role": "user", "content": prompt})
+    content_chapter = interact.extract_passage("./data/content_chapter.csv", st.session_state.selected_chapter)
     user_prompt = f"Answer this request as an Arabic Grammar teacher: '{prompt}'. Content from chapter: {content_chapter}."
     
     with st.chat_message("user"):
