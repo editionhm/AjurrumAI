@@ -1,5 +1,7 @@
 import streamlit as st
 import database, interact, iot_module
+import csv
+from datetime import datetime
 
 st.set_page_config(page_title="AjurrumAI", page_icon="💬")
 
@@ -64,7 +66,7 @@ with st.sidebar:
 # -------------------------------
 # Main Content Area
 # -------------------------------
-st.write("AjurrumAI : Arabic-English Chatbot")
+st.write("AjurrumAI is a personalized, interactive language assistant that adapts to your learning style, making Arabic grammar and cultural nuances accessible and engaging for learners at any level.")
 st.markdown("---")
 
 if st.session_state.selected_mode == "Continue the course | متابعة الدرس":
@@ -107,4 +109,55 @@ if prompt := st.chat_input("Write your text here | اكتب نصك هنا"):
             st.markdown(full_response)
 
 st.markdown("---")
+
+# Enregistrer le feedback dans un fichier CSV
+def save_feedback(is_helpful):
+    feedback_data = {
+        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "question": prompt,
+        "response": full_response,
+        "is_helpful": is_helpful
+    }
+    with open("feedback.csv", mode="a", newline='', encoding="utf-8") as file:
+        writer = csv.DictWriter(file, fieldnames=["timestamp", "question", "response", "is_helpful"])
+        if file.tell() == 0:  # Vérifie si le fichier est vide pour écrire l'en-tête
+            writer.writeheader()
+        writer.writerow(feedback_data)
+
+# Affichage de l'historique des messages
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
+
+# Si un utilisateur envoie un message
+if prompt := st.chat_input("Write your text here | اكتب نصك هنا"):
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    context = st.session_state.conversation_context
+    content_chapter = interact.extract_passage("./data/content_chapter.csv", st.session_state.selected_chapter)
+    user_prompt = f"""Answer to this request: {prompt}. Remember, you are an Arabic Grammar teacher and the content of the subject is : {content_chapter}. Explain in {language}."""
+    
+    # Affiche la question de l'utilisateur
+    with st.chat_message("user"):
+        st.write(prompt)
+    
+    # Affiche la réponse générée par l'assistant
+    with st.chat_message("assistant"):
+        with st.spinner("Thinking..."):
+            response = interact.generate_llm(user_prompt)
+            full_response = ''.join(response)
+            st.session_state.messages.append({"role": "assistant", "content": full_response})
+            st.markdown(full_response)
+
+    # Feedback utilisateur après la réponse du chatbot
+    st.write("Was this response helpful?")
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("Yes"):
+            save_feedback(is_helpful=True)
+            st.success("Thank you for your feedback!")
+    with col2:
+        if st.button("No"):
+            save_feedback(is_helpful=False)
+            st.warning("Thank you for your feedback!")
+
 # st.markdown("<h2 style='text-align: center;'>Start interacting with the chatbot to learn more! | ابدأ التفاعل مع الروبوت للتعلم أكثر!</h2>", unsafe_allow_html=True)
