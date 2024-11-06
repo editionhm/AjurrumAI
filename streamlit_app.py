@@ -64,6 +64,7 @@ with st.sidebar:
 # -------------------------------
 # Main Content Area
 # -------------------------------
+st.write("AjurrumAI : Arabic-English Chatbot")
 st.markdown("---")
 
 if st.session_state.selected_mode == "Continue the course | متابعة الدرس":
