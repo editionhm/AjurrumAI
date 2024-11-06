@@ -97,23 +97,14 @@ def generate_questions(selected_chapter, file_path, level_mastery):
 
     # Préparer le prompt pour la génération des questions en fonction du niveau de l'utilisateur
     prompt = f"""
-    You are an expert in teaching Arabic Grammar. Create a series of questions and answers based on the following chapter content:
+    You are an expert Arabic Grammar teacher. Create a series of questions and answers based on the following chapter content:
     {chapter_content}
     The questions should match the user's level: {level_mastery}.
     Generate questions of various types (e.g., fill-in-the-blank, true/false, and open-ended) that assess understanding at this level.
-    Provide answers for each question.
+    Provide answers for each question. Write in both english and arabic.
     """
 
     # Utiliser la fonction generate_llm pour générer les questions-réponses
     response = generate_llm(prompt)
 
-    # Parser la réponse (présumé formaté en JSON-like, ajuster si nécessaire)
-    questions = []
-    try:
-        # Supposons que la réponse est sous forme de texte JSON, par exemple :
-        # [{"question": "Complétez la phrase: ...", "answer": "..."}, ...]
-        questions = eval(response)  # Remplacer eval par json.loads si la sortie est en JSON valide
-    except Exception as e:
-        st.error(f"Erreur lors du parsing des questions générées: {e}")
-
-    return questions
+    return response
