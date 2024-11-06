@@ -68,7 +68,6 @@ if st.session_state.selected_mode == "Review a lesson | مراجعة درس":
     # Mode "Review a lesson" pour poser des questions basées sur le chapitre sélectionné
     if st.session_state.selected_chapter:
         if not st.session_state.questions:
-            st.markdown("### Generating questions... | جاري توليد الأسئلة...")
             st.session_state.questions = interact.generate_questions(st.session_state.selected_chapter, "./data/content_chapter.csv", level_mastery)
             for i, question in enumerate(st.session_state.questions):
                 st.session_state.messages.append({"role": "assistant", "content": question['question']})
@@ -102,7 +101,7 @@ if st.session_state.selected_mode == "Review a lesson | مراجعة درس":
             st.session_state.selected_chapter = selected_chapter
             st.experimental_rerun()  # Recharger la page pour afficher les questions après la sélection
 
-else:
+elif st.session_state.selected_mode == "Continue the course | متابعة الدرس":
     selected_chapter = st.selectbox('Select a Chapter | اختر فصلاً:', chapters_list_with_placeholder)
 
     if selected_chapter != "Please select a chapter | اختر فصلاً" and selected_chapter != st.session_state.selected_chapter:
@@ -140,4 +139,4 @@ if prompt := st.chat_input("Write your text here | اكتب نصك هنا"):
             st.markdown(full_response)
 
 st.markdown("---")
-st.markdown("<h2 style='text-align: center;'>Start interacting with the chatbot to learn more! | ابدأ التفاعل مع الروبوت للتعلم أكثر!</h2>", unsafe_allow_html=True)
+# st.markdown("<h2 style='text-align: center;'>Start interacting with the chatbot to learn more! | ابدأ التفاعل مع الروبوت للتعلم أكثر!</h2>", unsafe_allow_html=True)
