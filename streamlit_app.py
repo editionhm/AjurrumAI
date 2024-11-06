@@ -66,44 +66,7 @@ with st.sidebar:
 # -------------------------------
 st.markdown("---")
 
-if st.session_state.selected_mode == "Review a lesson | مراجعة درس":
-    # Mode "Review a lesson" pour poser des questions basées sur le chapitre sélectionné
-    if st.session_state.selected_chapter:
-        if not st.session_state.questions:
-            st.session_state.questions = interact.generate_questions(st.session_state.selected_chapter, "./data/content_chapter.csv", level_mastery)
-            for i, question in enumerate(st.session_state.questions):
-                st.session_state.messages.append({"role": "assistant", "content": question['question']})
-
-        if st.session_state.current_question_index < len(st.session_state.questions):
-            current_question = st.session_state.questions[st.session_state.current_question_index]
-            user_answer = st.text_input(f"Q{st.session_state.current_question_index + 1}: {current_question['question']}", key=f"question_{st.session_state.current_question_index}")
-
-            if user_answer:
-                st.session_state.messages.append({"role": "user", "content": user_answer})
-                st.session_state.show_correction = True
-
-                if st.button("Show Correction | إظهار التصحيح", key=f"correction_{st.session_state.current_question_index}"):
-                    correct_answer = current_question['answer']
-                    if user_answer.lower().strip() == correct_answer.lower().strip():
-                        st.success("Correct! | صحيح!")
-                    else:
-                        st.error(f"Incorrect. The correct answer is: {correct_answer} | خطأ. الإجابة الصحيحة هي: {correct_answer}")
-                    
-                    st.session_state.current_question_index += 1
-                    st.session_state.show_correction = False
-
-        else:
-            st.markdown("### No more questions available. | لا توجد أسئلة أخرى متاحة.")
-    else:
-        # Afficher le menu déroulant si aucun chapitre n'est sélectionné
-        st.markdown("### Please select a chapter to review | الرجاء اختيار فصل للمراجعة")
-        selected_chapter = st.selectbox('Select a Chapter | اختر فصلاً:', chapters_list_with_placeholder)
-        
-        if selected_chapter != "Please select a chapter | اختر فصلاً":
-            st.session_state.selected_chapter = selected_chapter
-            st.experimental_rerun()  # Recharger la page pour afficher les questions après la sélection
-
-elif st.session_state.selected_mode == "Continue the course | متابعة الدرس":
+if st.session_state.selected_mode == "Continue the course | متابعة الدرس":
     selected_chapter = st.selectbox('Select a Chapter | اختر فصلاً:', chapters_list_with_placeholder)
 
     if selected_chapter != "Please select a chapter | اختر فصلاً" and selected_chapter != st.session_state.selected_chapter:
@@ -111,10 +74,12 @@ elif st.session_state.selected_mode == "Continue the course | متابعة ال�
         st.session_state.messages.append({"role": "assistant", "content": f"You chose to study **{selected_chapter}** with the level: {level_mastery}. Let me think...!"})
 
         with st.spinner("Thinking..."):
-            prompt = f"""You are an expert in teaching Arabic Grammar. The user has selected the following chapter: {selected_chapter}.""" 
+            prompt = f"""You are an expert Arabic Grammar teacher. The user has selected the following chapter: {selected_chapter}.""" 
             content_chapter = interact.extract_passage("./data/content_chapter.csv", selected_chapter)
-            prompt += f"""The content of the chapter is the following {content_chapter}. Please explain it in a clear and engaging manner, and include examples for someone who has the level {level_mastery}.
-            Always stay in the context of this chapter. Write in {language}. Use Arabic for examples and terminology."""
+            prompt += f"""The content of the chapter is : {content_chapter}. 
+            Please explain it in a clear and engaging manner, and include examples for someone who has the level {level_mastery}. 
+            When you write examples, make sure there are written both in english and arabic.
+            Always stay in the context of this chapter. Write in {language}. """
             
             response = interact.generate_llm(prompt)
             full_response = ''
@@ -130,7 +95,7 @@ for message in st.session_state.messages:
 if prompt := st.chat_input("Write your text here | اكتب نصك هنا"):
     st.session_state.messages.append({"role": "user", "content": prompt})
     context = st.session_state.conversation_context
-    user_prompt = f"{context} The user asked: {prompt}. Remember, you are an Arabic Grammar teacher. Explain in {language}, with examples in Arabic."
+    user_prompt = f"{context} The user asked: {prompt}. Remember, you are an Arabic Grammar teacher and the content of the subject is : {content_chapter}. Explain in {language}, and when you give examples, give them in both arabic and english."
     with st.chat_message("user"):
         st.write(prompt)
     with st.chat_message("assistant"):
