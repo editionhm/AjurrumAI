@@ -1,6 +1,8 @@
 import streamlit as st
 import database, interact, iot_module
 
+st.set_page_config(page_title="AjurrumAI", page_icon="💬")
+
 iot = iot_module.IterationOfThought(max_iterations=5, timeout=45, temperature=0.65)
 age = 20  # Modifier pour récupérer depuis la base de données si nécessaire
 language = "english"
