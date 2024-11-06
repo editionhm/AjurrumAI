@@ -51,12 +51,14 @@ selected_chapter = st.selectbox('Select a Chapter | اختر فصلاً:', chapt
 if selected_chapter != "Please select a chapter | اختر فصلاً" and selected_chapter != st.session_state.selected_chapter:
     st.session_state.selected_chapter = selected_chapter
     st.session_state.messages.append({"role": "assistant", "content": f"You chose to study **{selected_chapter}**. Let's start!"})
-    
+
     # Load content and generate questions from selected chapter
     content_chapter = interact.extract_passage("./data/content_chapter.csv", selected_chapter)
     prompt = f"You are an Arabic language tutor. Generate a series of questions based on the following content: {content_chapter}."
-    questions = interact.generate_questions(prompt, file_path = "./data/content_chapter.csv", level_mastery="Beginner")
-    st.session_state.questions = questions.split("\n")  # Assuming questions are separated by new lines
+    questions = interact.generate_questions(prompt, file_path="./data/content_chapter.csv", level_mastery="Beginner")
+    
+    # Assign questions directly if it’s already a list
+    st.session_state.questions = questions
     st.session_state.current_question_index = 0
 
 # Display chat history
