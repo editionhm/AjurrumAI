@@ -55,7 +55,7 @@ if selected_chapter != "Please select a chapter | اختر فصلاً" and selec
     # Load content and generate questions from selected chapter
     content_chapter = interact.extract_passage("./data/content_chapter.csv", selected_chapter)
     prompt = f"You are an Arabic language tutor. Generate a series of questions based on the following content: {content_chapter}."
-    questions = interact.generate_questions(prompt)
+    questions = interact.generate_questions(prompt, file_path = "./data/content_chapter.csv", level_mastery="Beginner")
     st.session_state.questions = questions.split("\n")  # Assuming questions are separated by new lines
     st.session_state.current_question_index = 0
 
