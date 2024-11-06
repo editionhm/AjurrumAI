@@ -70,7 +70,6 @@ def extract_passage(file_path, chapter_value):
                 return row.get("Passage")  # Récupère le contenu de la colonne "Passage"
     return None
 
-
 def generate_questions(selected_chapter, file_path):
     """
     Génère une série de questions-réponses basées sur le contenu du chapitre sélectionné.
@@ -82,18 +81,20 @@ def generate_questions(selected_chapter, file_path):
     Returns:
     list: Une liste de dictionnaires contenant des questions et leurs réponses.
     """
-    # Charger le fichier CSV
-    df = pd.read_csv(file_path)
+    chapter_content = None
     
-    # Trouver le contenu du chapitre sélectionné
-    chapter_content = df[df['Chapter'] == selected_chapter]['Content'].values
-    if len(chapter_content) == 0:
+    # Lire le fichier CSV et trouver le contenu du chapitre sélectionné
+    with open(file_path, mode='r', encoding='utf-8') as file:
+        csv_reader = csv.DictReader(file)
+        for row in csv_reader:
+            if row.get("Chapter") == selected_chapter:
+                chapter_content = row.get("Content")  # Récupère le contenu de la colonne "Content"
+                break
+
+    if not chapter_content:
         return []
 
-    chapter_content = chapter_content[0]
-    
     # Générer des questions simples en utilisant des techniques basiques de NLP
-    # Ici, nous créons des questions du type "Compléter la phrase" et "Vrai ou faux"
     questions = []
 
     # Exemple de découpage simple du contenu en phrases
@@ -118,5 +119,3 @@ def generate_questions(selected_chapter, file_path):
             questions.append({"question": f"Vrai ou Faux: {sentence} ?", "answer": "Vrai"})
     
     return questions
-
-
