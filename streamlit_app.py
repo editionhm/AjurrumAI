@@ -8,6 +8,24 @@ age = 20  # Modifier pour récupérer depuis la base de données si nécessaire
 language = "english"
 
 # -------------------------------
+# CSS perso
+# -------------------------------
+st.markdown("""
+    <style>
+    .sticky-menu {
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background-color: white;
+        padding: 10px 0;
+        border-bottom: 1px solid #eee;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+
+# -------------------------------
 # Initialize Session State
 # -------------------------------
 if "messages" not in st.session_state:
@@ -66,25 +84,30 @@ with st.sidebar:
 # -------------------------------
 st.markdown("---")
 
-if st.session_state.selected_mode == "Continue the course | متابعة الدرس":
-    selected_chapter = st.selectbox('Select a Chapter | اختر فصلاً:', chapters_list_with_placeholder)
+# -------------------------------
+# Sticky Chapter Selection
+# -------------------------------
+with st.container():
+    st.markdown('<div class="sticky-menu">', unsafe_allow_html=True)
+    if st.session_state.selected_mode == "Continue the course | متابعة الدرس":
+        selected_chapter = st.selectbox('Select a Chapter | اختر فصلاً:', chapters_list_with_placeholder)
 
-    if selected_chapter != "Please select a chapter | اختر فصلاً" and selected_chapter != st.session_state.selected_chapter:
-        st.session_state.selected_chapter = selected_chapter
-        st.session_state.messages.append({"role": "assistant", "content": f"You chose to study **{selected_chapter}** with the level: {level_mastery}. Let me think...!"})
+        if selected_chapter != "Please select a chapter | اختر فصلاً" and selected_chapter != st.session_state.selected_chapter:
+            st.session_state.selected_chapter = selected_chapter
+            st.session_state.messages.append({"role": "assistant", "content": f"You chose to study **{selected_chapter}** with the level: {level_mastery}. Let me think...!"})
 
-        with st.spinner("Thinking..."):
-            prompt = f"""You are an expert Arabic Grammar teacher."""
-            content_chapter = interact.extract_passage("./data/content_chapter.csv", selected_chapter)
-            prompt += f"""The content of the chapter that you will explain is : {content_chapter}. 
-            Please explain it in a clear and engaging manner. Remember the examples in the previous content. Write to someone who has the level {level_mastery}. 
-            Always stay in the context of this chapter. Write in {language}. """
-            
-            response = interact.generate_llm(prompt)
-            full_response = ''
-            for item in response:
-                full_response += item
-            st.session_state.messages.append({"role": "assistant", "content": full_response})
+            with st.spinner("Thinking..."):
+                prompt = f"""You are an expert Arabic Grammar teacher."""
+                content_chapter = interact.extract_passage("./data/content_chapter.csv", selected_chapter)
+                prompt += f"""The content of the chapter that you will explain is : {content_chapter}. 
+                Please explain it in a clear and engaging manner. Remember the examples in the previous content. Write to someone who has the level {level_mastery}. 
+                Always stay in the context of this chapter. Write in {language}. """
+
+                response = interact.generate_llm(prompt)
+                full_response = ''.join(response)
+                st.session_state.messages.append({"role": "assistant", "content": full_response})
+    st.markdown('</div>', unsafe_allow_html=True)
+
 
 # Affichage de l'historique des messages
 for message in st.session_state.messages:
