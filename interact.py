@@ -69,15 +69,16 @@ def extract_passage(file_path, chapter_value):
             if row.get("Chapter") == chapter_value:
                 return row.get("Passage")  # Récupère le contenu de la colonne "Passage"
     return None
-
-def generate_questions(selected_chapter, file_path):
+def generate_questions(selected_chapter, file_path, level_mastery):
     """
-    Génère une série de questions-réponses basées sur le contenu du chapitre sélectionné.
-    
+    Génère une série de questions-réponses basées sur le contenu du chapitre sélectionné
+    et le niveau de l'utilisateur en utilisant la fonction generate_llm.
+
     Parameters:
     selected_chapter (str): Le titre du chapitre sélectionné.
     file_path (str): Le chemin vers le fichier CSV contenant les chapitres et leur contenu.
-    
+    level_mastery (str): Le niveau de l'utilisateur (Beginner, Intermediate, Advanced, Expert).
+
     Returns:
     list: Une liste de dictionnaires contenant des questions et leurs réponses.
     """
@@ -94,28 +95,25 @@ def generate_questions(selected_chapter, file_path):
     if not chapter_content:
         return []
 
-    # Générer des questions simples en utilisant des techniques basiques de NLP
-    questions = []
+    # Préparer le prompt pour la génération des questions en fonction du niveau de l'utilisateur
+    prompt = f"""
+    You are an expert in teaching Arabic Grammar. Create a series of questions and answers based on the following chapter content:
+    {chapter_content}
+    The questions should match the user's level: {level_mastery}.
+    Generate questions of various types (e.g., fill-in-the-blank, true/false, and open-ended) that assess understanding at this level.
+    Provide answers for each question.
+    """
 
-    # Exemple de découpage simple du contenu en phrases
-    sentences = chapter_content.split('.')
-    
-    for i, sentence in enumerate(sentences):
-        sentence = sentence.strip()
-        if not sentence:
-            continue
-        
-        # Question de type "Compléter la phrase"
-        if len(sentence.split()) > 5:
-            words = sentence.split()
-            blank_index = len(words) // 2  # Prend un mot au milieu de la phrase
-            answer = words[blank_index]
-            words[blank_index] = '_____'
-            question = ' '.join(words)
-            questions.append({"question": f"Complétez la phrase: {question}", "answer": answer})
-        
-        # Question de type "Vrai ou faux"
-        if i % 2 == 0 and len(sentence) > 10:
-            questions.append({"question": f"Vrai ou Faux: {sentence} ?", "answer": "Vrai"})
-    
+    # Utiliser la fonction generate_llm pour générer les questions-réponses
+    response = generate_llm(prompt)
+
+    # Parser la réponse (présumé formaté en JSON-like, ajuster si nécessaire)
+    questions = []
+    try:
+        # Supposons que la réponse est sous forme de texte JSON, par exemple :
+        # [{"question": "Complétez la phrase: ...", "answer": "..."}, ...]
+        questions = eval(response)  # Remplacer eval par json.loads si la sortie est en JSON valide
+    except Exception as e:
+        st.error(f"Erreur lors du parsing des questions générées: {e}")
+
     return questions
