@@ -11,13 +11,20 @@ def generate_hint(word, errors):
 # Streamlit Interface Configuration
 st.title("لعبة الحروف المقطوعة (البحث عن كلمة بالعربية)")
 st.write("### اختر مستوى الصعوبة")
-level = st.selectbox("Level / المستوى", ["Beginner / مبتدئ", "Intermediate / متوسط", "Expert / خبير"])
+
+with st.sidebar:
+    level = st.selectbox("Level / المستوى", ["Beginner / مبتدئ", "Intermediate / متوسط", "Expert / خبير"])
+    # Start a new game if the session is reset
+    if st.button("New Game / لعبة جديدة"):
+        st.session_state.clear()
 
 # Game Initialization
 if 'word' not in st.session_state:
     # Fetching the Arabic word via the LLM
-    prompt = f"Choose an Arabic word of {level} level for a hangman game."
+    prompt = f"Choose an Arabic word of {level} level for a hangman game. Output should be ONE WORD ONLY AND NOTHING ELSE."
     word = interact.generate_llm(prompt)
+    
+    print("The word is :",word)
     st.session_state.word = word
     st.session_state.guessed_letters = ["_"] * len(word)
     st.session_state.errors = 0
@@ -67,6 +74,4 @@ if prompt:
         st.write(f"The word was / كانت الكلمة: {st.session_state.word}")
         st.session_state.clear()  # Reset for a new game
 
-# Start a new game if the session is reset
-if st.button("New Game / لعبة جديدة"):
-    st.session_state.clear()
+
