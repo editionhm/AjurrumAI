@@ -15,6 +15,19 @@ if 'word' not in st.session_state:
     st.session_state.word = interact.generate_llm(prompt)
     st.session_state.guessed_letters = ["_"] * len(st.session_state.word)
 
+with st.sidebar:
+    level = st.selectbox("Level / المستوى", ["Beginner / مبتدئ", "Intermediate / متوسط", "Expert / خبير"])
+    if st.button("New Game / لعبة جديدة"):
+        # Fetch a new word and reset game variables without clearing the session
+        prompt = f"Choose an Arabic word of {level} level for a hangman game. Output should be ONE WORD ONLY AND NOTHING ELSE."
+        word = interact.generate_llm(prompt)
+        
+        st.session_state.word = word
+        st.session_state.guessed_letters = ["_"] * len(word)
+        st.session_state.errors = 0
+        st.session_state.max_errors = 10
+        st.session_state.attempts = set()
+        
 # Display the game state
 st.write("### Guess the Arabic word / خمن الكلمة بالعربية")
 st.write("Word / الكلمة: " + " ".join(st.session_state.guessed_letters))
