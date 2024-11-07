@@ -32,7 +32,7 @@ st.write("### Guess the Arabic word / خمن الكلمة بالعربية")
 
 with st.chat_message("assistant"):
     st.write("Word / الكلمة: " + " ".join(st.session_state.guessed_letters))
-    st.write(print("The word is :",word))
+    st.write("The word is :", word))
     st.write(f"Remaining Attempts / المحاولات المتبقية: {st.session_state.max_errors - st.session_state.errors}")
 # Input box to enter a letter
 prompt = st.chat_input("Propose an Arabic letter / اقترح حرفا بالعربية")
