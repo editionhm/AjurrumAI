@@ -1,6 +1,6 @@
 import streamlit as st
 import interact
-
+import re
 # Function to generate a hint every three errors
 def generate_hint(word, errors):
     hint_prompt = f"Give a vague definition for the word '{word}' without MENTIONING IT AT ALL. NEVER MENTION THE WORD."
@@ -15,7 +15,9 @@ with st.sidebar:
         # Fetch a new word and reset game variables without clearing the session
         prompt = f"GIVE ME AN Arabic word THAT SOMEONE WHO HAS THE LEVEL {level} CAN UNDERSTAND. Output should be ONE WORD ONLY. Do not give any TRANSLATION."
         word = interact.generate_llm(prompt)
-        word.strip(" ")
+        
+        # Remove parentheses, Latin characters, and spaces
+        word = re.sub(r"[a-zA-Z() ]", "", word)
         st.session_state.word = word
         st.session_state.guessed_letters = ["_"] * len(word)
         st.session_state.errors = 0
