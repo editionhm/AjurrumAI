@@ -33,8 +33,6 @@ if 'word' not in st.session_state:
 
 # Displaying the game state
 st.write("### Guess the Arabic word / خمن الكلمة بالعربية")
-st.write("Word / الكلمة: " + " ".join(st.session_state.guessed_letters))
-st.write(f"Remaining Attempts / المحاولات المتبقية: {st.session_state.max_errors - st.session_state.errors}")
 
 # Input box to enter a letter
 prompt = st.chat_input("Propose an Arabic letter / اقترح حرفا بالعربية")
@@ -42,6 +40,10 @@ if prompt:
     letter = prompt.strip()
     with st.chat_message("user"):
         st.write(f"Proposed letter / الحرف المقترح: {letter}")
+        st.write("Word / الكلمة: " + " ".join(st.session_state.guessed_letters))
+        st.write(f"Remaining Attempts / المحاولات المتبقية: {st.session_state.max_errors - st.session_state.errors}")
+
+        
 
     if letter in st.session_state.attempts:
         st.write("You have already tried this letter / لقد جربت هذا الحرف من قبل.")
