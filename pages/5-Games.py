@@ -29,8 +29,9 @@ if 'word' not in st.session_state:
     # Fetching the Arabic word via the LLM if it's the first game
     prompt = f"Choose an Arabic word of {level} level for a hangman game. Output should be ONE WORD ONLY AND NOTHING ELSE."
     word = interact.generate_llm(prompt)
-    
+    hint = generate_hint(word)
     st.session_state.word = word
+    st.session_state.hint = hint
     st.session_state.guessed_letters = ["_"] * len(word)
     st.session_state.errors = 0
     st.session_state.max_errors = 10
