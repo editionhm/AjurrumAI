@@ -1,95 +1,72 @@
 import streamlit as st
-import random
+import interact
 
-# Liste des mots avec leur correspondance en arabe
-words = {
-    "cat": "قطة",
-    "dog": "كلب",
-    "book": "كتاب",
-    "sun": "شمس",
-    "moon": "قمر",
-    "tree": "شجرة",
-    "star": "نجمة",
-    "house": "بيت",
-    "water": "ماء",
-    "bread": "خبز"
-}
+# Function to generate a hint every three errors
+def generate_hint(word, errors):
+    hint_prompt = f"Give a vague definition for the word '{word}' without revealing it."
+    if errors % 3 == 0 and errors != 0:  # Provide a hint every 3 errors
+        return interact.generate_llm(hint_prompt)
+    return None
 
-# Dimensions de la grille
-grid_size = 10
-grid = [[" " for _ in range(grid_size)] for _ in range(grid_size)]
+# Streamlit Interface Configuration
+st.title("لعبة الحروف المقطوعة (البحث عن كلمة بالعربية)")
+st.write("### اختر مستوى الصعوبة")
+level = st.selectbox("Level / المستوى", ["Beginner / مبتدئ", "Intermediate / متوسط", "Expert / خبير"])
 
-# Fonction pour placer les mots
-def place_word(word, row, col, direction):
-    if direction == "horizontal" and col + len(word) <= grid_size:
-        for i, letter in enumerate(word):
-            grid[row][col + i] = letter
-        return True
-    elif direction == "vertical" and row + len(word) <= grid_size:
-        for i, letter in enumerate(word):
-            grid[row + i][col] = letter
-        return True
-    return False
+# Game Initialization
+if 'word' not in st.session_state:
+    # Fetching the Arabic word via the LLM
+    prompt = f"Choose an Arabic word of {level} level for a hangman game."
+    word = interact.generate_llm(prompt)
+    st.session_state.word = word
+    st.session_state.guessed_letters = ["_"] * len(word)
+    st.session_state.errors = 0
+    st.session_state.max_errors = 10
+    st.session_state.attempts = set()
 
-# Placer les mots aléatoirement dans la grille
-placed_words = []
-for english, arabic in words.items():
-    placed = False
-    attempts = 0
-    while not placed and attempts < 100:
-        row, col = random.randint(0, grid_size - 1), random.randint(0, grid_size - 1)
-        direction = random.choice(["horizontal", "vertical"])
-        placed = place_word(english, row, col, direction)
-        attempts += 1
-    if placed:
-        placed_words.append((english, arabic, row, col, direction))
+# Displaying the game state
+st.write("### Guess the Arabic word / خمن الكلمة بالعربية")
+st.write("Word / الكلمة: " + " ".join(st.session_state.guessed_letters))
+st.write(f"Remaining Attempts / المحاولات المتبقية: {st.session_state.max_errors - st.session_state.errors}")
 
-# Interface Streamlit
-st.title("Mots Croisés Bilingues (Arabe-Anglais)")
-st.write("Remplissez la grille en fonction des indices en arabe et vérifiez vos réponses.")
+# Input box to enter a letter
+prompt = st.chat_input("Propose an Arabic letter / اقترح حرفا بالعربية")
+if prompt:
+    letter = prompt.strip()
+    with st.chat_message("user"):
+        st.write(f"Proposed letter / الحرف المقترح: {letter}")
 
-# Affichage de la grille avec numérotation des lignes et colonnes
-st.write("### Grille")
-grid_input = []
-for i in range(grid_size):
-    row_inputs = []
-    cols = st.columns(grid_size + 1)
-    cols[0].markdown(f"**{i+1}**")  # Numéro de ligne
-    for j in range(grid_size):
-        if grid[i][j] != " ":
-            cell = cols[j + 1].text_input("", "", max_chars=1, key=f"{i}-{j}")
-        else:
-            cell = cols[j + 1].text(" ")
-        row_inputs.append(cell)
-    grid_input.append(row_inputs)
-
-# Affiche la numérotation des colonnes en haut
-st.write("**Colonne**")
-col_numbers = "  ".join([f"{num+1:2}" for num in range(grid_size)])
-st.write(col_numbers)
-
-# Affichage des indices
-st.write("### Indices")
-for english, arabic, row, col, direction in placed_words:
-    st.write(f"{arabic} : Mot en {direction} (ligne {row + 1}, colonne {col + 1})")
-
-# Vérification de la solution
-def check_solution():
-    correct = True
-    for english, arabic, row, col, direction in placed_words:
-        if direction == "horizontal":
-            user_input = "".join(grid_input[row][col:col + len(english)])
-        else:  # direction == "vertical"
-            user_input = "".join([grid_input[row + i][col] for i in range(len(english))])
-        if user_input.lower() != english:
-            correct = False
-            break
-    return correct
-
-# Bouton pour vérifier
-if st.button("Vérifier"):
-    if check_solution():
-        st.success("Félicitations ! Vous avez bien rempli la grille.")
+    if letter in st.session_state.attempts:
+        st.write("You have already tried this letter / لقد جربت هذا الحرف من قبل.")
+    elif letter in st.session_state.word:
+        # Reveal the letter in the guessed word
+        for idx, char in enumerate(st.session_state.word):
+            if char == letter:
+                st.session_state.guessed_letters[idx] = letter
+        st.write("Correct letter! / حرف صحيح!")
     else:
-        st.error("Certains mots sont incorrects. Essayez à nouveau.")
+        # Increase the error count if the letter is incorrect
+        st.session_state.errors += 1
+        st.write(f"Incorrect letter. {st.session_state.max_errors - st.session_state.errors} attempts left / حرف غير صحيح. تبقى لك {st.session_state.max_errors - st.session_state.errors} محاولات.")
 
+    # Add the letter to attempts
+    st.session_state.attempts.add(letter)
+
+    # Show a hint if the user reaches a multiple of 3 errors
+    hint = generate_hint(st.session_state.word, st.session_state.errors)
+    if hint:
+        st.write(f"Hint / تلميح: {hint}")
+
+    # Check the game status
+    if "_" not in st.session_state.guessed_letters:
+        st.success("Congratulations! You've found the word 🎉 / تهانينا! لقد وجدت الكلمة 🎉.")
+        st.write(f"The word was / كانت الكلمة: {st.session_state.word}")
+        st.session_state.clear()  # Reset for a new game
+    elif st.session_state.errors >= st.session_state.max_errors:
+        st.error("You lost 😢 / لقد خسرت 😢.")
+        st.write(f"The word was / كانت الكلمة: {st.session_state.word}")
+        st.session_state.clear()  # Reset for a new game
+
+# Start a new game if the session is reset
+if st.button("New Game / لعبة جديدة"):
+    st.session_state.clear()
