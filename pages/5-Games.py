@@ -60,6 +60,7 @@ if prompt:
             if char == letter:
                 st.session_state.guessed_letters[idx] = letter
         st.write("Correct letter! / حرف صحيح!")
+        st.write("Word: " + " ".join(st.session_state.guessed_letters))
     else:
         # Increase the error count if the letter is incorrect
         st.session_state.errors += 1
