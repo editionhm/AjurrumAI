@@ -69,11 +69,6 @@ if prompt:
     # Add the letter to attempts
     st.session_state.attempts.add(letter)
 
-    # Show a hint if the user reaches a multiple of 3 errors
-    hint = generate_hint(st.session_state.word, st.session_state.errors)
-    if hint:
-        st.write(f"Hint / تلميح: {hint}")
-
     # Check the game status
     if "_" not in st.session_state.guessed_letters:
         st.success("Congratulations! You've found the word 🎉 / تهانينا! لقد وجدت الكلمة 🎉.")
