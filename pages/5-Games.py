@@ -8,9 +8,6 @@ def generate_hint(word, errors):
         return interact.generate_llm(hint_prompt)
     return None
 
-# Streamlit Interface Configuration
-st.title("لعبة الحروف المقطوعة (البحث عن كلمة بالعربية)")
-st.write("### اختر مستوى الصعوبة")
 
 with st.sidebar:
     level = st.selectbox("Level / المستوى", ["Beginner / مبتدئ", "Intermediate / متوسط", "Expert / خبير"])
@@ -24,7 +21,6 @@ if 'word' not in st.session_state:
     prompt = f"Choose an Arabic word of {level} level for a hangman game. Output should be ONE WORD ONLY AND NOTHING ELSE."
     word = interact.generate_llm(prompt)
     
-    print("The word is :",word)
     st.session_state.word = word
     st.session_state.guessed_letters = ["_"] * len(word)
     st.session_state.errors = 0
@@ -34,15 +30,16 @@ if 'word' not in st.session_state:
 # Displaying the game state
 st.write("### Guess the Arabic word / خمن الكلمة بالعربية")
 
+with st.chat_message("assistant"):
+    st.write("Word / الكلمة: " + " ".join(st.session_state.guessed_letters))
+    st.write(print("The word is :",word))
+    st.write(f"Remaining Attempts / المحاولات المتبقية: {st.session_state.max_errors - st.session_state.errors}")
 # Input box to enter a letter
 prompt = st.chat_input("Propose an Arabic letter / اقترح حرفا بالعربية")
 if prompt:
     letter = prompt.strip()
     with st.chat_message("user"):
         st.write(f"Proposed letter / الحرف المقترح: {letter}")
-        st.write("Word / الكلمة: " + " ".join(st.session_state.guessed_letters))
-        st.write(f"Remaining Attempts / المحاولات المتبقية: {st.session_state.max_errors - st.session_state.errors}")
-
         
 
     if letter in st.session_state.attempts:
