@@ -2,11 +2,9 @@ import streamlit as st
 import interact
 import re
 # Function to generate a hint every three errors
-def generate_hint(word, errors):
+def generate_hint(word):
     hint_prompt = f"Give a vague definition for the word '{word}' without MENTIONING IT AT ALL. NEVER MENTION THE WORD."
-    if errors % 3 == 0 and errors != 0:  # Provide a hint every 3 errors
-        return interact.generate_llm(hint_prompt)
-    return None
+    return interact.generate_llm(hint_prompt)
 
 # Sidebar for level selection and new game button
 with st.sidebar:
@@ -15,10 +13,12 @@ with st.sidebar:
         # Fetch a new word and reset game variables without clearing the session
         prompt = f"GIVE ME AN Arabic word THAT SOMEONE WHO HAS THE LEVEL {level} CAN UNDERSTAND. Output should be ONE WORD ONLY. Do not give any TRANSLATION."
         word = interact.generate_llm(prompt)
+        hint = generate_hint(word)
         
         # Remove parentheses, Latin characters, and spaces
         word = re.sub(r"[a-zA-Z() ]", "", word)
         st.session_state.word = word
+        st.session_state.hint = hint
         st.session_state.guessed_letters = ["_"] * len(word)
         st.session_state.errors = 0
         st.session_state.max_errors = 10
@@ -42,6 +42,7 @@ st.write("### Guess the Arabic word / خمن الكلمة بالعربية")
 with st.chat_message("assistant"):
     st.write("Word / الكلمة: " + " ".join(st.session_state.guessed_letters))
     st.write(f"The word is : {st.session_state.word}")
+    st.write(f"The hint of the word is : {st.session_state.hint}")
     
 # Input box to enter a letter
 prompt = st.chat_input("Propose an Arabic letter / اقترح حرفا بالعربية")
