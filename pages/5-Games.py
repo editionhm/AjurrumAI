@@ -53,7 +53,8 @@ if prompt:
     else:
         # Increase the error count if the letter is incorrect
         st.session_state.errors += 1
-        st.write(f"Incorrect letter. {st.session_state.max_errors - st.session_state.errors} attempts left / حرف غير صحيح. تبقى لك {st.session_state.max_errors - st.session_state.errors} محاولات.")
+        with st.chat_message("assistant"):
+            st.write(f"Incorrect letter. {st.session_state.max_errors - st.session_state.errors} attempts left / حرف غير صحيح. تبقى لك {st.session_state.max_errors - st.session_state.errors} محاولات.")
 
     # Add the letter to attempts
     st.session_state.attempts.add(letter)
