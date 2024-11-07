@@ -25,7 +25,7 @@ with st.sidebar:
 # Game Initialization
 if 'word' not in st.session_state:
     # Fetching the Arabic word via the LLM if it's the first game
-    prompt = f"Choose an Arabic word of {level} level for a hangman game. Output should be ONE WORD ONLY AND NOTHING ELSE."
+    prompt = f"Choose a RANDOM Arabic word of {level} level for a hangman game between 3 and 8 letters. Output should be ONE WORD ONLY AND NOTHING ELSE."
     word = interact.generate_llm(prompt)
     
     st.session_state.word = word
@@ -56,7 +56,8 @@ if prompt:
         for idx, char in enumerate(st.session_state.word):
             if char == letter:
                 st.session_state.guessed_letters[idx] = letter
-        st.write("Correct letter! / حرف صحيح!")
+        with st.chat_message("assistant"):
+            st.write("Correct letter! / حرف صحيح!")
     else:
         # Increase the error count if the letter is incorrect
         st.session_state.errors += 1
