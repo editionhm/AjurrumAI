@@ -74,6 +74,8 @@ if prompt:
     if "_" not in st.session_state.guessed_letters:
         st.success("Congratulations! You've found the word 🎉 / تهانينا! لقد وجدت الكلمة 🎉.")
         st.write(f"The word was / كانت الكلمة: {st.session_state.word}")
+        translation = interact.generate_llm(f"Please translate this word from arabic to english : {st.session_state.word}")
+        st.write(f"The translation of this word is : {translation}")
         # Reset only game-specific variables for a new game
         st.session_state.word = interact.generate_llm(f"Choose an Arabic word of {level} level for a hangman game. Output should be ONE WORD ONLY AND NOTHING ELSE.")
         st.session_state.guessed_letters = ["_"] * len(st.session_state.word)
