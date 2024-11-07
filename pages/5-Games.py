@@ -3,7 +3,7 @@ import interact
 
 # Function to generate a hint every three errors
 def generate_hint(word, errors):
-    hint_prompt = f"Give a vague definition for the word '{word}' without revealing it."
+    hint_prompt = f"Give a vague definition for the word '{word}' without MENTIONNING IT AT ALL. NEVER MENTION THE WORD."
     if errors % 3 == 0 and errors != 0:  # Provide a hint every 3 errors
         return interact.generate_llm(hint_prompt)
     return None
