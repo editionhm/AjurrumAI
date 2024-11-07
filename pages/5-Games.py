@@ -13,9 +13,9 @@ with st.sidebar:
     level = st.selectbox("Level / المستوى", ["Beginner / مبتدئ", "Intermediate / متوسط", "Expert / خبير"])
     if st.button("New Game / لعبة جديدة"):
         # Fetch a new word and reset game variables without clearing the session
-        prompt = f"GIVE ME AN Arabic word THAT SOMEONE WHO HAS THE LEVEL {level} CAN UNDERSTAND. Output should be ONE WORD ONLY AND NOTHING ELSE. DO NOT WRITE ANYTHING MORE THAN THE WORD"
+        prompt = f"GIVE ME AN Arabic word THAT SOMEONE WHO HAS THE LEVEL {level} CAN UNDERSTAND. Output should be ONE WORD ONLY IN ARABIC WITHOUT ANYTHING MORE NO TRANSLATION NOTHING BUT THE ARABIC WORD."
         word = interact.generate_llm(prompt)
-        
+        word.strip(" ")
         st.session_state.word = word
         st.session_state.guessed_letters = ["_"] * len(word)
         st.session_state.errors = 0
