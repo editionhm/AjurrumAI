@@ -27,7 +27,7 @@ if "shuffled_pairs" not in st.session_state or st.button("Reset Game"):
     st.session_state.revealed = [False] * len(items)
     st.session_state.selected_buttons = []
     st.session_state.matched_buttons = []
-    st.session_state.feedback = ""
+    st.session_state.feedback = ""  # Initialize feedback
 
 # Callback to handle button click
 def reveal_button(idx, text, lang):
