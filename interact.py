@@ -11,6 +11,7 @@ deploy_url = "https://ai.deem.sa/ml/v1/deployments/5041749e-8c92-46a7-b625-276ff
 deploy_id  = "5041749e-8c92-46a7-b625-276ffb5c53f3"
 
 project_id = "74cc6740-c372-4851-ba31-db8af6f7bc0a"
+
 wml_credentials = {
                    "url": "https://ai.deem.sa/",
                    "token": access_token,
