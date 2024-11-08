@@ -175,7 +175,7 @@ if st.button("Generate Poem | ولّد القصيدة"):
         poem = generate_llm(prompt)
         
         # Afficher le poème généré
-        st.write("Generated Poem | القصيدة المولدة:")
-        st.text_area("Arabic Poem | القصيدة بالعربية", poem, height=200)
+        with st.chat_message("assistant"):
+            st.write(poem)
     else:
         st.warning("Please enter text in Arabic to generate a poem | يرجى إدخال نص بالعربية لتوليد القصيدة.")
