@@ -1,6 +1,6 @@
 import streamlit as st
 import random
-import interact
+from interact import generate_pairs
 
 # Function to generate English-Arabic pairs using LLM
 
@@ -8,7 +8,7 @@ import interact
 # Generate or reset game state only on "Reset Game" button click
 if "shuffled_pairs" not in st.session_state or st.button("Reset Game"):
     # Generate new pairs when resetting the game
-    phrases = interact.generate_pairs(10)
+    phrases = generate_pairs(10)
     st.write("Generated Pairs:", phrases)
     
     # Duplicate and shuffle the list of pairs
