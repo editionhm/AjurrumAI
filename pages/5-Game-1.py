@@ -8,7 +8,7 @@ def generate_hint(word):
 
 # Sidebar for level selection and new game button
 with st.sidebar:
-    level = st.selectbox("Level / المستوى", ["Beginner / مبتدئ", "Intermediate / متوسط", "Expert / خبير"])
+    level = st.selectbox("Level / المستوى", ["Beginner", "Intermediate", "Expert"])
     if st.button("New Game / لعبة جديدة"):
         # Fetch a new word and reset game variables without clearing the session
         prompt = f"GIVE ME AN Arabic word THAT SOMEONE WHO HAS THE LEVEL {level} CAN UNDERSTAND. Output should be ONE WORD ONLY."
