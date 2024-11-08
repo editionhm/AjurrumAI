@@ -1,19 +1,41 @@
 import streamlit as st
 import random
+import interact
+
+import interact
+
+def generate_pairs(num_pairs=10):
+    """
+    Generate English-Arabic word/phrase pairs using the LLM.
+    
+    Parameters:
+        num_pairs (int): Number of pairs to generate. Default is 10.
+        
+    Returns:
+        List[Tuple[str, str]]: A list of tuples where each tuple contains an Arabic phrase and its English translation.
+    """
+    pairs = []
+    
+    for _ in range(num_pairs):
+        # Define the prompt to generate a phrase pair in Arabic and English
+        prompt = "Generate a common Arabic phrase and its English translation as a pair."
+        
+        # Use the LLM to generate the pair
+        result = interact.generate_llm(prompt)
+        
+        # Parse the response assuming it returns a pair like "مرحبا - Hello"
+        try:
+            arabic, english = result.split(" - ")
+            pairs.append((arabic.strip(), english.strip()))
+        except ValueError:
+            print(f"Unexpected response format: {result}")
+
+    return pairs
 
 # Sample phrases with Arabic and English pairs
-phrases = [
-    ("مرحبا", "Hello"),
-    ("كيف حالك؟", "How are you?"),
-    ("صباح الخير", "Good morning"),
-    ("مساء الخير", "Good evening"),
-    ("أين الحمام؟", "Where is the bathroom?"),
-    ("أريد المساعدة", "I need help"),
-    ("شكرا", "Thank you"),
-    ("نعم", "Yes"),
-    ("لا", "No"),
-    ("أراك لاحقا", "See you later")
-]
+phrases = generate_pairs()
+
+st.write("Text gen phrases :", phrases)
 
 # Shuffle phrases and translations to display as buttons
 if "shuffled_pairs" not in st.session_state or st.button("Reset Game"):
