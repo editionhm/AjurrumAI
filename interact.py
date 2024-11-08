@@ -7,7 +7,7 @@ import pandas as pd
 
 url = st.secrets["URL"] 
 token_iam = st.secrets["TOKEN"]
-project_id = # st.secrets["PROJECT_ID"]
+# project_id = # st.secrets["PROJECT_ID"]
 
 def generate_llm(prompt):
     """
