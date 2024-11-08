@@ -27,7 +27,7 @@ if selected_chapter != "Please select a chapter | اختر فصلاً" and selec
     
     # Generate bilingual flashcards for the chapter content using the LLM
     prompt = f"Create bilingual (Arabic and English) True or False questions based on this content: {st.session_state.content_chapter}. Format each flashcard as 'True or False: <Arabic statement> | <English statement>'."
-    flashcards_response = interact.generate_llm(prompt)
+    flashcards_response = interact.generate_llm_true(prompt)
     flashcards = [line.strip() for line in flashcards_response.splitlines() if line.strip()]
     st.session_state.flashcards = flashcards
     st.session_state.current_flashcard = 0
@@ -45,14 +45,14 @@ if st.session_state.flashcards and st.session_state.flashcard_mode:
         if st.button("True"):
             # Check answer and provide feedback
             prompt = f"""Is the following statement true or false? {current_flashcard_text} Please answer in both Arabic and English. Only answer based on this context : '{st.session_state.content_chapter}'"""
-            answer_response = interact.generate_llm(prompt).strip().lower()
+            answer_response = interact.generate_llm_true(prompt).strip().lower()
             if "true" in answer_response:
                 st.session_state.feedback = "Correct! ✅ | صحيح! ✅"
                 st.session_state.current_flashcard += 1
                 st.write(f"**Flashcard {st.session_state.current_flashcard + 1}:** {current_flashcard_text}")
             else:
                 explanation_prompt = f"Explain why the following statement is false in both Arabic and English: '{current_flashcard_text}' using this context : {st.session_state.content_chapter}"
-                explanation_response = interact.generate_llm(explanation_prompt)
+                explanation_response = interact.generate_llm_true(explanation_prompt)
                 st.session_state.feedback = f"Incorrect. ❌ | غير صحيح ❌\n\nExplanation | التوضيح: {explanation_response}"
                 st.session_state.flashcard_mode = False  # Switch to explanation mode
 
@@ -60,13 +60,13 @@ if st.session_state.flashcards and st.session_state.flashcard_mode:
         if st.button("False"):
             # Check answer and provide feedback
             prompt = f"Is the following statement true or false? '{current_flashcard_text}' Please answer in both Arabic and English. Only answer based on this context : {st.session_state.content_chapter}"
-            answer_response = interact.generate_llm(prompt).strip().lower()
+            answer_response = interact.generate_llm_true(prompt).strip().lower()
             if "false" in answer_response:
                 st.session_state.feedback = "Correct! ✅ | صحيح! ✅"
                 st.session_state.current_flashcard += 1
             else:
                 explanation_prompt = f"Explain why the following statement is true in both Arabic and English: '{current_flashcard_text}'"
-                explanation_response = interact.generate_llm(explanation_prompt)
+                explanation_response = interact.generate_llm_true(explanation_prompt)
                 st.session_state.feedback = f"Incorrect. ❌ | غير صحيح ❌\n\nExplanation | التوضيح: {explanation_response}"
                 st.session_state.flashcard_mode = False  # Switch to explanation mode
         
