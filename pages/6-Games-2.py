@@ -11,9 +11,9 @@ def generate_pairs(num_pairs=10):
         num_pairs (int): Number of pairs to generate. Default is 10.
         
     Returns:
-        List[Tuple[str, str]]: A list of tuples where each tuple contains an Arabic phrase and its English translation.
+        Dict[str, str]: A dictionary where each key is an English phrase and each value is its Arabic translation.
     """
-    pairs = []
+    pairs = {}
     
     for _ in range(num_pairs):
         prompt = "Generate a common Arabic phrase and its English translation as a pair."
@@ -22,7 +22,7 @@ def generate_pairs(num_pairs=10):
         # Parse the response assuming it returns a pair like "مرحبا - Hello"
         try:
             arabic, english = result.split(" - ")
-            pairs.append((arabic.strip(), english.strip()))
+            pairs[english.strip()] = arabic.strip()
         except ValueError:
             print(f"Unexpected response format: {result}")
 
@@ -33,8 +33,9 @@ if "shuffled_pairs" not in st.session_state or st.button("Reset Game"):
     # Generate new pairs when resetting the game
     phrases = generate_pairs()
     st.write("TEST GEN PAIRS:", phrases)
+    
     # Duplicate and shuffle the list of pairs
-    items = [(phrase, "arabic") for phrase, _ in phrases] + [(translation, "english") for _, translation in phrases]
+    items = [(english, "english") for english in phrases.keys()] + [(arabic, "arabic") for arabic in phrases.values()]
     random.shuffle(items)
     
     # Initialize game state variables
@@ -55,7 +56,10 @@ def reveal_button(idx, text, lang):
         (idx1, text1, lang1), (idx2, text2, lang2) = st.session_state.selected_buttons
 
         # Check if the two selected buttons form a correct pair
-        if (lang1 != lang2) and ((text1, text2) in phrases or (text2, text1) in phrases):
+        if (lang1 != lang2) and (
+            (lang1 == "english" and phrases[text1] == text2) or
+            (lang1 == "arabic" and phrases[text2] == text1)
+        ):
             # Correct match; mark as permanently revealed
             st.session_state.matched_buttons.extend([idx1, idx2])
             st.session_state.feedback = f"Matched: {text1} - {text2} 🎉"
