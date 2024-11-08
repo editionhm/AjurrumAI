@@ -32,7 +32,7 @@ def generate_pairs(num_pairs=10):
 if "shuffled_pairs" not in st.session_state or st.button("Reset Game"):
     # Generate new pairs when resetting the game
     phrases = generate_pairs()
-    
+    st.write("TEST GEN PAIRS:", phrases)
     # Duplicate and shuffle the list of pairs
     items = [(phrase, "arabic") for phrase, _ in phrases] + [(translation, "english") for _, translation in phrases]
     random.shuffle(items)
