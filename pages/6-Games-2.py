@@ -16,7 +16,7 @@ def generate_pairs(num_pairs=10):
     pairs = {}
     
     for _ in range(num_pairs):
-        prompt = f"Generate {num_pairs} pairs of common Arabic phrase and its English translation as a pair. Answer should be like : مرحبا | Hello"
+        prompt = f"Generate a common Arabic phrase and its English translation as a pair. Answer should be like : مرحبا | Hello"
         result = interact.generate_llm(prompt)
         
         # Parse the response assuming it returns a pair like "مرحبا | Hello"
