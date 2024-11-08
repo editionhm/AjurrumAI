@@ -11,7 +11,7 @@ with st.sidebar:
     level = st.selectbox("Level / المستوى", ["Beginner / مبتدئ", "Intermediate / متوسط", "Expert / خبير"])
     if st.button("New Game / لعبة جديدة"):
         # Fetch a new word and reset game variables without clearing the session
-        prompt = f"GIVE ME AN Arabic word THAT SOMEONE WHO HAS THE LEVEL {level} CAN UNDERSTAND. Output should be ONE WORD ONLY. Do not give any TRANSLATION. Output example : مشكلة "
+        prompt = f"GIVE ME AN Arabic word THAT SOMEONE WHO HAS THE LEVEL {Beginner} CAN UNDERSTAND. Output should be ONE WORD ONLY."
         word = interact.generate_llm(prompt)
         hint = generate_hint(word)
         
@@ -27,7 +27,7 @@ with st.sidebar:
 # Game Initialization
 if 'word' not in st.session_state:
     # Fetching the Arabic word via the LLM if it's the first game
-    prompt = f"Choose an Arabic word of {level} level for a hangman game. Output should be ONE WORD ONLY AND NOTHING ELSE."
+    prompt = f"GIVE ME AN Arabic word THAT SOMEONE WHO HAS THE LEVEL {Beginner} CAN UNDERSTAND. Output should be ONE WORD ONLY."
     word = interact.generate_llm(prompt)
     hint = generate_hint(word)
     st.session_state.word = word
