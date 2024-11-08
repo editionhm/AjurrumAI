@@ -44,9 +44,13 @@ Nَحْوَ قَوْلِكَ "قَامَ زَيْدٌ أَخُوكَ، وَأَ�
 
 Here’s a version of this text rephrased in the rhythmic 'Rajaz' poetry style:
 أَقْسَامُهُ أَرْبَعَةٌ فَإِنْ تُرِدْ *** إِحْصَاءَهَا فَاسْمَعْ لِقَولِي تَسْتَفِدْ
+\n
 فَبَدَلُ الشَّيءِ مِنَ الشَّيءِ كَجَا *** زَيدٌ أَخُوكَ ذَا سُرُورٍ بَهِجَا
+\n
 وَبَدَلُ البَعْضِ مِنَ الكُلِّ كَمَنْ *** يَأْكُلْ رَغِيْفًا نِصْفَهُ يُعْطِ الثَّمَنْ
+\n
 وَبَدَلُ اشْتِمَالٍ نَحْوُ رَاقَنِي *** مُحَمَّدٌ جَمَالُهُ فَشَاقَنِي
+\n
 وَبَدَلُ الغَلَطِ نَحْوُ قَدْ رَكِبْ *** زَيدٌ حِمَارًا فَرَسًا يَبْغِي اللَّعِبْ
 
 Notice that each line ends with a consistent rhyming sound, creating a sense of unity and rhythm. Each verse uses a balanced structure, often presenting a statement or description followed by a phrase with an emotional or descriptive response.
