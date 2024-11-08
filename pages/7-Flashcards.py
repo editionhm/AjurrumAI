@@ -30,44 +30,19 @@ if selected_chapter != "Please select a chapter | اختر فصلاً" and selec
     # Generate questions and answers for the chapter content using the LLM
     prompt = f"Generate questions and answers based on the content of this chapter: {st.session_state.content_chapter}. Format the response as follows: #1 question1 .. #2 question2 .. # answer1 .. # answer2 .."
     flashcards_response = interact.generate_llm(prompt)
-    
+
     # Process the response to separate questions and answers
     qa_pairs = [line.strip() for line in flashcards_response.splitlines() if line.strip()]
     st.session_state.qa_pairs = qa_pairs  # Save the QA pairs for later validation
-    st.session_state.current_flashcard = 0
-    st.session_state.feedback = ""
-    st.session_state.flashcard_mode = True
 
     # Extract questions only for displaying flashcards
     questions = [qa for qa in qa_pairs if qa.startswith("#")]
-
-    # Initialize flashcards with only the questions
     st.session_state.flashcards = questions
 
-# Display current flashcard question
-if st.session_state.flashcards and st.session_state.flashcard_mode:
-    current_flashcard_text = st.session_state.flashcards[st.session_state.current_flashcard]
-    st.write(f"**Flashcard {st.session_state.current_flashcard + 1}:** {current_flashcard_text}")
-
-    # True/False buttons
-    col1, col2 = st.columns(2)
-    with col1:
-        if st.button("True"):
-            st.session_state.feedback = "Selected True ✅"
-            st.session_state.current_flashcard += 1
-        if st.button("False"):
-            st.session_state.feedback = "Selected False ❌"
-            st.session_state.current_flashcard += 1
-
-    # Show feedback or explanation
-    if st.session_state.feedback:
-        st.write(st.session_state.feedback)
-
-# Switch back to flashcard mode after explanation
-if st.session_state.current_flashcard >= len(st.session_state.flashcards):
-    st.success("Congratulations! You've completed all flashcards. 🎉")
-    st.session_state.current_flashcard = 0
-    st.session_state.flashcard_mode = True
+    # Display all generated questions as flashcards for review
+    st.write("Generated Questions:")
+    for question in st.session_state.flashcards:
+        st.write(question)
 
 # Add chat input for user responses
 if prompt := st.chat_input("Write your text here | اكتب نصك هنا"):
