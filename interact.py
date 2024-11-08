@@ -7,7 +7,7 @@ import pandas as pd
 
 url = st.secrets["URL"] 
 token_iam = st.secrets["TOKEN"]
-project_id = st.secrets["PROJECT_ID"]
+project_id = # st.secrets["PROJECT_ID"]
 
 def generate_llm(prompt):
     """
@@ -23,8 +23,8 @@ def generate_llm(prompt):
             "max_new_tokens": 2048,
             "repetition_penalty": 1
         },
-        "model_id": "sdaia/allam-1-13b-instruct",
-        "project_id": project_id
+        "model_id": "15b0b694-3c3a-4c76-95f3-5585ac9a22d4", #"sdaia/allam-1-13b-instruct",
+        "project_id": "a1299999-8b02-4638-b105-6af8a7538a9b" #project_id
     }
 
     headers = {
