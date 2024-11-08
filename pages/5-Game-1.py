@@ -12,7 +12,7 @@ with st.sidebar:
     if st.button("New Game / لعبة جديدة"):
         # Fetch a new word and reset game variables without clearing the session
         prompt = f"GIVE ME AN Arabic word THAT SOMEONE WHO HAS THE LEVEL {Beginner} CAN UNDERSTAND. Output should be ONE WORD ONLY."
-        word = interact.generate_llm(prompt)
+        word = interact.generate_word(prompt)
         hint = generate_hint(word)
         
         # Remove parentheses, Latin characters, and spaces
@@ -28,7 +28,7 @@ with st.sidebar:
 if 'word' not in st.session_state:
     # Fetching the Arabic word via the LLM if it's the first game
     prompt = f"GIVE ME AN Arabic word THAT SOMEONE WHO HAS THE LEVEL {Beginner} CAN UNDERSTAND. Output should be ONE WORD ONLY."
-    word = interact.generate_llm(prompt)
+    word = interact.generate_word(prompt)
     hint = generate_hint(word)
     st.session_state.word = word
     st.session_state.hint = hint
