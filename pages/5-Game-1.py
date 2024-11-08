@@ -3,7 +3,7 @@ import interact
 import re
 # Function to generate a hint every three errors
 def generate_hint(word):
-    hint_prompt = f"Give a vague definition for the word '{word}' without MENTIONING IT AT ALL. NEVER MENTION THE WORD."
+    hint_prompt = f" Define the word : '{word}' without mentionning it."
     return interact.generate_llm(hint_prompt)
 
 # Sidebar for level selection and new game button
