@@ -33,8 +33,8 @@ def reveal_button(idx, text, lang):
     # Reveal the button temporarily
     st.session_state.revealed[idx] = True
     st.session_state.selected_buttons.append((idx, text, lang))
-    
-    # Check for matching pairs when two buttons are clicked
+
+    # Check if two buttons have been selected
     if len(st.session_state.selected_buttons) == 2:
         (idx1, text1, lang1), (idx2, text2, lang2) = st.session_state.selected_buttons
 
@@ -43,14 +43,21 @@ def reveal_button(idx, text, lang):
             # Correct match; mark as permanently revealed
             st.session_state.matched_buttons.extend([idx1, idx2])
             st.session_state.feedback = f"Matched: {text1} - {text2} 🎉"
+            st.session_state.selected_buttons = []  # Clear selected buttons after a match
         else:
-            # Incorrect match; hide both buttons after a short delay
-            st.session_state.feedback = "Not a match! Try again."
+            # Incorrect match; wait for a third click to reset
+            st.session_state.feedback = "Not a match! Click another card to try again."
+
+    # On third click, reset revealed state if there was no match
+    elif len(st.session_state.selected_buttons) == 3:
+        # Hide both cards if they don't match
+        idx1, _, _ = st.session_state.selected_buttons[0]
+        idx2, _, _ = st.session_state.selected_buttons[1]
+        if idx1 not in st.session_state.matched_buttons and idx2 not in st.session_state.matched_buttons:
             st.session_state.revealed[idx1] = False
             st.session_state.revealed[idx2] = False
-        
-        # Reset selected buttons for the next turn
-        st.session_state.selected_buttons = []
+        # Clear selected buttons for the next turn
+        st.session_state.selected_buttons = [st.session_state.selected_buttons[2]]
 
 # Display feedback message if any
 if st.session_state.feedback:
