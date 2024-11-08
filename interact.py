@@ -71,14 +71,14 @@ def generate_llm(prompt):
     resultat = data['results'][0]['generated_text']
     return resultat
 
-"""url = st.secrets["URL"] 
-token_iam = st.secrets["TOKEN"]
-project_id = st.secrets["PROJECT_ID"]"""
 
 def generate_llm_true(prompt):
     """
     Function to generate responses from the LLM
     """
+    url = st.secrets["URL_2"] 
+    project_id = st.secrets["PROJECT_ID"]
+    token_iam = st.secrets["TOKEN_2"]
     authenticator = IAMAuthenticator(token_iam)
     token = authenticator.token_manager.get_token()
     body = {
