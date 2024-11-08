@@ -1,6 +1,7 @@
 streamlit
 ibm-cloud-sdk-core
 ibm-watsonx-ai
+ibm-watson-machine-learning
 pymongo
 bcrypt
 utils
