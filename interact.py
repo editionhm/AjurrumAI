@@ -108,3 +108,25 @@ def generate_questions(selected_chapter, file_path, level_mastery):
     response = generate_llm(prompt)
 
     return response
+
+
+def generate_pairs(num_pairs):
+    pairs = {}
+    
+    for i in range(num_pairs):
+        prompt = "Generate a common Arabic phrase and its English translation. Output should be ONLY: Arabic phrase | English translation"
+        result = interact.generate_llm(prompt)
+        
+        # Parse the response assuming it returns a pair like "مرحبا | Hello"
+        try:
+            arabic, english = result.split(" | ")
+            english, arabic = english.strip(), arabic.strip()
+            if english and arabic and english not in pairs:
+                pairs[english] = arabic
+                print(f"Added pair: {english} - {arabic}")
+            else:
+                pairs[english] = f"Skipped duplicate or invalid pair: {english} - {arabic}"
+        except ValueError:
+            print(f"Unexpected response format: {result}")
+
+    return pairs
