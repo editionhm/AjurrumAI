@@ -33,7 +33,7 @@ def generate_pairs(num_pairs=10):
 # Generate or reset game state only on "Reset Game" button click
 if "shuffled_pairs" not in st.session_state or st.button("Reset Game"):
     # Generate new pairs when resetting the game
-    phrases = generate_pairs()
+    phrases = generate_pairs(10)
     st.write("Generated Pairs:", phrases)
     
     # Duplicate and shuffle the list of pairs
