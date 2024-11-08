@@ -1,6 +1,5 @@
 import streamlit as st
 import random
-import time
 
 # Sample phrases with Arabic and English pairs
 phrases = [
@@ -47,7 +46,6 @@ def reveal_button(idx, text, lang):
         else:
             # Incorrect match; hide both buttons after a short delay
             st.session_state.feedback = "Not a match! Try again."
-            time.sleep(0.5)  # Pause for a brief moment to show both selections
             st.session_state.revealed[idx1] = False
             st.session_state.revealed[idx2] = False
         
