@@ -16,6 +16,7 @@ if "shuffled_pairs" not in st.session_state or st.button("Reset Game"):
     random.shuffle(items)
     
     # Initialize game state variables
+    st.session_state.phrases = phrases
     st.session_state.shuffled_pairs = items
     st.session_state.revealed = [False] * len(items)
     st.session_state.selected_buttons = []
@@ -34,8 +35,8 @@ def reveal_button(idx, text, lang):
 
         # Check if the two selected buttons form a correct pair
         if (lang1 != lang2) and (
-            (lang1 == "english" and phrases[text1] == text2) or
-            (lang1 == "arabic" and phrases[text2] == text1)
+            (lang1 == "english" and st.session_state.phrases[text1] == text2) or
+            (lang1 == "arabic" and st.session_state.phrases[text2] == text1)
         ):
             # Correct match; mark as permanently revealed
             st.session_state.matched_buttons.extend([idx1, idx2])
