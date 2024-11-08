@@ -36,7 +36,8 @@ length_poem = st.select_slider(
 # Fonction pour générer le prompt en fonction du type de poème
 def create_prompt(text, poem_style):
     if poem_style == "Rajaz | الرجز":
-        prompt = f"""Please create a poem in arabic preserving the rules of arabic poetry that contains what is in this content {text}.
+        prompt = f"Please create a poem in arabic preserving the rules of arabic poetry that contains what is in this content :  {text}"
+        prompt_z = f"""Please create a poem in arabic preserving the rules of arabic poetry that contains what is in this content {text}.
 
 For example, here is an example of an Arabic text:
 وَهُوَ عَلَى أَرْبَعَةِ أَقْسَامٍ بَدَلُ اَلشَّيْءِ مِنْ اَلشَّيْءِ، وَبَدَلُ اَلْبَعْضِ مِنْ اَلْكُلِّ، وَبَدَلُ اَلِاشْتِمَالِ، وَبَدَلُ اَلْغَلَطِ.
@@ -54,6 +55,7 @@ __
 وَبَدَلُ الغَلَطِ نَحْوُ قَدْ رَكِبْ *** زَيدٌ حِمَارًا فَرَسًا يَبْغِي اللَّعِبْ
 
 Remember the instruction is : Please create a poem in arabic preserving the rules of arabic poetry that contains what is in this content {text}. Please when you do the output, separate all verse by a return by '___'""" 
+    
     elif poem_style == "Basit | البسيط":
         prompt = f""" Create an Arabic poem in 'Basit' meter with smooth, balanced verses based on the theme: {text}. I will show you examples of text transformed in a Basit poem : 
 
@@ -140,7 +142,7 @@ And now here is a of this text versified in arabic in the style “Sari’” :
 Analyse how between "***" the last word has always the same sound. And analyze how between each "***" the structure of the phrase is.
 """
     else:
-        prompt = f"Generate a poem based on the theme: {text}"
+        prompt = f"Please create a poem in arabic preserving the rules of arabic poetry that contains what is in this content : {text}"
     return prompt
 
 # Bouton pour générer le poème
