@@ -7,8 +7,9 @@ import os
 from ibm_watson_machine_learning import APIClient
 
 access_token = st.secrets['TOKEN']
-deploy_url = "https://ai.deem.sa/ml/v1/deployments/15b0b694-3c3a-4c76-95f3-5585ac9a22d4/text/generation?version=2021-05-01"
-deploy_id  = "15b0b694-3c3a-4c76-95f3-5585ac9a22d4"
+deploy_url = "https://ai.deem.sa/ml/v1/deployments/5041749e-8c92-46a7-b625-276ffb5c53f3/text/generation?version=2021-05-01"
+deploy_id  = "5041749e-8c92-46a7-b625-276ffb5c53f3"
+
 project_id = "74cc6740-c372-4851-ba31-db8af6f7bc0a"
 wml_credentials = {
                    "url": "https://ai.deem.sa/",
