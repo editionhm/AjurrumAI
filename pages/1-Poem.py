@@ -28,6 +28,9 @@ length_poem = st.select_slider(
         "3",
         "5",
         "10",
+        "15",
+        "20",
+        "30",
     ],
 )
 
