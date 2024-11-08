@@ -41,7 +41,7 @@ if 'word' not in st.session_state:
 st.write("### Guess the Arabic word / خمن الكلمة بالعربية")
 
 with st.chat_message("assistant"):
-    st.write("Word / الكلمة: " + " ".join(st.session_state.guessed_letters))
+    st.write("Word : " + " ".join(st.session_state.guessed_letters))
     st.write(f"The word is : {st.session_state.word}")
     st.write(f"The hint of the word is : {st.session_state.hint}")
     
