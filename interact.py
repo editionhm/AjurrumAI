@@ -34,7 +34,7 @@ def generate_llm(prompt):
         "Content-Type": "application/json",
         "Authorization": f"Bearer {access_token}"
     }
-    response = requests.post(deploy_url, headers=headers, json=body)
+    response = requests.post(deploy_url, headers=headers, json=scoring_payload)
     if response.status_code != 200:
         raise Exception("Non-200 response: " + str(response.text))
 
