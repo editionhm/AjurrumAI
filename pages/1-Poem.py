@@ -22,6 +22,20 @@ poem_type = st.radio(
     ],
 )
 
+length_poem = st.select_slider(
+    "Select the lenght of your poem",
+    options=[
+        "3",
+        "5,
+        "10",
+        "15",
+        "20",
+        "25",
+        "30",
+    ],
+)
+
+
 # Fonction pour générer le prompt en fonction du type de poème
 def create_prompt(text, poem_style):
     if poem_style == "Rajaz | الرجز":
@@ -153,6 +167,7 @@ if st.button("Generate Poem | ولّد القصيدة"):
         # Créer le prompt en fonction du type de poème
         prompt = create_prompt(arabic_text, poem_type)
         # Appeler la fonction generate_llm pour créer le poème
+        prompt += f"The poem shoud be exactly {length_poem} verses."
         poem = generate_llm(prompt)
         
         # Afficher le poème généré
