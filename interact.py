@@ -112,10 +112,10 @@ def generate_questions(selected_chapter, file_path, level_mastery):
 
 def generate_pairs(num_pairs):
     pairs = {}
-    prompt = f"Generate exaclty {num_pairs} pairs of common Arabic phrase and its English translation. Output should be ONLY: 1. Arabic phrase | English translation
+    prompt = f"""Generate exaclty {num_pairs} pairs of common Arabic phrase and its English translation. Output should be ONLY: 1. Arabic phrase | English translation
     2. Arabic phrase | English translation
     3. Arabic phrase | English translation
-    etc.."
+    etc.."""
     result = generate_llm(prompt)
     pairs[result] = result
         # Parse the response assuming it returns a pair like "مرحبا | Hello"
