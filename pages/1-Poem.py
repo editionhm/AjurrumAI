@@ -36,9 +36,9 @@ length_poem = st.select_slider(
 # Fonction pour générer le prompt en fonction du type de poème
 def create_prompt(text, poem_style):
     if poem_style == "Rajaz | الرجز":
-        prompt = f"""Compose a short Arabic poem in the traditional 'Rajaz' style with rhythmic, concise lines. Each line should follow a distinct rhythm and end with a rhyming sound that gives the poem a flowing, musical quality. Use the following theme: {text}.
+        prompt = f"""Please create a poem in arabic preserving the rules of arabic poetry that contains what is in this content {text}.
 
-For context, here is an example of an Arabic text:
+For example, here is an example of an Arabic text:
 وَهُوَ عَلَى أَرْبَعَةِ أَقْسَامٍ بَدَلُ اَلشَّيْءِ مِنْ اَلشَّيْءِ، وَبَدَلُ اَلْبَعْضِ مِنْ اَلْكُلِّ، وَبَدَلُ اَلِاشْتِمَالِ، وَبَدَلُ اَلْغَلَطِ.
 Nَحْوَ قَوْلِكَ "قَامَ زَيْدٌ أَخُوكَ، وَأَكَلْتُ اَلرَّغِيفَ ثُلُثَهُ، وَنَفَعَنِي زَيْدٌ عِلْمُهُ، وَرَأَيْتُ زَيْدًا اَلْفَرَسَ"، أَرَدْتَ أَنْ تَقُولَ رَأَيْتُ اَلْفَرَسَ فَغَلِطْتَ فَأَبْدَلْتَ زَيْدًا مِنْه.ُ
 
@@ -53,10 +53,7 @@ Here’s a version of this text rephrased in the rhythmic 'Rajaz' poetry style:
 \n
 وَبَدَلُ الغَلَطِ نَحْوُ قَدْ رَكِبْ *** زَيدٌ حِمَارًا فَرَسًا يَبْغِي اللَّعِبْ
 
-Notice that each line ends with a consistent rhyming sound, creating a sense of unity and rhythm. Each verse uses a balanced structure, often presenting a statement or description followed by a phrase with an emotional or descriptive response.
-
-**Guidance:** In your response, use a consistent rhyme pattern across lines, and follow a clear, structured format that mirrors the 'Rajaz' style, focusing on simplicity and rhythm in each line."""
-
+Remember the instruction is : Please create a poem in arabic preserving the rules of arabic poetry that contains what is in this content {text}.""" 
     elif poem_style == "Basit | البسيط":
         prompt = f""" Create an Arabic poem in 'Basit' meter with smooth, balanced verses based on the theme: {text}. I will show you examples of text transformed in a Basit poem : 
 
