@@ -5,6 +5,7 @@ import interact
 if "selected_chapter" not in st.session_state:
     st.session_state.selected_chapter = None
     st.session_state.content_chapter = None
+    st.session_state.flashcards_response = None
 if "flashcards" not in st.session_state:
     st.session_state.flashcards = []
 if "current_flashcard" not in st.session_state:
@@ -30,15 +31,16 @@ if selected_chapter != "Please select a chapter | اختر فصلاً" and selec
     # Generate questions and answers for the chapter content using the LLM
     prompt = f"Generate questions and answers based on the content of this chapter: {st.session_state.content_chapter}"
     flashcards_response = interact.generate_llm(prompt)
+    st.session_state.flashcards_response = flashcards_response
     with st.chat_message("assistant"):
         st.write(flashcards_response)
 
 
 # Add chat input for user responses
-if prompt := st.chat_input("Write your text here | اكتب نصك هنا"):
+if prompt := st.chat_input("Write your answers here !"):
     st.session_state.messages.append({"role": "user", "content": prompt})
     content_chapter = interact.extract_passage("./data/content_chapter.csv", st.session_state.selected_chapter)
-    user_prompt = f"Answer to this request: {prompt}. Remember, you are an Arabic Grammar teacher and the content of the subject is: {content_chapter}. Explain in both Arabic and English."
+    user_prompt = f" Here is the questions {st.session_state.flashcards_response}. The user gave those answers {prompt}. The context to check if answers are correct is : {content_chapter}. Check every answers given by the user and provide detailled explanation when it is false."
 
     # Display user message
     with st.chat_message("user"):
@@ -51,10 +53,3 @@ if prompt := st.chat_input("Write your text here | اكتب نصك هنا"):
             full_response = ''.join(response)
             st.session_state.messages.append({"role": "assistant", "content": full_response})
             st.markdown(full_response)
-
-# Check if user responses are close to saved QA pairs
-user_answer_prompt = f"Check if the user's answer is close and correct to the saved questions and answers: {st.session_state.qa_pairs}"
-if prompt:
-    response = interact.generate_llm(user_answer_prompt)
-    with st.chat_message("assistant"):
-        st.write(response)
