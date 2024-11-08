@@ -57,8 +57,7 @@ __
 Remember the instruction is : Please create a poem in arabic preserving the rules of arabic poetry that contains what is in this content {text}. Please when you do the output, separate all verse by a return by '___'""" 
     
     elif poem_style == "Basit | البسيط":
-        prompt = f""" Create an Arabic poem in 'Basit' meter with smooth, balanced verses based on the theme: {text}. I will show you examples of text transformed in a Basit poem : 
-
+        prompt = f"""Please create a poem in arabic preserving the rules of arabic poetry that contains what is in this content :  {text}"
 Here is an example of arabic text : 
 وأما الاجتهاد فهو بذل الوسع في بلوغ الغرض، فالمجتهد إن كان كامل الآلة في الاجتهاد، فإن اجتهد في الفروع فأصاب فله أجران، وإن اجتهد فيها وأخطأ فله أجر . 
 ومنهم من قال: كل مجتهد في الفروع مصيب . 
@@ -73,39 +72,8 @@ And now here is a of this text versified in arabic in the style “Basit” :
 لا في أصول كلامٍ، إذ يجرُّ إلى *** تصويبِ قولٍ به كفرٌ وتضليلُ
 دليلُ نافيه ما قد جاء في خَبَرٍ *** رَوَوْهُ عمَّن به تُشْفَى العقابيلُ
 إذْ كان خطَّأه طورًا، وصوَّبَه *** طورًا، وقد تمَّ للمقصودِ تكميلُ"
- 
-Here is another example of arabic text : 
-والتقليد قبول قول القائل بلا حجة، فعلى هذا قبول قول النبي صلى الله عليه وآله وسلم يسمى تقليداً . 
-ومنهم من قال: التقليد قبول قول القائل وأنت لا تدري من أين قاله، فإن قلنا: إن النبي صلى الله عليه وآله وسلم كان يقول بالقياس، فيجوز أن يسمى قبول قوله تقليداً . 
 
-And now here is a of this text versified in arabic in the style “Basit” : 
-"قَبولُ قولٍ بلا علمٍ بمأخذِهِ *** حدٌّ لَدَى الغُرِّ للتَّقليدِ مقبولُ
-والاقتدا برسولِ اللهِ يَربَأُ عن *** هذا المقامِ به وحيٌ وتنزيلُ
-ولو فَرَضْنَا اجتهادَ المصطفى فكفى *** به دليلًا، وما في الأصلِ تطويلُ"
-
-Here is another example of arabic text : 
-وأما القياس فهو رد الفرع إلى الأصل بعلة تجمعهما في الحكم . 
-وهو ينقسم إلى ثلاثة أقسام: إلى قياس علة، وقياس دلالة، وقياس شبه . 
-فقياس العلة ما كانت العلة فيه موجبة الحكم . 
-وقياس الدلالة هو الاستدلال بأحد النظرين على الآخر، وهو أن تكون العلة دالة على الحكم ولا تكون موجبة للحكم . 
-وقياس الشبه هو الفرع المتردد بين أصلين، فيلحق بأكثرهما شبهاً . 
-ومن شرط الفرع أن يكون مناسباً للأصل، ومن شرط الأصل أن يكون ثابتاً بدليل متفق عليه بين الخصمين . 
-ومن شرط العلة أن تطرد في معلولاتها، فلا تنتقض لفظاً ولا معنى . 
-ومن شرط الحكم أن يكون مثل العلة في النفي والإثبات . 
-والعلة هي الجالبة، والحكم هو المجلوب للعلة . 
-
-And now here is a of this text versified in arabic in the style “Basit” : 
-"أَمَّا القياسُ فَرَدُّ الفرعِ فادْرِ إلى *** أصلٍ يَضُمُّهُما في الحكمِ تَعلِيلُ
-فمنْه ذو عِلَّةٍ، ومنه ذو شَبَهٍ *** وذو الدَّلالةِ أنواعٌ أبابيلُ
-مَا كان عِلَّتُهُ للحكمِ مُوجِبةً *** ذو عِلَّةٍ، بل لِعَيْنِ اللَّفظِ مدلولُ
-وذو الدَّلالةِ ما دلَّ النَّظيرُ به *** على النظِيرِ ولم يُوجِبْه تعليلُ
-وما تجاذَبَه أصْلانِ ذو شَبَهٍ *** كالعبدِ يُشبِهُ مالا وهْوَ مقتولُ
-وشرطُ أصلٍ ثبوتٌ بالدليلِ بما *** عليهِ في نَظَرِ الخصمَيْن تعويلُ
-وعلَّةُ الحكمِ في معلولِهَا اطَّرَدَتْ *** لفظًا ومعنًى، فما بالنَّقضِ تعطيلُ
-والحكمُ نفيًا وإثباتًا كَعلَّتِهِ  *** إن تُنفَ أو تُلْفَ يَجْرِي ما جَرَى النَّيلُ
-
-Analyse how between "***" the last word has always the same sound. And analyze how between each "***" the structure of the phrase is.
-"""
+Now that you seen this example, Please create a poem in arabic preserving the rules of arabic poetry that contains what is in this content :  {text}"""
 
     elif poem_style == "Sari' | السريع":
         prompt = f"""Create an Arabic poem in 'Sari'' meter with smooth, balanced verses based on the theme: {text}. I will show you examples of text transformed in a Sari' poem : 
