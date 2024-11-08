@@ -28,21 +28,11 @@ if selected_chapter != "Please select a chapter | اختر فصلاً" and selec
     st.session_state.content_chapter = interact.extract_passage("./data/content_chapter.csv", selected_chapter)
     
     # Generate questions and answers for the chapter content using the LLM
-    prompt = f"Generate questions and answers based on the content of this chapter: {st.session_state.content_chapter}. Format the response as follows: #1 question1 .. #2 question2 .. # answer1 .. # answer2 .."
+    prompt = f"Generate questions and answers based on the content of this chapter: {st.session_state.content_chapter}"
     flashcards_response = interact.generate_llm(prompt)
+    with st.chat_message("assistant"):
+        st.write(flashcards_response)
 
-    # Process the response to separate questions and answers
-    qa_pairs = [line.strip() for line in flashcards_response.splitlines() if line.strip()]
-    st.session_state.qa_pairs = qa_pairs  # Save the QA pairs for later validation
-
-    # Extract questions only for displaying flashcards
-    questions = [qa for qa in qa_pairs if qa.startswith("#")]
-    st.session_state.flashcards = questions
-
-    # Display all generated questions as flashcards for review
-    st.write("Generated Questions:")
-    for question in st.session_state.flashcards:
-        st.write(question)
 
 # Add chat input for user responses
 if prompt := st.chat_input("Write your text here | اكتب نصك هنا"):
