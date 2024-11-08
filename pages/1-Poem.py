@@ -155,6 +155,7 @@ And now here is a of this text versified in arabic in the style “Sari’” :
 واستثن جمعا سالما مؤنثا * فنصبه بكسرة تشبثا
 واسما لشبه الفعل لا ينصرف * ختمه بالفتح حتما يعرف
 كذا المضارع المعل الاخر *  فجزمه بالحذف عندهم دری
+
 """
     else:
         prompt = f"Generate a poem based on the theme: {text}"
@@ -166,7 +167,7 @@ if st.button("Generate Poem | ولّد القصيدة"):
         # Créer le prompt en fonction du type de poème
         prompt = create_prompt(arabic_text, poem_type)
         # Appeler la fonction generate_llm pour créer le poème
-        prompt += f"The poem shoud be exactly {length_poem} verses."
+        prompt += f"The poem should not exceed {length_poem} verses. Always analyse how a poem is 2 hemistichs, the sound of the end of the first is the same as the end of the second one. Analyse and remember everything in examples i gave you to make a poem with the same aspect and rules"
         poem = generate_llm(prompt)
         
         # Afficher le poème généré
