@@ -3,13 +3,51 @@ import streamlit as st
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 import csv
 import pandas as pd
+import os
+from ibm_watson_machine_learning import APIClient
 
-
-url = st.secrets["URL"] 
-token_iam = st.secrets["TOKEN"]
-# project_id = # st.secrets["PROJECT_ID"]
+access_token = st.secrets['TOKEN']
+deploy url = "https://ai.deem.sa/ml/v1/deployments/15b0b694-3c3a-4c76-95f3-5585ac9a22d4/text/generation?version=2021-05-01"
+deploy_id  = "15b0b694-3c3a-4c76-95f3-5585ac9a22d4"
+project_id = "74cc6740-c372-4851-ba31-db8af6f7bc0a"
+wml_credentials = {
+                   "url": "https://ai.deem.sa/",
+                   "token": access_token,
+                   "instance_id": "openshift",
+                   "version": "5.0"
+                  }
+client = APIClient(wml_credentials)
 
 def generate_llm(prompt):
+    full_input = f"{prompt}"
+    scoring_payload = {
+        "input": full_input,
+        "parameters": {
+            "decoding_method" : "greedy",
+            "max_new_tokens": 2048,
+            "min_new_tokens" : 0,
+            "repetition_penalty": 1
+        }
+    }
+
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {access_token}"
+    }
+    response = requests.post(url, headers=headers, json=body)
+
+    if response.status_code != 200:
+        raise Exception("Non-200 response: " + str(response.text))
+
+    data = response.json()
+    resultat = data['results'][0]['generated_text']
+    return resultat
+
+"""url = st.secrets["URL"] 
+token_iam = st.secrets["TOKEN"]
+project_id = st.secrets["PROJECT_ID"]"""
+
+def generate_llm_true(prompt):
     """
     Function to generate responses from the LLM
     """
@@ -23,8 +61,8 @@ def generate_llm(prompt):
             "max_new_tokens": 2048,
             "repetition_penalty": 1
         },
-        "model_id": "15b0b694-3c3a-4c76-95f3-5585ac9a22d4", #"sdaia/allam-1-13b-instruct",
-        "project_id": "a1299999-8b02-4638-b105-6af8a7538a9b" #project_id
+        "model_id": "sdaia/allam-1-13b-instruct",
+        "project_id": "project_id"
     }
 
     headers = {
