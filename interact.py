@@ -5,7 +5,16 @@ import csv
 import pandas as pd
 import os
 from ibm_watson_machine_learning import APIClient
+"""
+base
+"""
+url_base = st.secrets["URL_2"] 
+project_id_base = st.secrets["PROJECT_ID"]
+token_iam_base = st.secrets["TOKEN_2"]
 
+"""
+fine tuned
+"""
 access_token = st.secrets['TOKEN']
 deploy_url = "https://ai.deem.sa/ml/v1/deployments/5041749e-8c92-46a7-b625-276ffb5c53f3/text/generation?version=2021-05-01"
 deploy_id  = "5041749e-8c92-46a7-b625-276ffb5c53f3"
@@ -76,10 +85,8 @@ def generate_llm_true(prompt):
     """
     Function to generate responses from the LLM
     """
-    url = st.secrets["URL_2"] 
-    project_id = st.secrets["PROJECT_ID"]
-    token_iam = st.secrets["TOKEN_2"]
-    authenticator = IAMAuthenticator(token_iam)
+
+    authenticator = IAMAuthenticator(token_iam_base)
     token = authenticator.token_manager.get_token()
     body = {
         "input": f"""[INST] {prompt} [/INST]""",
@@ -90,7 +97,7 @@ def generate_llm_true(prompt):
             "repetition_penalty": 1
         },
         "model_id": "sdaia/allam-1-13b-instruct",
-        "project_id": "project_id"
+        "project_id": "project_id_base"
     }
 
     headers = {
@@ -99,7 +106,7 @@ def generate_llm_true(prompt):
         "Authorization": f"Bearer {token}"
     }
 
-    response = requests.post(url, headers=headers, json=body)
+    response = requests.post(url_base, headers=headers, json=body)
 
     if response.status_code != 200:
         raise Exception("Non-200 response: " + str(response.text))
