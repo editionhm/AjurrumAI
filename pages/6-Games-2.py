@@ -3,34 +3,12 @@ import random
 import interact
 
 # Function to generate English-Arabic pairs using LLM
-def generate_pairs(num_pairs=10):
-    pairs = {}
-    
-    for i in range(num_pairs):
-        prompt = "Generate a common Arabic phrase and its English translation. Output should be ONLY: Arabic phrase | English translation"
-        result = interact.generate_llm(prompt)
-        
-        # Print the raw result for debugging
-        print(f"Result {i + 1}: {result}")
-        
-        # Parse the response assuming it returns a pair like "مرحبا | Hello"
-        try:
-            arabic, english = result.split(" | ")
-            english, arabic = english.strip(), arabic.strip()
-            if english and arabic and english not in pairs:
-                pairs[english] = arabic
-                print(f"Added pair: {english} - {arabic}")
-            else:
-                print(f"Skipped duplicate or invalid pair: {english} - {arabic}")
-        except ValueError:
-            print(f"Unexpected response format: {result}")
 
-    return pairs
 
 # Generate or reset game state only on "Reset Game" button click
 if "shuffled_pairs" not in st.session_state or st.button("Reset Game"):
     # Generate new pairs when resetting the game
-    phrases = generate_pairs(10)
+    phrases = interact.generate_pairs(10)
     st.write("Generated Pairs:", phrases)
     
     # Duplicate and shuffle the list of pairs
