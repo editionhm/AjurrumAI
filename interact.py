@@ -24,7 +24,7 @@ def generate_llm(prompt):
         "input": full_input,
         "parameters": {
             "decoding_method" : "greedy",
-            "max_new_tokens": 2048,
+            "max_new_tokens": 2047,
             "min_new_tokens" : 0,
             "repetition_penalty": 1
         }
