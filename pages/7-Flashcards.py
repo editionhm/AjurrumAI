@@ -10,6 +10,8 @@ if "current_flashcard" not in st.session_state:
     st.session_state.current_flashcard = 0
 if "feedback" not in st.session_state:
     st.session_state.feedback = ""
+if "flashcard_mode" not in st.session_state:
+    st.session_state.flashcard_mode = True  # To toggle between flashcard and explanation modes
 
 # Load chapters list and display selection box
 chapters_list = interact.extract_chapters('./data/content_chapter.csv')
@@ -23,16 +25,17 @@ if selected_chapter != "Please select a chapter | اختر فصلاً" and selec
     content_chapter = interact.extract_passage("./data/content_chapter.csv", selected_chapter)
     st.write(f"**Content of Chapter:** {content_chapter}")
     
-    # Generate flashcards for the chapter content using the LLM
-    prompt = f"Create True or False questions based on this content: {content_chapter}. Format each flashcard as 'True or False: <statement>'."
+    # Generate bilingual flashcards for the chapter content using the LLM
+    prompt = f"Create bilingual (Arabic and English) True or False questions based on this content: {content_chapter}. Format each flashcard as 'True or False: <Arabic statement> | <English statement>'."
     flashcards_response = interact.generate_llm(prompt)
     flashcards = [line.strip() for line in flashcards_response.splitlines() if line.strip()]
     st.session_state.flashcards = flashcards
     st.session_state.current_flashcard = 0
     st.session_state.feedback = ""
+    st.session_state.flashcard_mode = True  # Reset to flashcard mode
 
 # Display current flashcard
-if st.session_state.flashcards:
+if st.session_state.flashcards and st.session_state.flashcard_mode:
     current_flashcard_text = st.session_state.flashcards[st.session_state.current_flashcard]
     st.write(f"**Flashcard {st.session_state.current_flashcard + 1}:** {current_flashcard_text}")
 
@@ -41,34 +44,43 @@ if st.session_state.flashcards:
     with col1:
         if st.button("True"):
             # Check answer and provide feedback
-            prompt = f"Is the following statement true or false? '{current_flashcard_text}'"
+            prompt = f"Is the following statement true or false? '{current_flashcard_text}' Please answer in both Arabic and English."
             answer_response = interact.generate_llm(prompt).strip().lower()
             if "true" in answer_response:
-                st.session_state.feedback = "Correct! ✅"
+                st.session_state.feedback = "Correct! ✅ | صحيح! ✅"
                 st.session_state.current_flashcard += 1
             else:
-                explanation_prompt = f"Explain why the following statement is false: '{current_flashcard_text}'"
+                explanation_prompt = f"Explain why the following statement is false in both Arabic and English: '{current_flashcard_text}'"
                 explanation_response = interact.generate_llm(explanation_prompt)
-                st.session_state.feedback = f"Incorrect. ❌\n\nExplanation: {explanation_response}"
-    
+                st.session_state.feedback = f"Incorrect. ❌ | غير صحيح ❌\n\nExplanation | التوضيح: {explanation_response}"
+                st.session_state.flashcard_mode = False  # Switch to explanation mode
+
     with col2:
         if st.button("False"):
             # Check answer and provide feedback
-            prompt = f"Is the following statement true or false? '{current_flashcard_text}'"
+            prompt = f"Is the following statement true or false? '{current_flashcard_text}' Please answer in both Arabic and English."
             answer_response = interact.generate_llm(prompt).strip().lower()
             if "false" in answer_response:
-                st.session_state.feedback = "Correct! ✅"
+                st.session_state.feedback = "Correct! ✅ | صحيح! ✅"
                 st.session_state.current_flashcard += 1
             else:
-                explanation_prompt = f"Explain why the following statement is true: '{current_flashcard_text}'"
+                explanation_prompt = f"Explain why the following statement is true in both Arabic and English: '{current_flashcard_text}'"
                 explanation_response = interact.generate_llm(explanation_prompt)
-                st.session_state.feedback = f"Incorrect. ❌\n\nExplanation: {explanation_response}"
+                st.session_state.feedback = f"Incorrect. ❌ | غير صحيح ❌\n\nExplanation | التوضيح: {explanation_response}"
+                st.session_state.flashcard_mode = False  # Switch to explanation mode
 
-    # Show feedback
+# Show feedback or explanation
+if st.session_state.feedback:
     st.write(st.session_state.feedback)
 
-    # Check if all flashcards are done
-    if st.session_state.current_flashcard >= len(st.session_state.flashcards):
-        st.success("Congratulations! You've completed all flashcards.")
+# Switch back to flashcard mode after explanation
+if not st.session_state.flashcard_mode:
+    if st.button("Next Flashcard | التالي"):
+        st.session_state.flashcard_mode = True
         st.session_state.feedback = ""
-        st.session_state.current_flashcard = 0  # Reset for another round if desired
+
+# Check if all flashcards are done
+if st.session_state.current_flashcard >= len(st.session_state.flashcards):
+    st.success("Congratulations! You've completed all flashcards. 🎉")
+    st.session_state.current_flashcard = 0  # Reset for another round if desired
+    st.session_state.flashcard_mode = True
