@@ -4,7 +4,7 @@ import re
 # Function to generate a hint every three errors
 def generate_hint(word):
     hint_prompt = f" Define the word : '{word}' without mentionning it."
-    return interact.generate_llm(hint_prompt)
+    return interact.generate_llm_true(hint_prompt)
 
 # Sidebar for level selection and new game button
 with st.sidebar:
@@ -12,7 +12,7 @@ with st.sidebar:
     if st.button("New Game / لعبة جديدة"):
         # Fetch a new word and reset game variables without clearing the session
         prompt = f"Generate a single Arabic word suitable for a hangman game at difficulty level {level}. The output must be exactly one Arabic word, without any additional text or punctuation. For example, if the level is beginner, you could output: شمس."
-        word = interact.generate_word(prompt)
+        word = interact.generate_llm_true(prompt)
         hint = generate_hint(word)
         
         # Remove parentheses, Latin characters, and spaces
@@ -28,7 +28,7 @@ with st.sidebar:
 if 'word' not in st.session_state:
     # Fetching the Arabic word via the LLM if it's the first game
     prompt = f"Generate a single Arabic word suitable for a hangman game at difficulty level {level}. The output must be exactly one Arabic word, without any additional text or punctuation. For example, if the level is beginner, you could output: شمس."
-    word = interact.generate_word(prompt)
+    word = interact.generate_llm_true(prompt)
     hint = generate_hint(word)
     st.session_state.word = word
     st.session_state.hint = hint
