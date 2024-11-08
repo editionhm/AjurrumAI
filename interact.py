@@ -7,7 +7,7 @@ import os
 from ibm_watson_machine_learning import APIClient
 
 access_token = st.secrets['TOKEN']
-deploy url = "https://ai.deem.sa/ml/v1/deployments/15b0b694-3c3a-4c76-95f3-5585ac9a22d4/text/generation?version=2021-05-01"
+deploy_url = "https://ai.deem.sa/ml/v1/deployments/15b0b694-3c3a-4c76-95f3-5585ac9a22d4/text/generation?version=2021-05-01"
 deploy_id  = "15b0b694-3c3a-4c76-95f3-5585ac9a22d4"
 project_id = "74cc6740-c372-4851-ba31-db8af6f7bc0a"
 wml_credentials = {
@@ -34,8 +34,7 @@ def generate_llm(prompt):
         "Content-Type": "application/json",
         "Authorization": f"Bearer {access_token}"
     }
-    response = requests.post(url, headers=headers, json=body)
-
+    response = requests.post(deploy_url, headers=headers, json=body)
     if response.status_code != 200:
         raise Exception("Non-200 response: " + str(response.text))
 
