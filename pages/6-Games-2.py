@@ -2,8 +2,7 @@ import streamlit as st
 import random
 import interact
 
-import interact
-
+# Function to generate English-Arabic pairs using LLM
 def generate_pairs(num_pairs=10):
     """
     Generate English-Arabic word/phrase pairs using the LLM.
@@ -17,10 +16,7 @@ def generate_pairs(num_pairs=10):
     pairs = []
     
     for _ in range(num_pairs):
-        # Define the prompt to generate a phrase pair in Arabic and English
         prompt = "Generate a common Arabic phrase and its English translation as a pair."
-        
-        # Use the LLM to generate the pair
         result = interact.generate_llm(prompt)
         
         # Parse the response assuming it returns a pair like "مرحبا - Hello"
@@ -32,14 +28,12 @@ def generate_pairs(num_pairs=10):
 
     return pairs
 
-# Sample phrases with Arabic and English pairs
-phrases = generate_pairs()
-
-st.write("Text gen phrases :", phrases)
-
-# Shuffle phrases and translations to display as buttons
+# Generate or reset game state only on "Reset Game" button click
 if "shuffled_pairs" not in st.session_state or st.button("Reset Game"):
-    # Duplicate and shuffle the list
+    # Generate new pairs when resetting the game
+    phrases = generate_pairs()
+    
+    # Duplicate and shuffle the list of pairs
     items = [(phrase, "arabic") for phrase, _ in phrases] + [(translation, "english") for _, translation in phrases]
     random.shuffle(items)
     
@@ -72,14 +66,12 @@ def reveal_button(idx, text, lang):
 
     # On third click, reset revealed state if there was no match
     elif len(st.session_state.selected_buttons) == 3:
-        # Hide both cards if they don't match
         idx1, _, _ = st.session_state.selected_buttons[0]
         idx2, _, _ = st.session_state.selected_buttons[1]
         if idx1 not in st.session_state.matched_buttons and idx2 not in st.session_state.matched_buttons:
             st.session_state.revealed[idx1] = False
             st.session_state.revealed[idx2] = False
-        # Clear selected buttons for the next turn
-        st.session_state.selected_buttons = [st.session_state.selected_buttons[2]]
+        st.session_state.selected_buttons = [st.session_state.selected_buttons[2]]  # Keep only the third click
 
 # Display feedback message if any
 if st.session_state.feedback:
