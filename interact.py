@@ -116,17 +116,13 @@ def generate_pairs(num_pairs):
     for i in range(num_pairs):
         prompt = "Generate a common Arabic phrase and its English translation. Output should be ONLY: Arabic phrase | English translation"
         result = generate_llm(prompt)
-        
+        pairs[result] = result
         # Parse the response assuming it returns a pair like "مرحبا | Hello"
-        try:
+        """try:
             arabic, english = result.split(" | ")
             english, arabic = english.strip(), arabic.strip()
             if english and arabic and english not in pairs:
                 pairs[english] = arabic
                 print(f"Added pair: {english} - {arabic}")
-            else:
-                pairs[english] = f"Skipped duplicate or invalid pair: {english} - {arabic}"
-        except ValueError:
-            print(f"Unexpected response format: {result}")
-
+         """
     return pairs
