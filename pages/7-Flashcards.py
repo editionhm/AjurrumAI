@@ -68,6 +68,7 @@ if st.session_state.flashcards and st.session_state.flashcard_mode:
                 explanation_response = interact.generate_llm(explanation_prompt)
                 st.session_state.feedback = f"Incorrect. ❌ | غير صحيح ❌\n\nExplanation | التوضيح: {explanation_response}"
                 st.session_state.flashcard_mode = False  # Switch to explanation mode
+            st.rerun()
 
 # Show feedback or explanation
 if st.session_state.feedback:
