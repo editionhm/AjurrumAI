@@ -23,7 +23,6 @@ if selected_chapter != "Please select a chapter | اختر فصلاً" and selec
     
     # Display selected chapter content
     content_chapter = interact.extract_passage("./data/content_chapter.csv", selected_chapter)
-    st.write(f"**Content of Chapter:** {content_chapter}")
     
     # Generate bilingual flashcards for the chapter content using the LLM
     prompt = f"Create bilingual (Arabic and English) True or False questions based on this content: {content_chapter}. Format each flashcard as 'True or False: <Arabic statement> | <English statement>'."
@@ -49,6 +48,7 @@ if st.session_state.flashcards and st.session_state.flashcard_mode:
             if "true" in answer_response:
                 st.session_state.feedback = "Correct! ✅ | صحيح! ✅"
                 st.session_state.current_flashcard += 1
+                st.write(f"**Flashcard {st.session_state.current_flashcard + 1}:** {current_flashcard_text}")
             else:
                 explanation_prompt = f"Explain why the following statement is false in both Arabic and English: '{current_flashcard_text}'"
                 explanation_response = interact.generate_llm(explanation_prompt)
@@ -68,7 +68,7 @@ if st.session_state.flashcards and st.session_state.flashcard_mode:
                 explanation_response = interact.generate_llm(explanation_prompt)
                 st.session_state.feedback = f"Incorrect. ❌ | غير صحيح ❌\n\nExplanation | التوضيح: {explanation_response}"
                 st.session_state.flashcard_mode = False  # Switch to explanation mode
-            st.rerun()
+        
 
 # Show feedback or explanation
 if st.session_state.feedback:
