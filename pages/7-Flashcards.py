@@ -26,7 +26,7 @@ if selected_chapter != "Please select a chapter | اختر فصلاً" and selec
     st.session_state.content_chapter = interact.extract_passage("./data/content_chapter.csv", selected_chapter)
     
     # Generate bilingual flashcards for the chapter content using the LLM
-    prompt = f"Create bilingual (Arabic and English) True or False questions based on this content: {content_chapter}. Format each flashcard as 'True or False: <Arabic statement> | <English statement>'."
+    prompt = f"Create bilingual (Arabic and English) True or False questions based on this content: {st.session_state.content_chapter}. Format each flashcard as 'True or False: <Arabic statement> | <English statement>'."
     flashcards_response = interact.generate_llm(prompt)
     flashcards = [line.strip() for line in flashcards_response.splitlines() if line.strip()]
     st.session_state.flashcards = flashcards
