@@ -59,8 +59,13 @@ if prompt:
         for idx, char in enumerate(st.session_state.word):
             if char == letter:
                 st.session_state.guessed_letters[idx] = letter
+    
         st.write("Correct letter! / حرف صحيح!")
-        st.write("Word: " + " ".join(st.session_state.guessed_letters))
+        
+        # Use RTL embedding for correct display order in Arabic
+        rtl_text = "\u202B" + " ".join(st.session_state.guessed_letters)
+        st.write("Word: " + rtl_text)
+
     else:
         # Increase the error count if the letter is incorrect
         st.session_state.errors += 1
