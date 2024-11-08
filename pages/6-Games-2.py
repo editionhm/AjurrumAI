@@ -1,5 +1,6 @@
 import streamlit as st
 import random
+import time
 
 # Sample phrases with Arabic and English pairs
 phrases = [
@@ -26,9 +27,11 @@ if "shuffled_pairs" not in st.session_state or st.button("Reset Game"):
     st.session_state.revealed = [False] * len(items)
     st.session_state.selected_buttons = []
     st.session_state.matched_buttons = []
+    st.session_state.feedback = ""
 
 # Callback to handle button click
 def reveal_button(idx, text, lang):
+    # Reveal the button temporarily
     st.session_state.revealed[idx] = True
     st.session_state.selected_buttons.append((idx, text, lang))
     
@@ -37,15 +40,23 @@ def reveal_button(idx, text, lang):
         (idx1, text1, lang1), (idx2, text2, lang2) = st.session_state.selected_buttons
 
         # Check if the two selected buttons form a correct pair
-        if (text1 == text2) or (lang1 != lang2 and (text1, text2) in phrases or (text2, text1) in phrases):
+        if (lang1 != lang2) and ((text1, text2) in phrases or (text2, text1) in phrases):
             # Correct match; mark as permanently revealed
             st.session_state.matched_buttons.extend([idx1, idx2])
-            st.session_state.selected_buttons = []  # Reset selected buttons
+            st.session_state.feedback = f"Matched: {text1} - {text2} 🎉"
         else:
-            # Incorrect match; hide both buttons after a delay
+            # Incorrect match; hide both buttons after a short delay
+            st.session_state.feedback = "Not a match! Try again."
+            time.sleep(0.5)  # Pause for a brief moment to show both selections
             st.session_state.revealed[idx1] = False
             st.session_state.revealed[idx2] = False
-            st.session_state.selected_buttons = []  # Reset selected buttons
+        
+        # Reset selected buttons for the next turn
+        st.session_state.selected_buttons = []
+
+# Display feedback message if any
+if st.session_state.feedback:
+    st.write(st.session_state.feedback)
 
 # Display the buttons in a grid format
 cols_per_row = 4
