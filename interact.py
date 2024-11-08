@@ -110,20 +110,45 @@ def generate_questions(selected_chapter, file_path, level_mastery):
     return response
 
 
-def generate_pairs(num_pairs):
+def generate_pairs(num_pairs=10):
+    """
+    Generate English-Arabic word/phrase pairs using the LLM.
+
+    Parameters:
+        num_pairs (int): Number of pairs to generate. Default is 10.
+
+    Returns:
+        Dict[str, str]: A dictionary where each key is an English phrase and each value is its Arabic translation.
+    """
     pairs = {}
+    
+    # Prompt the LLM to return multiple pairs at once in the expected format
     prompt = f"""Generate exaclty {num_pairs} pairs of common Arabic phrase and its English translation. Output should be ONLY: 1. Arabic phrase | English translation
     2. Arabic phrase | English translation
     3. Arabic phrase | English translation
     etc.."""
     result = generate_llm(prompt)
-    pairs[result] = result
-        # Parse the response assuming it returns a pair like "مرحبا | Hello"
-    """try:
-            arabic, english = result.split(" | ")
-            english, arabic = english.strip(), arabic.strip()
+    
+    # Split the response into lines and process each line
+    for line in result.splitlines():
+        line = line.strip()  # Remove any leading/trailing whitespace
+        if not line:
+            continue  # Skip empty lines
+
+        # Parse each line to extract the Arabic and English phrases
+        try:
+            # Remove the numbering if present, e.g., "1. "
+            if '. ' in line:
+                _, line = line.split('. ', 1)
+            
+            # Split the line by the "|" character to separate Arabic and English
+            arabic, english = line.split(" | ")
+            english, arabic = english.strip(), arabic.strip()  # Remove any extra spaces
+
+            # Add the pair to the dictionary if it's unique
             if english and arabic and english not in pairs:
                 pairs[english] = arabic
-                print(f"Added pair: {english} - {arabic}")
-    """
+        except ValueError:
+            print(f"Unexpected format in line: {line}")
+
     return pairs
