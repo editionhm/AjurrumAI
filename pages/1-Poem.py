@@ -53,7 +53,7 @@ Here’s a version of this text rephrased in the rhythmic 'Rajaz' poetry style:
 \n
 وَبَدَلُ الغَلَطِ نَحْوُ قَدْ رَكِبْ *** زَيدٌ حِمَارًا فَرَسًا يَبْغِي اللَّعِبْ
 
-Remember the instruction is : Please create a poem in arabic preserving the rules of arabic poetry that contains what is in this content {text}. Output should write each verse on one line""" 
+Remember the instruction is : Please create a poem in arabic preserving the rules of arabic poetry that contains what is in this content {text}. Please when you do the output, separate all verse by a return at the line""" 
     elif poem_style == "Basit | البسيط":
         prompt = f""" Create an Arabic poem in 'Basit' meter with smooth, balanced verses based on the theme: {text}. I will show you examples of text transformed in a Basit poem : 
 
