@@ -38,16 +38,7 @@ length_poem = st.select_slider(
 # Fonction pour générer le prompt en fonction du type de poème
 def create_prompt(text, poem_style):
     if poem_style == "Rajaz | الرجز":
-        prompt = f"""Compose a poem in the Arabic style of 'Rajaz' with rhythmic, short lines based on the theme: {text}. I will show you two examples of text transformed in a Rajaz poem.
-Here is an example of arabic text : 
-فَأَمَّا اَلضَّمَّةُ: فَتَكُونُ عَلَامَةً لِلرَّفْعِ فِي أَرْبَعَةِ مَوَاضِعَ: فِي اَلِاسْمِ المُفْرَدِ، وَجَمْعِ اَلتَّكْسِيرِ، وَجَمْعِ المُؤَنَّثِ اَلسَّالِمِ، وَالْفِعْلِ المُضَارِعِ اَلَّذِي لَمْ يَتَّصِلْ بِآخِرِهِ شَيْءٌ
-
-And now here is a of this text versified in arabic in the style “Rajaz” : 
-فَارْفَعْ بِضَمٍّ مُفْرَدَ الأَسْمَاءِ *** كَجاء زَيْدٌ صَاحِبُ العَلاَءِ 
-\n
-وَارْفَعْ بِهِ الجَمْعَ المُكَسَّرَ وَمَا *** جُمِعَ مِنْ مُؤَنَّثٍ فَسَلِمَا
-\n
-كَذَا المُضَارِعُ الَّذِي لَمْ يَتَّصِلْ *** شَيء بِهِ كَيَهْتَدِي وَكَيَصِلْ
+        prompt = f"""Compose a poem in the Arabic style of 'Rajaz' with rhythmic, short lines based on the theme: {text}. 
 
 Here is another example of arabic text : 
 وَهُوَ عَلَى أَرْبَعَةِ أَقْسَامٍ بَدَلُ اَلشَّيْءِ مِنْ اَلشَّيْءِ، وَبَدَلُ اَلْبَعْضِ مِنْ اَلْكُلِّ، وَبَدَلُ اَلِاشْتِمَالِ، وَبَدَلُ اَلْغَلَطِ.
@@ -64,29 +55,7 @@ And now here is a of this text versified in arabic in the style “Rajaz” :
 \n
 وَبَدَلُ الغَلَطِ نَحْوُ قَدْ رَكِبْ *** زَيدٌ حِمَارًا فَرَسًا يَبْغِي اللَّعِبْ
 
-Here is another example of arabic text :
-"وأما الاجتهاد فهو بذل الوسع في بلوغ الغرض، فالمجتهد إن كان كامل الآلة في الاجتهاد، فإن اجتهد في الفروع فأصاب فله أجران، وإن اجتهد فيها وأخطأ فله أجر . 
-ومنهم من قال: كل مجتهد في الفروع مصيب . 
-ولا يجوز أن يقال: كل مجتهد في الأصول الكلامية مصيب، لأن ذلك يؤدي إلى تصويب أهل الضلالة من النصارى والمجوس والكفار والملحدين . 
-ودليل من قال: ليس كل مجتهد في الفروع مصيباً، قوله صلى الله عليه وآله وسلم: (( من اجتهد وأصاب فله أجران، ومن اجتهد وأخطأ فله أجر واحد )) . 
-وجه الدليل أن النبي صلى الله عليه وآله وسلم خطأ المجتهد وصوبه أخرى . "
-
-And now here is a of this text versified in arabic in the style “Rajaz” : 
-"وَالاجْتِهادُ بَذْلُ وُسْعٍ لِغَرَضْ *** لِذي اجْتِهَادٍ كامِلٍ لِمَا عَرَضْ
-\n
-وَحَيْثُ يَجْتَهِدُ في الفَرْعِ وَنالْ *** صَوَابَهُ فَالأَجْرُ عُدِّدَ يُقالْ
-\n
-وَحَيْثُ يُخْطِئُ فَأَجْرٌ وَاحِدٌ *** وَقِيلَ فِي الفُرُوعِ كُلٌّ وَاجِدُ
-\n
-وَلا يَجوزُ أَنْ يُقالَ كُلُّ مَنْ *** فِي الأَصْلِ يَجْتَهِدُ واجِدٌ ثَمَنْ
-\n
-لأَنَّهُ يُؤَدِّي لِلتَّصْويبِ مِنْ *** أَهْلِ الضَّلالَةِ وَكُفْرُهُمْ قَمِنْ
-\n
-وَمَنْ يَقولُ لَيْسَ كُلُّ مُجْتَهِدْ *** فِي الفَرْعِ أَصَابَ قَوْلَهُ اعْتَمِدْ
-\n
-لِأَنَّهُ رَأَى رَسولَ اللهِ  *** خَطَّأَهُ وَهُوَ  بِهِ التَّناهِي"
-
-Analyse how between "***" the last word has always the same sound. And analyze how between each "***" the structure of the phrase is.
+Before answering, Analyse how between "***" the last word has always the same sound and how between each "***" the structure of the phrase is.
 """
     elif poem_style == "Basit | البسيط":
         prompt = f""" Create an Arabic poem in 'Basit' meter with smooth, balanced verses based on the theme: {text}. I will show you examples of text transformed in a Basit poem : 
