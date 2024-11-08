@@ -119,11 +119,11 @@ def generate_pairs(num_pairs):
     result = generate_llm(prompt)
     pairs[result] = result
         # Parse the response assuming it returns a pair like "مرحبا | Hello"
-        """try:
+    """try:
             arabic, english = result.split(" | ")
             english, arabic = english.strip(), arabic.strip()
             if english and arabic and english not in pairs:
                 pairs[english] = arabic
                 print(f"Added pair: {english} - {arabic}")
-         """
+    """
     return pairs
