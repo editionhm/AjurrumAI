@@ -26,7 +26,7 @@ length_poem = st.select_slider(
     "Select the lenght of your poem",
     options=[
         "3",
-        "5,
+        "5",
         "10",
         "15",
         "20",
