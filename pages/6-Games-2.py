@@ -16,12 +16,12 @@ def generate_pairs(num_pairs=10):
     pairs = {}
     
     for _ in range(num_pairs):
-        prompt = "Generate a common Arabic phrase and its English translation as a pair."
+        prompt = "Generate a common Arabic phrase and its English translation as a pair. Answer should be like : مرحبا | Hello"
         result = interact.generate_llm(prompt)
         
-        # Parse the response assuming it returns a pair like "مرحبا - Hello"
+        # Parse the response assuming it returns a pair like "مرحبا | Hello"
         try:
-            arabic, english = result.split(" - ")
+            arabic, english = result.split(" | ")
             pairs[english.strip()] = arabic.strip()
         except ValueError:
             print(f"Unexpected response format: {result}")
