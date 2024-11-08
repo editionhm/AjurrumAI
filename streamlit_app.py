@@ -44,7 +44,7 @@ with st.sidebar:
 
     level_mastery = st.select_slider(
         "Select the level of the explanation",
-        options=["Beginner", "Intermediate", "Advanced", "Expert"],
+        options=["Beginner", "Intermediate", "Expert"],
     )
     st.write("You selected the level", level_mastery)
 
