@@ -20,6 +20,33 @@ wml_credentials = {
                   }
 client = APIClient(wml_credentials)
 
+def generate_word(prompt):
+    full_input = f"{prompt}"
+    scoring_payload = {
+        "input": full_input,
+        "parameters": {
+            "decoding_method" : "sample",
+            "max_new_tokens": 30,
+            "temperature": 0.8,
+            "top_k": 30,
+            "top_p": 0.8,
+            "repetition_penalty": 1
+        }
+    }
+
+
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {access_token}"
+    }
+    response = requests.post(deploy_url, headers=headers, json=scoring_payload)
+    if response.status_code != 200:
+        raise Exception("Non-200 response: " + str(response.text))
+
+    data = response.json()
+    resultat = data['results'][0]['generated_text']
+    return resultat
+  
 def generate_llm(prompt):
     full_input = f"{prompt}"
     scoring_payload = {
