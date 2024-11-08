@@ -1,7 +1,7 @@
 import streamlit as st
 import random
 
-# Sample Arabic phrases and their English translations
+# Sample phrases with Arabic and English pairs
 phrases = [
     ("مرحبا", "Hello"),
     ("كيف حالك؟", "How are you?"),
@@ -15,47 +15,52 @@ phrases = [
     ("أراك لاحقا", "See you later")
 ]
 
-# Shuffle phrases and create buttons with hidden text
-st.title("Match the Arabic Phrase with its English Translation")
-
-# Initialize or reset game state variables
-if "shuffled_phrases" not in st.session_state or st.button("Reset Game"):
-    st.session_state.shuffled_phrases = phrases + [(eng, arabic) for arabic, eng in phrases]
-    random.shuffle(st.session_state.shuffled_phrases)
-    st.session_state.revealed = [False] * len(st.session_state.shuffled_phrases)
+# Shuffle phrases and translations to display as buttons
+if "shuffled_pairs" not in st.session_state or st.button("Reset Game"):
+    # Duplicate and shuffle the list
+    items = [(phrase, "arabic") for phrase, _ in phrases] + [(translation, "english") for _, translation in phrases]
+    random.shuffle(items)
+    
+    # Initialize game state variables
+    st.session_state.shuffled_pairs = items
+    st.session_state.revealed = [False] * len(items)
     st.session_state.selected_buttons = []
-    st.session_state.matched_pairs = []
+    st.session_state.matched_buttons = []
 
-# Display the buttons and handle game logic
-for idx, (text, translation) in enumerate(st.session_state.shuffled_phrases):
-    if st.session_state.revealed[idx] or idx in st.session_state.matched_pairs:
-        # Show the text if it's already matched or revealed
-        st.button(text if text in [p[0] for p in phrases] else translation, key=idx, disabled=True)
+# Display the buttons in a grid format
+cols_per_row = 4
+rows = [st.columns(cols_per_row) for _ in range((len(st.session_state.shuffled_pairs) + cols_per_row - 1) // cols_per_row)]
+for idx, (text, lang) in enumerate(st.session_state.shuffled_pairs):
+    row = rows[idx // cols_per_row]
+    col = row[idx % cols_per_row]
+
+    # Display the button text if it’s already matched or temporarily revealed
+    if st.session_state.revealed[idx] or idx in st.session_state.matched_buttons:
+        col.button(text, key=idx, disabled=True)
     else:
-        if st.button("?", key=idx):
-            # Reveal the selected button
+        # Button with hidden text (shows "?" initially)
+        if col.button("?", key=idx):
+            # Reveal the button temporarily and add to selected buttons
             st.session_state.revealed[idx] = True
-            st.session_state.selected_buttons.append((idx, text, translation))
+            st.session_state.selected_buttons.append((idx, text, lang))
 
-            # Check for pair matching logic
+            # Check for matching pairs when two buttons are clicked
             if len(st.session_state.selected_buttons) == 2:
-                # Get both selected buttons
-                (idx1, text1, translation1), (idx2, text2, translation2) = st.session_state.selected_buttons
+                (idx1, text1, lang1), (idx2, text2, lang2) = st.session_state.selected_buttons
 
-                # Check if they match
-                if (text1 == text2 and translation1 == translation2) or (text1 == translation2 and translation1 == text2):
-                    # If matched, store their indices to keep them revealed
-                    st.session_state.matched_pairs.extend([idx1, idx2])
-                    st.write(f"Matched: {text1} - {translation1} 🎉")
+                if (text1 == text2) or (lang1 != lang2 and (text1, text2) in phrases or (text2, text1) in phrases):
+                    # Correct match; mark as permanently revealed
+                    st.session_state.matched_buttons.extend([idx1, idx2])
+                    st.write(f"Matched: {text1} - {text2} 🎉")
                 else:
-                    # If not matched, reset their reveal status after a short delay
+                    # Incorrect match; hide both buttons after a short delay
                     st.warning("Not a match! Try again.")
                     st.session_state.revealed[idx1] = False
                     st.session_state.revealed[idx2] = False
 
-                # Clear the selected buttons for the next attempt
+                # Reset selected buttons for the next turn
                 st.session_state.selected_buttons = []
 
-# Check if all pairs are matched to end the game
-if len(st.session_state.matched_pairs) == len(st.session_state.shuffled_phrases):
+# End of game check
+if len(st.session_state.matched_buttons) == len(st.session_state.shuffled_pairs):
     st.success("Congratulations! You've matched all pairs.")
