@@ -171,7 +171,9 @@ if st.button("Generate Poem | ولّد القصيدة"):
         # Créer le prompt en fonction du type de poème
         prompt = create_prompt(arabic_text, poem_type)
         # Appeler la fonction generate_llm pour créer le poème
-        prompt += f"The poem should not exceed {length_poem} verses. Always analyse how a poem is 2 hemistichs, the sound of the end of the first is the same as the end of the second one. Analyse and remember everything in examples i gave you to make a poem with the same aspect and rules"
+        prompt += f"""The poem should not exceed {length_poem} verses. Always analyse how a poem is 2 hemistichs, the sound of the end of the first is the same as the end of the second one. Analyse and remember everything in examples i gave you to make a poem with the same aspect and rules. Output will be like 
+واسما لشبه الفعل لا ينصرف *** ختمه بالفتح حتما يعرف
+كذا المضارع المعل الاخر ***  فجزمه بالحذف عندهم دری"""
         poem = generate_llm(prompt)
         
         # Afficher le poème généré
