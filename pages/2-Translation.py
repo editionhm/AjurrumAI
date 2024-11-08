@@ -43,8 +43,8 @@ if st.button("Translate | ترجمة"):
         
         # Traduction de l'anglais vers l'arabe
         translated_text = translate(english_text, "English", "Arabic", analysis_info)
-        st.write("Arabic Translation | الترجمة إلى العربية:")
-        st.text_area("النص العربي | Arabic Text", translated_text, height=150)
+        with st.chat_message("assistant"):
+            st.write(translated_text)
     elif arabic_text and not english_text:
         # Analyse du texte en arabe
         analysis_info = analyze_text(arabic_text, "Arabic")
@@ -53,7 +53,7 @@ if st.button("Translate | ترجمة"):
         
         # Traduction de l'arabe vers l'anglais
         translated_text = translate(arabic_text, "Arabic", "English", analysis_info)
-        st.write("English Translation | الترجمة إلى الإنجليزية:")
-        st.text_area("النص الإنجليزي | English Text", translated_text, height=150)
+        with st.chat_message("assistant"):
+            st.write(translated_text)
     else:
         st.warning("Please enter text in one of the boxes to translate. | يرجى إدخال النص في إحدى الحقول للترجمة.")
