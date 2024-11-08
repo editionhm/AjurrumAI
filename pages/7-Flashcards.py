@@ -12,7 +12,11 @@ if "current_flashcard" not in st.session_state:
 if "feedback" not in st.session_state:
     st.session_state.feedback = ""
 if "flashcard_mode" not in st.session_state:
-    st.session_state.flashcard_mode = True  # To toggle between flashcard and explanation modes
+    st.session_state.flashcard_mode = True
+if "messages" not in st.session_state:
+    st.session_state.messages = []  # For chat messages
+if "qa_pairs" not in st.session_state:
+    st.session_state.qa_pairs = []  # To save questions and answers
 
 # Load chapters list and display selection box
 chapters_list = interact.extract_chapters('./data/content_chapter.csv')
@@ -21,20 +25,26 @@ selected_chapter = st.selectbox('Select a Chapter | اختر فصلاً:', ["Ple
 if selected_chapter != "Please select a chapter | اختر فصلاً" and selected_chapter != st.session_state.selected_chapter:
     # Update selected chapter
     st.session_state.selected_chapter = selected_chapter
-    
-    # Display selected chapter content
     st.session_state.content_chapter = interact.extract_passage("./data/content_chapter.csv", selected_chapter)
     
-    # Generate bilingual flashcards for the chapter content using the LLM
-    prompt = f"Elaborate some Questions and Answers based on the content of this chapter : {st.session_state.content_chapter}."
+    # Generate questions and answers for the chapter content using the LLM
+    prompt = f"Generate questions and answers based on the content of this chapter: {st.session_state.content_chapter}. Format the response as follows: #1 question1 .. #2 question2 .. # answer1 .. # answer2 .."
     flashcards_response = interact.generate_llm(prompt)
-    flashcards = [line.strip() for line in flashcards_response.splitlines() if line.strip()]
-    st.session_state.flashcards = flashcards
+    
+    # Process the response to separate questions and answers
+    qa_pairs = [line.strip() for line in flashcards_response.splitlines() if line.strip()]
+    st.session_state.qa_pairs = qa_pairs  # Save the QA pairs for later validation
     st.session_state.current_flashcard = 0
     st.session_state.feedback = ""
-    st.session_state.flashcard_mode = True  # Reset to flashcard mode
+    st.session_state.flashcard_mode = True
 
-# Display current flashcard
+    # Extract questions only for displaying flashcards
+    questions = [qa for qa in qa_pairs if qa.startswith("#")]
+
+    # Initialize flashcards with only the questions
+    st.session_state.flashcards = questions
+
+# Display current flashcard question
 if st.session_state.flashcards and st.session_state.flashcard_mode:
     current_flashcard_text = st.session_state.flashcards[st.session_state.current_flashcard]
     st.write(f"**Flashcard {st.session_state.current_flashcard + 1}:** {current_flashcard_text}")
@@ -43,46 +53,43 @@ if st.session_state.flashcards and st.session_state.flashcard_mode:
     col1, col2 = st.columns(2)
     with col1:
         if st.button("True"):
-            # Check answer and provide feedback
-            prompt = f"""Is the following statement true or false? {current_flashcard_text} Please answer in both Arabic and English. Only answer based on this context : '{st.session_state.content_chapter}'"""
-            answer_response = interact.generate_llm(prompt).strip().lower()
-            if "true" in answer_response:
-                st.session_state.feedback = "Correct! ✅ | صحيح! ✅"
-                st.session_state.current_flashcard += 1
-                st.write(f"**Flashcard {st.session_state.current_flashcard + 1}:** {current_flashcard_text}")
-            else:
-                explanation_prompt = f"Explain why the following statement is false in both Arabic and English: '{current_flashcard_text}' using this context : {st.session_state.content_chapter}"
-                explanation_response = interact.generate_llm(explanation_prompt)
-                st.session_state.feedback = f"Incorrect. ❌ | غير صحيح ❌\n\nExplanation | التوضيح: {explanation_response}"
-                st.session_state.flashcard_mode = False  # Switch to explanation mode
-
-    with col2:
+            st.session_state.feedback = "Selected True ✅"
+            st.session_state.current_flashcard += 1
         if st.button("False"):
-            # Check answer and provide feedback
-            prompt = f"Is the following statement true or false? '{current_flashcard_text}' Please answer in both Arabic and English. Only answer based on this context : {st.session_state.content_chapter}"
-            answer_response = interact.generate_llm(prompt).strip().lower()
-            if "false" in answer_response:
-                st.session_state.feedback = "Correct! ✅ | صحيح! ✅"
-                st.session_state.current_flashcard += 1
-            else:
-                explanation_prompt = f"Explain why the following statement is true in both Arabic and English: '{current_flashcard_text}'"
-                explanation_response = interact.generate_llm(explanation_prompt)
-                st.session_state.feedback = f"Incorrect. ❌ | غير صحيح ❌\n\nExplanation | التوضيح: {explanation_response}"
-                st.session_state.flashcard_mode = False  # Switch to explanation mode
-        
+            st.session_state.feedback = "Selected False ❌"
+            st.session_state.current_flashcard += 1
 
-# Show feedback or explanation
-if st.session_state.feedback:
-    st.write(st.session_state.feedback)
+    # Show feedback or explanation
+    if st.session_state.feedback:
+        st.write(st.session_state.feedback)
 
 # Switch back to flashcard mode after explanation
-if not st.session_state.flashcard_mode:
-    if st.button("Next Flashcard | التالي"):
-        st.session_state.flashcard_mode = True
-        st.session_state.feedback = ""
-
-# Check if all flashcards are done
 if st.session_state.current_flashcard >= len(st.session_state.flashcards):
     st.success("Congratulations! You've completed all flashcards. 🎉")
-    st.session_state.current_flashcard = 0  # Reset for another round if desired
+    st.session_state.current_flashcard = 0
     st.session_state.flashcard_mode = True
+
+# Add chat input for user responses
+if prompt := st.chat_input("Write your text here | اكتب نصك هنا"):
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    content_chapter = interact.extract_passage("./data/content_chapter.csv", st.session_state.selected_chapter)
+    user_prompt = f"Answer to this request: {prompt}. Remember, you are an Arabic Grammar teacher and the content of the subject is: {content_chapter}. Explain in both Arabic and English."
+
+    # Display user message
+    with st.chat_message("user"):
+        st.write(prompt)
+
+    # Generate assistant's response based on user input
+    with st.chat_message("assistant"):
+        with st.spinner("Thinking..."):
+            response = interact.generate_llm(user_prompt)
+            full_response = ''.join(response)
+            st.session_state.messages.append({"role": "assistant", "content": full_response})
+            st.markdown(full_response)
+
+# Check if user responses are close to saved QA pairs
+user_answer_prompt = f"Check if the user's answer is close and correct to the saved questions and answers: {st.session_state.qa_pairs}"
+if prompt:
+    response = interact.generate_llm(user_answer_prompt)
+    with st.chat_message("assistant"):
+        st.write(response)
