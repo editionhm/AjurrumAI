@@ -57,7 +57,7 @@ if st.button("Generate I'rab | ولّد الإعراب"):
         irab_result = generate_llm(prompt)
         
         # Afficher l'I'rab généré
-        st.write("Generated I'rab | الإعراب الناتج:")
-        st.text_area("I'rab Details | تفاصيل الإعراب", irab_result, height=300)
+        with st.chat_message("assistant"):
+            st.write(irab_result)
     else:
         st.warning("Please enter Arabic text for analysis | يرجى إدخال نص عربي للتحليل.")
