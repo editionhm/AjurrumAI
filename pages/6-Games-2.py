@@ -61,7 +61,8 @@ def reveal_button(idx, text, lang):
 
 # Display feedback message if any
 if st.session_state.feedback:
-    st.write(st.session_state.feedback)
+    with st.chat_message("assistant"):
+        st.write(st.session_state.feedback)
 
 # Display the buttons in a grid format
 cols_per_row = 4
