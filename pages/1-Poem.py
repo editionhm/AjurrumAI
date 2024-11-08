@@ -40,20 +40,20 @@ def create_prompt(text, poem_style):
 
 For example, here is an example of an Arabic text:
 وَهُوَ عَلَى أَرْبَعَةِ أَقْسَامٍ بَدَلُ اَلشَّيْءِ مِنْ اَلشَّيْءِ، وَبَدَلُ اَلْبَعْضِ مِنْ اَلْكُلِّ، وَبَدَلُ اَلِاشْتِمَالِ، وَبَدَلُ اَلْغَلَطِ.
-Nَحْوَ قَوْلِكَ "قَامَ زَيْدٌ أَخُوكَ، وَأَكَلْتُ اَلرَّغِيفَ ثُلُثَهُ، وَنَفَعَنِي زَيْدٌ عِلْمُهُ، وَرَأَيْتُ زَيْدًا اَلْفَرَسَ"، أَرَدْتَ أَنْ تَقُولَ رَأَيْتُ اَلْفَرَسَ فَغَلِطْتَ فَأَبْدَلْتَ زَيْدًا مِنْه.ُ
+حْوَ قَوْلِكَ "قَامَ زَيْدٌ أَخُوكَ، وَأَكَلْتُ اَلرَّغِيفَ ثُلُثَهُ، وَنَفَعَنِي زَيْدٌ عِلْمُهُ، وَرَأَيْتُ زَيْدًا اَلْفَرَسَ"، أَرَدْتَ أَنْ تَقُولَ رَأَيْتُ اَلْفَرَسَ فَغَلِطْتَ فَأَبْدَلْتَ زَيْدًا مِنْه.ُ
 
-Here’s a version of this text rephrased in the rhythmic 'Rajaz' poetry style:
+Here is a poem based on the previous subject : 
 أَقْسَامُهُ أَرْبَعَةٌ فَإِنْ تُرِدْ *** إِحْصَاءَهَا فَاسْمَعْ لِقَولِي تَسْتَفِدْ
-\n
+__
 فَبَدَلُ الشَّيءِ مِنَ الشَّيءِ كَجَا *** زَيدٌ أَخُوكَ ذَا سُرُورٍ بَهِجَا
-\n
+__
 وَبَدَلُ البَعْضِ مِنَ الكُلِّ كَمَنْ *** يَأْكُلْ رَغِيْفًا نِصْفَهُ يُعْطِ الثَّمَنْ
-\n
+__
 وَبَدَلُ اشْتِمَالٍ نَحْوُ رَاقَنِي *** مُحَمَّدٌ جَمَالُهُ فَشَاقَنِي
-\n
+__
 وَبَدَلُ الغَلَطِ نَحْوُ قَدْ رَكِبْ *** زَيدٌ حِمَارًا فَرَسًا يَبْغِي اللَّعِبْ
 
-Remember the instruction is : Please create a poem in arabic preserving the rules of arabic poetry that contains what is in this content {text}. Please when you do the output, separate all verse by a return at the line""" 
+Remember the instruction is : Please create a poem in arabic preserving the rules of arabic poetry that contains what is in this content {text}. Please when you do the output, separate all verse by a return by '___'""" 
     elif poem_style == "Basit | البسيط":
         prompt = f""" Create an Arabic poem in 'Basit' meter with smooth, balanced verses based on the theme: {text}. I will show you examples of text transformed in a Basit poem : 
 
