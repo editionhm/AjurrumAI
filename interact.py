@@ -52,7 +52,7 @@ def generate_word(prompt):
     return resultat
   
 def generate_llm(prompt):
-    full_input = f"[INST] {prompt} [/INST]"
+    full_input = f"{prompt}" #f"[INST] {prompt} [/INST]"
     scoring_payload = {
         "input": full_input,
         "parameters": {
