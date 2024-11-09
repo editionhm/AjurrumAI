@@ -51,7 +51,7 @@ def generate_word(prompt):
     resultat = data['results'][0]['generated_text']
     return resultat
   
-def generate_llm(prompt):
+def generate_llm_fine_tune(prompt):
     full_input = f"{prompt}" #f"[INST] {prompt} [/INST]"
     scoring_payload = {
         "input": full_input,
@@ -76,7 +76,7 @@ def generate_llm(prompt):
     return resultat
 
 
-def generate_llm_true(prompt):
+def generate_llm(prompt):
     """
     Function to generate responses from the LLM
     """
@@ -92,7 +92,7 @@ def generate_llm_true(prompt):
             "repetition_penalty": 1
         },
         "model_id": "sdaia/allam-1-13b-instruct",
-        "project_id": "project_id_base"
+        "project_id": project_id_base
     }
 
     headers = {
